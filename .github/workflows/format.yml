@@ -1,0 +1,48 @@
+name: Format Check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write # needed for reviewdog PR annotations/comments
+
+jobs:
+  format:
+    name: Code Format & Spelling Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Prettier "check" (no writes in CI)
+      - name: Check code format
+        run: npm run format -- --check
+
+      # Misspell: comment on PRs and fail on errors
+      - name: Find misspelled words
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: error
+          locale: "US" # or "UK" if you prefer British spelling
+          path: "." # scan the repo; adjust if you want a narrower scope
+          exclude: |
+            ./node_modules/*
+            ./.svelte-kit/*
+            ./dist/*
+            ./build/*
+            ./export.md
+            ./repomix-output.*

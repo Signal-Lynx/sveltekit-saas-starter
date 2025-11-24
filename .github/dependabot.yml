@@ -1,0 +1,98 @@
+version: 2
+updates:
+  # NPM packages
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 4
+    rebase-strategy: "disabled"
+    reviewers:
+      - "TheGrandGear99"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+    # Group related updates into single PRs to reduce churn
+    groups:
+      eslint-and-typescript:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "typescript"
+          - "typescript-eslint"
+          - "@types/*"
+          - "eslint-*"
+          - "svelte-eslint-parser"
+          - "eslint-plugin-svelte"
+      sveltekit-and-build:
+        patterns:
+          - "svelte"
+          - "@sveltejs/*"
+          - "vite"
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "esbuild"
+      supabase:
+        patterns:
+          - "@supabase/*"
+      stripe:
+        patterns:
+          - "stripe*"
+      prettier:
+        patterns:
+          - "prettier"
+          - "prettier-plugin-*"
+      playwright:
+        patterns:
+          - "playwright*"
+
+    # Hold back breaking majors while you stabilize
+    ignore:
+      - dependency-name: "@sveltejs/kit"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/ui"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "esbuild"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "playwright"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "TheGrandGear99"
+    labels:
+      - "ci"
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"

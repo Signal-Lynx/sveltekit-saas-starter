@@ -1,0 +1,26 @@
+# Build & caches
+dist/
+build/
+.out/
+.cache/
+.tmp/
+coverage/
+__pycache__/
+*.pyc
+
+# Packages & deps
+node_modules/
+.venv/
+env/
+.conda/
+.poetry/
+pip-wheel-metadata/
+
+# Local & editor junk
+*.log
+*.DS_Store
+.vscode/
+.idea/
+
+# Artifacts
+repomix-output.*

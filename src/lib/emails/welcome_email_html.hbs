@@ -1,0 +1,224 @@
+{{! FILE: src/lib/emails/welcome_email_html.hbs }}
+<html
+  lang="en"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="supported-color-schemes" content="dark" />
+    <title>{{subject}}</title>
+    <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+    <![endif]-->
+
+    {{! This entire style block is now templatized using the `theme` object }}
+    <style
+      type="text/css"
+    >
+      html, body { margin: 0 !important; padding: 0 !important; height: 100% !important; width: 100% !important; }
+      body, table, td, a { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+      table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+      img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; }
+      a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+      .container { width: 600px !important; max-width: 600px !important; }
+      .bg-page { background-color: {{theme.base-100}}; }
+      .card { background: {{theme.base-200}}; border: 1px solid {{theme.base-300}}; border-radius: 16px; }
+      .text-body { color: {{theme.base-content}}; }
+      .text-muted { color: {{theme.base-content}}; opacity: 0.7; } /* Muted text using theme color */
+      .text-accent { color: {{theme.primary}}; }
+      .btn-bg { background-color: {{theme.secondary}}; }
+      .btn-border { border-color: {{theme.secondary}}; }
+      .btn-text { color: {{theme.secondary-content}}; }
+      @media all {
+        .btn-primary table td:hover { background-color: {{theme.secondary}} !important; }
+        .btn-primary a:hover { background-color: {{theme.secondary}} !important; border-color: {{theme.secondary}} !important; }
+      }
+      @media only screen and (max-width: 640px) {
+        .wrapper { padding: 8px !important; }
+        .content { padding: 0 !important; }
+        .container { padding: 0 !important; padding-top: 8px !important; width: 100% !important; max-width: 100% !important; }
+        .main { border-left-width: 0 !important; border-right-width: 0 !important; border-radius: 0 !important; }
+        .main p, .main td, .main span { font-size: 16px !important; }
+        .btn table, .btn a { width: 100% !important; max-width: 100% !important; font-size: 16px !important; }
+      }
+      @media all {
+        .ExternalClass { width: 100%; }
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+        .apple-link a { color: inherit !important; font-family: inherit !important; font-size: inherit !important; font-weight: inherit !important; line-height: inherit !important; text-decoration: none !important; }
+        #MessageViewBody a { color: inherit; text-decoration: none; font-size: inherit; font-family: inherit; font-weight: inherit; line-height: inherit; }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-page text-body"
+    style="font-family: Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; font-size: 16px; line-height: 1.3; background-color: {{theme.base-100}}; color: {{theme.base-content}}; margin: 0; padding: 0; mso-line-height-rule: exactly;"
+  >
+    <table
+      role="presentation"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      class="body bg-page"
+      bgcolor="{{theme.base-100}}"
+      style="border-collapse: separate; background-color: {{theme.base-100}}; width: 100%;"
+      aria-hidden="true"
+    >
+      <tr>
+        <td valign="top" style="font-size: 0; line-height: 0;">&nbsp;</td>
+        <td
+          class="container"
+          width="600"
+          valign="top"
+          style="max-width: 600px; width: 600px; margin: 0 auto; padding: 0; padding-top: 24px;"
+        >
+          <div
+            class="content"
+            style="display: block; margin: 0 auto; max-width: 600px; padding: 0;"
+          >
+            {{!-- prettier-ignore --}}
+            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">{{preheader}}</span>
+            <table
+              role="presentation"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              class="main card text-body"
+              style="border-collapse: separate; background: {{theme.base-200}}; border: 1px solid {{theme.base-300}}; border-radius: 16px; width: 100%; color: {{theme.base-content}};"
+            >
+              <tr>
+                <td
+                  class="wrapper"
+                  valign="top"
+                  style="box-sizing: border-box; padding: 24px;"
+                >
+                  <h1
+                    class="text-accent"
+                    style="color: {{theme.primary}}; font-size: 24px; font-weight: bold; margin: 0 0 24px 0;"
+                  >Welcome to the {{companyName}} Command Center, Operator.</h1>
+                  <p
+                    style="margin: 0 0 16px 0; color: {{theme.base-content}};"
+                  >Your account with
+                    {{companyName}}
+                    is confirmed and your credentials are secure. You're ready
+                    to deploy.</p>
+                  <p
+                    style="margin: 0 0 16px 0; color: {{theme.base-content}};"
+                  >Your next step is to access your dashboard, where you can
+                    choose your arsenal, download your tools, and manage your
+                    account.</p>
+                  <table
+                    role="presentation"
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    width="100%"
+                    class="btn btn-primary"
+                    style="border-collapse: separate; width: 100%; min-width: 100%;"
+                  >
+                    <tr>
+                      <td align="left" style="padding-bottom: 16px;">
+                        <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{WebsiteBaseUrl}}/account" style="height:44px; v-text-anchor:middle; width:260px;" arcsize="12%" stroke="f" fillcolor="{{theme.secondary}}">
+                            <w:anchorlock/>
+                            <center style="color:{{theme.secondary-content}}; font-family: Helvetica, Arial, sans-serif; font-size:16px; font-weight:bold;">Access Your Dashboard</center>
+                          </v:roundrect>
+                        <![endif]-->
+                        <!--[if !mso]><!-- -->
+                        <table
+                          role="presentation"
+                          border="0"
+                          cellpadding="0"
+                          cellspacing="0"
+                          style="border-collapse: separate; width: auto;"
+                        >
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              class="btn-bg"
+                              style="border-radius: 1rem; text-align: center; background-color: {{theme.secondary}};"
+                              bgcolor="{{theme.secondary}}"
+                            >
+                              <a
+                                href="{{WebsiteBaseUrl}}/account"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                role="button"
+                                style="border: 2px solid {{theme.secondary}}; border-radius: 1rem; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 16px; font-weight: bold; margin: 0; padding: 12px 24px; text-decoration: none; text-transform: capitalize; background-color: {{theme.secondary}}; color: {{theme.secondary-content}};"
+                                class="btn-text btn-border"
+                              >Access Your Dashboard</a>
+                            </td>
+                          </tr>
+                        </table>
+                        <!--<![endif]-->
+                      </td>
+                    </tr>
+                  </table>
+                  <p
+                    style="margin: 0 0 16px 0; color: {{theme.base-content}};"
+                  >Stay sharp,</p>
+                  <p
+                    style="margin: 0 0 16px 0; color: {{theme.base-content}};"
+                  >- The {{companyName}} Team</p>
+                </td>
+              </tr>
+            </table>
+            <div
+              class="footer"
+              style="clear: both; padding-top: 24px; text-align: center; width: 100%;"
+            >
+              <table
+                role="presentation"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                width="100%"
+                style="border-collapse: separate; width: 100%;"
+              >
+                <tr>
+                  <td
+                    class="content-block text-muted"
+                    align="center"
+                    valign="top"
+                    style="font-size: 12px; text-align: center;"
+                  >
+                    <span
+                      class="apple-link"
+                      style="font-size: 12px; text-align: center;"
+                    >
+                      {{companyName}}
+                      |
+                      {{tagline}}
+                    </span>
+                    <br />
+                    Don't like these emails?
+                    <a
+                      href="{{WebsiteBaseUrl}}/account/settings/change_email_subscription"
+                      class="text-muted"
+                      style="font-size: 12px; text-align: center; text-decoration: underline; color: {{theme.base-content}}; opacity: 0.7;"
+                    >Unsubscribe</a>.
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+        <td valign="top" style="font-size: 0; line-height: 0;">&nbsp;</td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="saasstartertheme">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <!-- Optional UI polish for browser chrome; safe default -->
+    <meta
+      name="theme-color"
+      content="#0a0a0a"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+
+    <!-- Font loading: keep your current Kalam family with preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    %sveltekit.head%
+
+    <style>
+      /* Ensure full-height layout and column flow without inline styles */
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        /* Prevent layout shift on mobile when address bar shows/hides */
+        min-height: 100svh;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Respect reduced motion preferences globally (non-invasive) */
+      @media (prefers-reduced-motion: reduce) {
+        *:not(:where(.allow-motion, .allow-motion *)) {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* Noscript minimal readability */
+      noscript {
+        display: block;
+        padding: 1rem;
+        margin: 0.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        font:
+          1rem/1.5 system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          sans-serif;
+      }
+    </style>
+  </head>
+
+  <body data-sveltekit-preload-data="hover">
+    <!-- Keep wrapper as display: contents to preserve body flex behavior -->
+    <div style="display: contents">%sveltekit.body%</div>
+
+    <noscript>
+      JavaScript is required for the best experience. Please enable it to use
+      this site.
+    </noscript>
+  </body>
+</html>

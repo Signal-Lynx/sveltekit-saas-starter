@@ -1,0 +1,78 @@
+name: Build Check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: SvelteKit Build Check
+    runs-on: ubuntu-latest
+
+    env:
+      # Public/SSR env used by the app during build. These are safe fakes for CI.
+      PUBLIC_SUPABASE_URL: "https://fake-test-url.supabase.co"
+      PUBLIC_SUPABASE_ANON_KEY: "fake_anon_key_for_ci"
+      PRIVATE_SUPABASE_URL: "https://fake-test-url.supabase.co"
+      PRIVATE_SUPABASE_ANON_KEY: "fake_anon_key_for_ci"
+      PRIVATE_STRIPE_API_KEY: "sk_test_1234567890abcdef"
+      PRIVATE_STRIPE_WEBHOOK_SECRET: "whsec_ci_placeholder_for_build_checks"
+      PRIVATE_SUPABASE_SERVICE_ROLE: "fake_service_role_for_ci"
+      PRIVATE_SITE_ACCESS_PASSWORD: "ci_access_password"
+      # Optional: if your code references this (safe if missing, but harmless to include)
+      PRIVATE_LICENSE_MANAGER_URL: "https://mock-lm.example.com"
+      PRIVATE_LICENSE_MANAGER_API_KEY: "mock_api_key_for_build_checks_1234567890"
+
+      # --- Turnstile (CAPTCHA) ---
+      PUBLIC_TURNSTILE_SITE_KEY: "ci_turnstile_site_key"
+      PRIVATE_TURNSTILE_SECRET_KEY: "ci_turnstile_secret_key"
+
+      # --- Beta purchase & product gates (safe fakes) ---
+      PRIVATE_BETA_PURCHASE_PASSWORD: "ci_beta_purchase_pwd"
+      PRIVATE_BETA_PASSPHRASE_SignalShield_Beta: "ci_shield_beta"
+      PRIVATE_BETA_PASSPHRASE_LynxRelay_Beta: "ci_relay_beta"
+      PRIVATE_BETA_PASSPHRASE_KeyCommander_Beta: "ci_keycommander_beta"
+
+      # --- Email (safe fakes) ---
+      PRIVATE_DEFAULT_FROM_EMAIL: "ci-noreply@example.com"
+      PRIVATE_ADMIN_EMAIL: "ci-admin@example.com"
+      PRIVATE_CONTACT_FORM_EMAIL: "ci-contact@example.com"
+      PRIVATE_MACHINE_RESET_EMAIL: "ci-machinereset@example.com"
+      PRIVATE_FROM_ADMIN_EMAIL: "ci-noreply@example.com"
+      PRIVATE_TEST_EMAIL_RECIPIENT: "ci-test@example.com"
+
+      # --- AWS SES (safe fakes) ---
+      PRIVATE_AWS_REGION: "us-east-1"
+      PRIVATE_AWS_ACCESS_KEY_ID: "ci_aws_access_key"
+      PRIVATE_AWS_SECRET_ACCESS_KEY: "ci_aws_secret"
+
+      # --- Cloudflare R2 (safe fakes) ---
+      PRIVATE_R2_ENDPOINT: "https://example.r2.cloudflarestorage.com"
+      PRIVATE_R2_ACCESS_KEY_ID: "ci_r2_access_key"
+      PRIVATE_R2_SECRET_ACCESS_KEY: "ci_r2_secret_key"
+      PRIVATE_R2_BUCKET_NAME: "ci-bucket"
+      PRIVATE_R2_REGION: "auto"
+
+      # --- Admin flags / allowlist ids ---
+      PUBLIC_CREATE_PROFILE_STEP: "false"
+      PUBLIC_ADMIN_MRR_SCOPE: "mapped"
+      PRIVATE_STRIPE_PRODUCT_IDS: ""
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: SvelteKit Build
+        run: npm run build

@@ -1,0 +1,28 @@
+{
+  // Inherit SvelteKit's generated config, which wires up `svelte` and `vite/client` types
+  "extends": "./.svelte-kit/tsconfig.json",
+
+  "compilerOptions": {
+    // --- keep your existing flags ---
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+
+    // --- safe, modern TS/Vite/SvelteKit defaults ---
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "target": "ES2022",
+    "noEmit": true
+
+    // NOTE: Do NOT set "types" here. We inherit SvelteKit's `svelte` and `vite/client`
+    // from the base config. For Vitest globals, add a tiny file:
+    //   src/vitest-env.d.ts  →  /// <reference types="vitest" />
+  }
+
+  // Path aliases are handled by SvelteKit config; no "paths"/"baseUrl" needed here.
+}

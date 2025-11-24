@@ -1,0 +1,39 @@
+name: Lint & Type Check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Linting and Type-checking
+    runs-on: ubuntu-latest
+    env:
+      # PUBLIC_* must exist at typegen time for $env/static/public exports
+      PUBLIC_SUPABASE_URL: "https://fake-test-url.supabase.co"
+      PUBLIC_SUPABASE_ANON_KEY: "fake_anon_key_for_ci"
+      PUBLIC_TURNSTILE_SITE_KEY: "ci_turnstile_site_key"
+      PUBLIC_CREATE_PROFILE_STEP: "false"
+      PUBLIC_ADMIN_MRR_SCOPE: "mapped"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter (Prettier + ESLint)
+        run: npm run lint
+
+      - name: Run type-checker (svelte-check)
+        run: npm run check

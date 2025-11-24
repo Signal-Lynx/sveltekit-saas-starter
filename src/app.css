@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -----------------------------------------------------------
+   Base tokens (outside DaisyUI theme system)
+   ----------------------------------------------------------- */
+@layer base {
+  :root {
+    --radius-field: 0.5rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+
+    /* animation tunables (non-color) */
+    --grad-scale: 100%;
+    --grad-scale-hover: 150%;
+    --grad-duration: 300ms;
+    --grad-ease: ease-in-out;
+    --dim-disabled: 65%;
+  }
+
+  /* Rendering polish; does not alter palette */
+  :root {
+    color-scheme: light dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    @apply cursor-pointer;
+  }
+}
+
+/* -----------------------------------------------------------
+   Components (DRY + accessibility + fallbacks)
+   ----------------------------------------------------------- */
+@layer components {
+  /* ---------------- Shared gradient styles (DRY) ---------------- */
+  :is(.authBtn, .btn-gradient-electric) {
+    /* Keep DaisyUI base button styling for .authBtn only */
+    /* (No harm if btn isn’t present on .btn-gradient-electric markup) */
+    @apply btn;
+
+    /* Original gradient & colors using DaisyUI OKLCH tokens */
+    background-image: linear-gradient(
+      to right,
+      oklch(var(--p)) 0%,
+      oklch(var(--s)) 100%
+    );
+    border: none;
+    background-size: var(--grad-scale) var(--grad-scale);
+    color: oklch(var(--pc));
+    transition:
+      background-size var(--grad-duration) var(--grad-ease),
+      filter var(--grad-duration) var(--grad-ease);
+  }
+
+  :is(.authBtn, .btn-gradient-electric):hover {
+    background-size: var(--grad-scale-hover) var(--grad-scale-hover);
+    filter: brightness(1.15);
+    /* Ensure DaisyUI hover bg doesn't cover gradient */
+    background-color: transparent;
+  }
+
+  :is(.authBtn, .btn-gradient-electric):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* ---------------- Accessibility preferences ---------------- */
+  @media (prefers-reduced-motion: reduce) {
+    :is(.authBtn, .btn-gradient-electric) {
+      /* Keep visual polish; minimize motion */
+      transition: filter var(--grad-duration) var(--grad-ease);
+    }
+  }
+
+  /* Windows High Contrast / Forced Colors */
+  @media (forced-colors: active) {
+    :is(.authBtn, .btn-gradient-electric) {
+      background-image: none;
+      background-color: ButtonFace;
+      color: ButtonText;
+      border: 1px solid ButtonText;
+    }
+  }
+
+  /* ---------------- OKLCH fallbacks (very old browsers) ---------------- */
+  @supports not (color: oklch(0% 0 0)) {
+    :is(.authBtn, .btn-gradient-electric) {
+      background-image: linear-gradient(
+        to right,
+        var(--fallback-p, #570df8) 0%,
+        var(--fallback-s, #f000b8) 100%
+      );
+      color: var(--fallback-pc, #ffffff);
+    }
+  }
+
+  /* ---------------- Supabase auth loading hacks ---------------- */
+  /* Preserve original “Loading...” behavior and add ARIA/data support */
+  button[disabled].authBtn,
+  .authBtn[aria-busy="true"],
+  .authBtn[data-loading="true"] {
+    font-size: 0.001px; /* visually hide original label */
+    filter: brightness(var(--dim-disabled));
+    cursor: progress;
+  }
+
+  button[disabled].authBtn::before,
+  .authBtn[aria-busy="true"]::before,
+  .authBtn[data-loading="true"]::before {
+    font-size: 14px;
+    content: "Loading...";
+    color: oklch(var(--pc));
+  }
+}
