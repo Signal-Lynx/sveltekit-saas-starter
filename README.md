@@ -1,163 +1,200 @@
-Paradox Innovations (SaaS Starter Template)
+Paradox Innovations (SaaS Starter Template) - By Signal Lynx
+A production-ready SvelteKit SaaS template for building modern SaaS products.
 
-<p align="center">
-<strong>A Production-Ready SvelteKit SaaS Template for the Bold.</strong>
-</p>
-<p align="center">
-<a href="https://github.com/Signal-Lynx/sveltekit-saas-starter/actions"><img src="https://img.shields.io/badge/Build-Passing-success" alt="Build Status"></a>
-<a href="https://github.com/Signal-Lynx/sveltekit-saas-starter/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue" alt="License"></a>
-</p>
-🧪 What is this?
+Build status and license details are available via the repository badges and LICENSE file.
+
+---
+
+## What is this?
+
 This is a full-stack SaaS starter kit built with SvelteKit, Supabase, and Stripe.
 
-It comes pre-loaded with a fictional brand, "Paradox Innovations", selling sci-fi products (Hoverboard Schematics and Timeline Access). This isn't just a Lorem Ipsum placeholder—it's a fully functional example showing:
+It comes pre-loaded with a fictional brand, "Paradox Innovations", selling sci-fi products (Hoverboard Schematics and Timeline Access). This is not just placeholder text; it is a functional example that shows:
 
-One-Time Purchases: Digital downloads via secure Cloudflare R2 links.
+- One-time purchases for digital downloads via secure Cloudflare R2 links.
+- Subscriptions and recurring billing with Stripe.
+- Bundling logic to give subscribers free access to one-time products.
+- Gated access with a user dashboard that only shows products the user owns.
 
-Subscriptions: Recurring billing with Stripe.
+The template is designed to work seamlessly with Key Commander (a self-hosted license manager), but it also works fine as a standalone SvelteKit + Stripe starter.
 
-Bundling Logic: How to give subscribers free access to one-time products.
+---
 
-Gated Access: A secure user dashboard that only shows products the user owns.
+## Tech stack
 
-It is designed to work seamlessly with Key Commander (a self-hosted license manager), but it works perfectly fine as a standalone SvelteKit + Stripe starter.
+- Framework: SvelteKit 5
+- Styling: Tailwind CSS with DaisyUI
+- Backend and auth: Supabase (PostgreSQL, Auth)
+- Payments: Stripe
+- Deployment: Cloudflare Pages (or any Node.js environment)
+- Testing: Vitest and Playwright
 
-⚡ Tech Stack
-Framework: SvelteKit 5
+---
 
-Styling: Tailwind CSS with DaisyUI
+## Getting started
 
-Backend & Auth: Supabase (PostgreSQL, Auth)
+This section walks you through running a full local copy of the template.
 
-Payments: Stripe
+Prerequisites:
 
-Deployment: Cloudflare Pages (or any Node.js environment)
+- Node.js (v18 or higher)
+- Git
+- Supabase account
+- Supabase CLI (via npx)
 
-Testing: Vitest & Playwright
+1. Clone and install dependencies
 
-🚀 Getting Started
-This guide walks you through running a full local copy of the template.
+Run these commands in your terminal:
 
-Prerequisites
-Node.js (v18 or higher)
-
-Git
-
-Supabase account
-
-Supabase CLI (via npx)
-
-1. Clone & Install Dependencies
-   code
-   Bash
-
-# Clone the repository
-
+```bash
 git clone https://github.com/Signal-Lynx/sveltekit-saas-starter.git
 cd sveltekit-saas-starter
 
-# Install dependencies
+npm install
+```
 
-npm install 2) Set Up Your Supabase Backend
+2. Set up your Supabase backend
+
 Your local app uses a cloud Supabase project for database and authentication.
 
-code
-Bash
-
+```bash
 # Log in to the Supabase CLI (if you haven't already)
-
 npx supabase login
 
 # Link your local repository to your Supabase project
-
-# You'll be prompted to select a project from your account
-
+# You will be prompted to select a project from your account
 npx supabase link
 
 # Push the database schema to your Supabase project
+# This executes migrations in supabase/migrations to set up your tables
+npx supabase db push
+```
 
-# Executes the migrations in supabase/migrations to set up your tables
+3. Configure environment variables
 
-npx supabase db push 3) Configure Environment Variables
-Create a local environment file and fill in required values.
+Create a local environment file and fill in the required values:
 
-code
-Bash
+```bash
 cp .env.example .env
-Now open .env and add the following (from your Supabase dashboard → Project Settings → API):
+```
 
-code
-Env
+Now open the .env file and add the following values (from your Supabase dashboard → Project Settings → API):
+
+```env
 PUBLIC_SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL"
 PUBLIC_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+
 PRIVATE_SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL"
 PRIVATE_SUPABASE_SERVICE_ROLE="YOUR_SUPABASE_SERVICE_ROLE_KEY"
-You will also need to add your Stripe Test Keys and AWS SES Credentials (if sending email) to the .env file.
+```
 
-4. Run the Development Server
-   code
-   Bash
-   npm run dev -- --open
-   Your local instance should now be running (typically at http://localhost:5173) and connected to your Supabase backend.
+You will also need to add your Stripe test keys and AWS SES credentials (if you are sending email) to the .env file.
 
-🛠️ Customization (De-Paradox Your App)
-We built this with a "Cleave & Leave" philosophy. You can strip out the sci-fi theme in about 15 minutes.
+4. Run the development server
 
-1. Rename Your Company
-   Edit src/config.ts. Change WebsiteName, CompanyLegalName, and the contact emails. The entire site pulls from this file.
+```bash
+npm run dev -- --open
+```
 
-2. Change the Colors
-   Edit src/lib/theme.ts. Change the primary and secondary hex codes. The entire UI (buttons, nav bars, accents) will update instantly via DaisyUI.
+Your local instance should now be running (typically at http://localhost:5173) and connected to your Supabase backend.
 
-3. Define Your Products
-   Edit src/lib/data/products.ts.
+---
 
-Delete the "Hoverboard" and "Timeline C" entries.
+## Customization (De-Paradox your app)
 
-Add your own products.
+This template is built using a "Cleave and Leave" approach. You can remove the sci-fi theme and plug in your own brand quickly.
 
-Update your Stripe Price IDs.
+1. Rename your company
 
-4. Update Content
-   Home Page: Edit src/routes/(marketing)/+page.svelte.
+Edit the file:
 
-FAQs: Edit src/lib/data/faqData.ts.
+- src/config.ts
 
-Features: Edit src/lib/data/homepageFeatures.ts.
+Update the following:
 
-For a detailed guide, see CUSTOMIZATION.md.
+- WebsiteName
+- CompanyLegalName
+- Contact emails
 
-🔑 Key Commander Integration
+Most of the site pulls these values from this config file.
+
+2. Change the colors
+
+Edit the file:
+
+- src/lib/theme.ts
+
+Update the primary and secondary hex codes. The UI (buttons, navigation bars, accents) will update via DaisyUI.
+
+3. Define your products
+
+Edit the file:
+
+- src/lib/data/products.ts
+
+Actions you should take:
+
+- Remove the example products such as "Hoverboard" and "Timeline C".
+- Add your own products.
+- Update the Stripe price IDs to match your Stripe setup.
+
+4. Update content
+
+Edit these files:
+
+- Home page: src/routes/(marketing)/+page.svelte
+- FAQs: src/lib/data/faqData.ts
+- Features: src/lib/data/homepageFeatures.ts
+
+For a more in-depth guide, refer to the CUSTOMIZATION.md file in the repository.
+
+---
+
+## Key Commander integration
+
 This template is the official frontend for Key Commander.
 
-If you are using Key Commander to manage your software licenses:
+If you are using Key Commander to manage software licenses, do the following:
 
-Set PRIVATE_LICENSE_MANAGER_URL and PRIVATE_LICENSE_MANAGER_API_KEY in your .env.
+1. Add the following values to your .env file:
 
-Ensure your Product IDs in src/lib/data/products.ts match the Product IDs in your Key Commander instance.
+```env
+PRIVATE_LICENSE_MANAGER_URL="YOUR_LICENSE_MANAGER_URL"
+PRIVATE_LICENSE_MANAGER_API_KEY="YOUR_LICENSE_MANAGER_API_KEY"
+```
 
-The dashboard will automatically fetch and display license keys for your users.
+2. Ensure that the product IDs in:
 
-📜 Available Scripts
-npm run dev — Starts the local development server.
+- src/lib/data/products.ts
 
-npm run build — Builds the application for production.
+match the product IDs in your Key Commander instance.
 
-npm run preview — Previews the production build locally.
+When configured correctly, the dashboard will automatically fetch and display license keys for your users.
 
-npm run check — Runs the Svelte type-checker.
+---
 
-npm run lint — Checks for linting issues.
+## Available scripts
 
-npm run format — Formats code (Prettier).
+The following scripts are available in the project:
 
-npm run test — Runs Vitest tests in watch mode.
+```bash
+npm run dev        # Start the local development server
+npm run build      # Build the application for production
+npm run preview    # Preview the production build locally
 
-npm run test:run — Runs all Vitest tests once.
+npm run check      # Run the Svelte type-checker
+npm run lint       # Check for linting issues
+npm run format     # Format code using Prettier
 
-npm run test:e2e — Runs end-to-end tests with Playwright.
+npm run test       # Run Vitest tests in watch mode
+npm run test:run   # Run all Vitest tests once
+npm run test:e2e   # Run end-to-end tests with Playwright
 
-./checks.sh — Runs format, lint, check, and tests in sequence.
+./checks.sh        # Run format, lint, check, and tests in sequence
+```
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+---
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file in this repository for full details.
