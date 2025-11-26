@@ -291,11 +291,11 @@ export const actions: Actions = {
       errorFields.push("newPassword2")
     }
     if (newPassword1.length < 6) {
-      validationError = "The new password must be at least 6 charaters long"
+      validationError = "The new password must be at least 6 characters long"
       errorFields.push("newPassword1")
     }
     if (newPassword1.length > 72) {
-      validationError = "The new password can be at most 72 charaters long"
+      validationError = "The new password can be at most 72 characters long"
       errorFields.push("newPassword1")
     }
     if (newPassword1 !== newPassword2) {

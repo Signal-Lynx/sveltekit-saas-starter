@@ -12,7 +12,7 @@
     entry methods, start/end dates, prize(s), and how winners are selected.
   </p>
   <ul>
-    <li><strong>Sponsor:</strong> Signal Lynx Solutions LLC, Texas, USA.</li>
+    <li><strong>Sponsor:</strong> Your Organization LLC, Location, Country.</li>
     <li>
       <strong>Eligibility:</strong> Must be 18+ to enter. Void where prohibited by
       law.

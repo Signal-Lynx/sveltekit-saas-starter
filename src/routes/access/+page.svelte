@@ -1,7 +1,6 @@
 <!-- src/routes/(marketing)/access/+page.svelte -->
 <script lang="ts">
   import { page } from "$app/stores"
-  import { enhance } from "$app/forms"
 
   // ----- Types -----
   type GateKind = "site" | "purchase"
@@ -45,7 +44,7 @@
   <meta name="robots" content="noindex" />
   <meta
     name="description"
-    content="Enter passphrase to proceed. Signal Lynx gated access."
+    content="Enter passphrase to proceed. Paradox Innovations gated access."
   />
 </svelte:head>
 
@@ -55,8 +54,8 @@
       <div class="card-body items-center">
         <!-- Main Logo -->
         <img
-          src="/images/SignalLynxHomePageBanner.png"
-          alt="Signal Lynx Logo"
+          src="/images/logo.png"
+          alt="Paradox Innovations Logo"
           class="h-50 w-auto mb-4"
           width="600"
           height="120"
@@ -71,19 +70,8 @@
           method="POST"
           aria-busy={isLoading}
           class="space-y-4 w-full max-w-sm"
-          use:enhance={({ cancel, formElement }) => {
+          onsubmit={() => {
             isLoading = true
-            return async ({ update }) => {
-              try {
-                await update()
-              } catch {
-                // Fall back to a normal submission on client-side failure
-                cancel()
-                formElement.submit()
-              } finally {
-                isLoading = false
-              }
-            }
           }}
         >
           <!-- Critical: pass through selected gate to the action -->
