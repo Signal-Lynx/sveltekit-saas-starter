@@ -61,6 +61,25 @@ function actionFailure(
 let __cspLoggedOnce = false
 let __lastCsp = ""
 
+// Junk Filter to stop bots early ---
+function isJunkRequest(pathname: string): boolean {
+  // Allow root and access page
+  if (pathname === "/" || pathname === "/access") return false
+
+  // Obvious junk patterns seen in logs
+  const junkRegex =
+    /(\.php|\.git|wp-admin|wp-content|wp-includes|\.env|xmlrpc|cgi-bin)/i
+  return junkRegex.test(pathname)
+}
+
+const junkFilter: Handle = async ({ event, resolve }) => {
+  if (isJunkRequest(event.url.pathname)) {
+    // Return 404 immediately. No logs, no DB, no redirect.
+    return new Response("Not Found", { status: 404 })
+  }
+  return resolve(event)
+}
+
 // -------------------------------
 // 1) Per-request correlation + structured logging
 // -------------------------------
@@ -487,6 +506,7 @@ export const handleError: HandleServerError = async ({ error, event }) => {
 // -------------------------------
 export const handle: Handle = sequence(
   forceErrorForTest,
+  junkFilter,
   requestContext,
   captureClientIp,
   siteGate,

@@ -1,6 +1,8 @@
 // FILE: src/routes/api/admin/stripe-timeseries/+server.ts
 import type { RequestHandler } from "./$types"
+import { error } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
+import { supabaseAdmin } from "$lib/server/supabaseAdmin"
 import Stripe from "stripe"
 
 // -----------------------------
@@ -239,7 +241,19 @@ async function collectUsingInvoicesRefundsCustomers(
 // -----------------------------
 // Handler
 // -----------------------------
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, locals }) => {
+  // --- SECURITY CHECK START ---
+  if (!locals.user) throw error(401, "Unauthorized")
+
+  const { data } = await supabaseAdmin
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", locals.user.id)
+    .single()
+
+  if (!data?.is_admin) throw error(403, "Forbidden")
+  // --- SECURITY CHECK END ---
+
   const monthsParam = clamp(
     Number(url.searchParams.get("months") ?? 12) || 12,
     1,

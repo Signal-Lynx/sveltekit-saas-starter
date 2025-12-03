@@ -176,15 +176,7 @@
       No active products yet
     </p>
     <p class="text-base-content/70">
-      Choose a plan to deploy your tools and go live. See the full
-      <a
-        href="/trading-automation"
-        target="_blank"
-        rel="noopener"
-        class="link link-accent"
-      >
-        product lineup
-      </a>.
+      Choose a plan to deploy your tools and go live.
     </p>
   </div>
 
