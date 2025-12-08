@@ -71,10 +71,26 @@
 <!-- Warning / Disclaimer -->
 <section class="py-20 bg-base-100">
   <div class="max-w-4xl mx-auto text-center px-4">
-    <div class="alert alert-warning shadow-lg max-w-2xl mx-auto text-left">
+    <div
+      class="alert bg-warning/10 border-l-4 border-warning text-base-content shadow-lg max-w-2xl mx-auto text-left"
+    >
       <div class="flex-1">
-        <h3 class="font-bold text-lg mb-1">⚠️ Safety Warning</h3>
-        <p>
+        <h3 class="font-bold text-warning text-lg mb-1 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            /></svg
+          >
+          Safety Warning
+        </h3>
+        <p class="opacity-90">
           Do not use over water unless you have power. We are not responsible
           for wet shoes, bruised egos, or accidental temporal displacement. If
           you start fading from family photos, please contact support

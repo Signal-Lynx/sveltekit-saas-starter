@@ -2,6 +2,8 @@
   import ContentPage from "$lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG, WebsiteName } from "../../../../config"
 
+  let showContact = $state(false)
+
   // Dynamically create the email template strings using the config
   const dmcaNoticeTemplate = `Subject: DMCA Notice - [Your Work / Reference]
 
@@ -55,22 +57,37 @@ To: ${SITE_CONFIG.legalEmail}
     <li>
       <strong>Agent:</strong> Legal Department, {SITE_CONFIG.companyLegalName}
     </li>
-    <li>
-      <strong>Email:</strong>
-      <a href={`mailto:${SITE_CONFIG.legalEmail}`}>{SITE_CONFIG.legalEmail}</a>
-    </li>
-    <li>
-      <strong>Telephone:</strong>
-      <span class="whitespace-nowrap">{SITE_CONFIG.companyPhone}</span>
-    </li>
-    <li>
-      <strong>Mailing Address:</strong><br />
-      <span class="block">
-        {#each SITE_CONFIG.companyAddress as line}
-          {line}<br />
-        {/each}
-      </span>
-    </li>
+
+    {#if showContact}
+      <li>
+        <strong>Email:</strong>
+        <a href={`mailto:${SITE_CONFIG.legalEmail}`}>{SITE_CONFIG.legalEmail}</a
+        >
+      </li>
+      <li>
+        <strong>Telephone:</strong>
+        <span class="whitespace-nowrap">{SITE_CONFIG.companyPhone}</span>
+      </li>
+      <li>
+        <strong>Mailing Address:</strong><br />
+        <span class="block">
+          {#each SITE_CONFIG.companyAddress as line}
+            {line}<br />
+          {/each}
+        </span>
+      </li>
+    {:else}
+      <li>
+        <strong>Contact Details:</strong>
+        <button
+          class="btn btn-xs btn-ghost text-primary underline decoration-dashed underline-offset-4"
+          onclick={() => (showContact = true)}
+          title="Click to reveal all contact details"
+        >
+          Click to view
+        </button>
+      </li>
+    {/if}
   </ul>
 
   <p class="text-sm">

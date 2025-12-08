@@ -1,12 +1,15 @@
 <!-- src/routes/(admin)/account/(menu)/+layout.svelte -->
 <script lang="ts">
-  import { setContext } from "svelte"
-  import { onMount } from "svelte"
+  import { dev } from "$app/environment"
+  import { setContext, onMount } from "svelte"
   import { goto, invalidate } from "$app/navigation"
   import { writable, type Writable } from "svelte/store"
-  import { WebsiteName } from "../../../../config"
+  import { WebsiteName, WebsiteBaseUrl } from "../../../../config"
   import type { Snippet } from "svelte"
   import { page } from "$app/stores"
+
+  // Use canonical base URL in prod, but keep "/" in dev/preview/local
+  const HOME_HREF = dev ? "/" : WebsiteBaseUrl
 
   interface Props {
     children?: Snippet
@@ -145,7 +148,11 @@
     <!-- Mobile top bar -->
     <div class="navbar bg-base-100 lg:hidden">
       <div class="flex-1">
-        <a class="btn btn-ghost normal-case text-xl" href="/">{WebsiteName}</a>
+        <a
+          class="btn btn-ghost normal-case text-xl"
+          href={HOME_HREF}
+          data-sveltekit-reload>{WebsiteName}</a
+        >
       </div>
       <div class="flex-none">
         <div class="dropdown dropdown-end">
@@ -192,7 +199,9 @@
         <div
           class="normal-case menu-title text-xl font-bold text-primary flex flex-row items-center"
         >
-          <a href="/" class="grow" data-sveltekit-reload>{WebsiteName}</a>
+          <a href={HOME_HREF} class="grow" data-sveltekit-reload
+            >{WebsiteName}</a
+          >
           <label
             for="admin-drawer"
             class="lg:hidden ml-3"

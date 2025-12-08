@@ -1,6 +1,7 @@
 <!-- FILE: src/routes/(marketing)/+layout.svelte -->
 <script lang="ts">
-  import { WebsiteName, SITE_CONFIG } from "./../../config"
+  import { dev } from "$app/environment"
+  import { WebsiteName, SITE_CONFIG, WebsiteBaseUrl } from "./../../config"
   import "../../app.css"
 
   interface Props {
@@ -8,11 +9,14 @@
   }
 
   const { children }: Props = $props()
+
+  // Use canonical base URL in prod, but keep "/" in dev/preview/local
+  const HOME_HREF = dev ? "/" : WebsiteBaseUrl
 </script>
 
 <div class="navbar bg-base-100 container mx-auto relative z-40">
   <div class="flex-1">
-    <a class="btn btn-ghost text-xl" href="/" data-sveltekit-reload>
+    <a class="btn btn-ghost text-xl" href={HOME_HREF} data-sveltekit-reload>
       <img
         src={SITE_CONFIG.logoPath}
         alt={SITE_CONFIG.logoAlt}

@@ -24,6 +24,7 @@
   // Create a string that can be safely rendered as HTML, breaking up the closing script tag
   const jsonldScript =
     `<script type="application/ld+json">${JSON.stringify(ldJson)}</` + `script>`
+  let showContact = $state(false)
 </script>
 
 <svelte:head>
@@ -45,12 +46,23 @@
 
 <ContentPage
   title="Security & Vulnerability Disclosure"
-  description={`How to report a suspected security vulnerability to ${WebsiteName}. Please email ${SITE_CONFIG.securityEmail} and avoid public disclosure until remediation.`}
+  description={`How to report a suspected security vulnerability to ${WebsiteName}.`}
 >
   <p>
     To report a suspected security vulnerability, please email
-    <a href={mailtoHref}>{SITE_CONFIG.securityEmail}</a>. Do not publicly
-    disclose the issue until we have had a reasonable time to address it.
+    {#if showContact}
+      <a href={mailtoHref}>{SITE_CONFIG.securityEmail}</a>
+    {:else}
+      <button
+        class="btn btn-xs btn-ghost text-primary underline decoration-dashed underline-offset-4"
+        onclick={() => (showContact = true)}
+        title="Click to reveal security email"
+      >
+        Click to view
+      </button>
+    {/if}
+    . Do not publicly disclose the issue until we have had a reasonable time to address
+    it.
   </p>
 
   <ul>

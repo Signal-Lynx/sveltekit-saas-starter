@@ -2,6 +2,8 @@
 <script lang="ts">
   import ContentPage from "$lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG, WebsiteName } from "../../../../config"
+
+  let showContact = $state(false)
 </script>
 
 <ContentPage
@@ -79,8 +81,19 @@
 
   <h2>Contact</h2>
   <p>
-    For privacy-related inquiries, email: <a
-      href={`mailto:${SITE_CONFIG.privacyEmail}`}>{SITE_CONFIG.privacyEmail}</a
-    >
+    For privacy-related inquiries, email:
+    {#if showContact}
+      <a href={`mailto:${SITE_CONFIG.privacyEmail}`}
+        >{SITE_CONFIG.privacyEmail}</a
+      >
+    {:else}
+      <button
+        class="btn btn-xs btn-ghost text-primary underline decoration-dashed underline-offset-4"
+        onclick={() => (showContact = true)}
+        title="Click to reveal email"
+      >
+        Click to view
+      </button>
+    {/if}
   </p>
 </ContentPage>

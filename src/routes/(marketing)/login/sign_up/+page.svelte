@@ -12,6 +12,7 @@
 
   const { form }: { form: FormState } = $props()
   let isLoading = $state(false)
+  let showPassword = $state(false)
 
   // --- Turnstile state (same pattern as Contact Us) ---
   let captchaToken = $state("")
@@ -161,16 +162,27 @@
         required
       />
     </div>
-    <div>
+
+    <div class="relative">
       <label for="password" class="label label-text">Password</label>
       <input
         id="password"
         name="password"
-        type="password"
+        type={showPassword ? "text" : "password"}
         autocomplete="new-password"
-        class="input input-bordered w-full"
+        class="input input-bordered w-full pr-12"
         required
       />
+      <!-- Show/Hide password toggle -->
+      <button
+        type="button"
+        class="btn btn-ghost btn-xs absolute right-2 top-9"
+        onclick={() => (showPassword = !showPassword)}
+        aria-label={showPassword ? "Hide password" : "Show password"}
+        title={showPassword ? "Hide password" : "Show password"}
+      >
+        {showPassword ? "Hide" : "Show"}
+      </button>
     </div>
 
     <!-- === START: TERMS OF SERVICE AGREEMENT CHECKBOX (UPDATED) === -->

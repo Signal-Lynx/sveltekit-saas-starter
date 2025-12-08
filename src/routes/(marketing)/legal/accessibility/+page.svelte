@@ -1,6 +1,8 @@
 <script lang="ts">
   import ContentPage from "$lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG } from "../../../../config"
+
+  let showContact = $state(false)
 </script>
 
 <ContentPage title="Accessibility">
@@ -10,8 +12,20 @@
     > and improve accessibility over time.
   </p>
   <p>
-    If you encounter an accessibility barrier, please contact us at <a
-      href={`mailto:${SITE_CONFIG.supportEmail}`}>{SITE_CONFIG.supportEmail}</a
-    > with the page URL and a description of the issue.
+    If you encounter an accessibility barrier, please contact us at
+    {#if showContact}
+      <a href={`mailto:${SITE_CONFIG.supportEmail}`}
+        >{SITE_CONFIG.supportEmail}</a
+      >
+    {:else}
+      <button
+        class="btn btn-xs btn-ghost text-primary underline decoration-dashed underline-offset-4"
+        onclick={() => (showContact = true)}
+        title="Click to reveal email"
+      >
+        Click to view
+      </button>
+    {/if}
+    with the page URL and a description of the issue.
   </p>
 </ContentPage>
