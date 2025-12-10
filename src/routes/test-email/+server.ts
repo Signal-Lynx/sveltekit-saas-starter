@@ -1,5 +1,6 @@
 // src/routes/test-email/+server.ts
 import { json } from "@sveltejs/kit"
+import { dev } from "$app/environment"
 import type { RequestHandler } from "./$types"
 import { sendTemplatedEmail } from "$lib/mailer"
 import { WebsiteBaseUrl, WebsiteName } from "../../config" // keep the corrected import
@@ -48,6 +49,12 @@ async function withTimeout<T>(
 // --- route -----------------------------------------------------------------
 
 export const GET: RequestHandler = async ({ setHeaders }) => {
+  // 1. Guard: Only allow in development.
+  // We return a raw Response to avoid triggering the global error reporter (handleError).
+  if (!dev) {
+    return new Response("Not Found", { status: 404 })
+  }
+
   // Add cache-busting headers so this endpoint isn't cached by browsers/CDNs.
   setHeaders({
     "Cache-Control": "no-store, no-cache, must-revalidate",

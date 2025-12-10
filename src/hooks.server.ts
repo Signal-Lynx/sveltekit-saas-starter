@@ -63,13 +63,67 @@ let __lastCsp = ""
 
 // Junk Filter to stop bots early ---
 function isJunkRequest(pathname: string): boolean {
-  // Allow root and access page
-  if (pathname === "/" || pathname === "/access") return false
+  const lower = pathname.toLowerCase()
 
-  // Obvious junk patterns seen in logs
-  const junkRegex =
-    /(\.php|\.git|wp-admin|wp-content|wp-includes|\.env|xmlrpc|cgi-bin)/i
-  return junkRegex.test(pathname)
+  // 1. SAFETY ALLOW LIST: Never block these, no matter what
+  if (
+    pathname === "/" ||
+    pathname === "/access" ||
+    pathname === "/favicon.ico" ||
+    pathname === "/favicon.png" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname === "/flutter_service_worker.js" || // Keep this to quiet 404s
+    lower.startsWith("/_app") || // SvelteKit assets
+    lower.startsWith("/api/") || // Your APIs (Stripe, Downloads)
+    lower.startsWith("/test") // Test routes
+  ) {
+    return false
+  }
+
+  // 2. BLOCK LIST: File extensions you definitely don't serve
+  if (
+    /\.(php|sql|bak|rar|zip|asp|aspx|jsp|cgi|env|git|ini|config|log)$/i.test(
+      lower,
+    )
+  ) {
+    return true
+  }
+
+  // 3. BLOCK LIST: Specific patterns found in your logs
+  const junkPatterns = [
+    // WordPress & CMS probes
+    "/wp-",
+    "/wp/",
+    "/wordpress",
+    "xmlrpc",
+    "cgi-bin",
+    "phpmyadmin",
+
+    // Specific exploits seen in your logs
+    "alfa_data", // Bot probe
+    "fckeditor", // Text editor exploit
+    "phpunit", // PHP unit testing exploit
+    "mod_simplefileupload", // Joomla exploit
+
+    // Generic reconnaissance
+    "/old/",
+    "/backup/",
+    "/install/",
+    "/temp/",
+    ".well-knownold", // Bot typo seen in logs
+
+    // Potentially dangerous admin probes
+    // (Note: We rely on start/end slashes to avoid blocking valid words)
+    "/admin/uploads",
+    "/admin/images",
+    "/sites/default/files",
+    "/components/",
+    "/modules/",
+    "/vendor/",
+  ]
+
+  return junkPatterns.some((pattern) => lower.includes(pattern))
 }
 
 const junkFilter: Handle = async ({ event, resolve }) => {
@@ -403,6 +457,7 @@ const rateLimit: Handle = async ({ event, resolve }) => {
   if (method === "POST") {
     const key = `ip:${ip}`
 
+    // 1. Auth endpoints
     if (pathname === "/access" || pathname === "/login/sign_in") {
       if (!isAllowed(`auth:${key}`, 10, 60_000)) {
         return actionFailure(429, {
@@ -411,6 +466,17 @@ const rateLimit: Handle = async ({ event, resolve }) => {
       }
     }
 
+    // 2. Public forms (Contact Us & Error Reporting) - NEW
+    if (pathname === "/contact_us" || pathname === "/api/report-error") {
+      // Limit to 5 requests per minute per IP
+      if (!isAllowed(`pub:${key}`, 5, 60_000)) {
+        return actionFailure(429, {
+          errorMessage: "Too many requests. Please wait a minute.",
+        })
+      }
+    }
+
+    // 3. Authenticated Account Area
     if (pathname.startsWith("/account")) {
       const userKey = event.locals.user?.id ?? key
       if (!isAllowed(`acct:${userKey}`, 5, 60_000)) {
