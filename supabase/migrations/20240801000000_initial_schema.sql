@@ -356,12 +356,6 @@ create policy "Users can read their own profile"
 on public.profiles for select
 using ((select auth.uid()) = id);
 
-drop policy if exists "Users can update their own profile" on public.profiles;
-create policy "Users can update their own profile"
-on public.profiles for update
-using ((select auth.uid()) = id)
-with check ((select auth.uid()) = id);
-
 -- STRIPE_CUSTOMERS TABLE
 drop policy if exists "Users can read their own stripe_customer record" on public.stripe_customers;
 create policy "Users can read their own stripe_customer record"
@@ -437,8 +431,9 @@ REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
 
 -- 2) Table-level base privileges so RLS can run (principle of least privilege).
--- Profiles: clients read/update their own row (INSERT/DELETE handled by server via triggers).
-GRANT SELECT, UPDATE ON TABLE public.profiles TO authenticated;
+-- Profiles: clients can ONLY read their own row (subject to RLS).
+-- Updates are handled exclusively via server-side actions (supabaseAdmin).
+GRANT SELECT ON TABLE public.profiles TO authenticated;
 
 -- Stripe customers: clients read their own mapping (no writes).
 GRANT SELECT ON TABLE public.stripe_customers TO authenticated;
