@@ -531,17 +531,12 @@ const siteGate: Handle = async ({ event, resolve }) => {
 // -------------------------------
 export const handleError: HandleServerError = async ({ error, event }) => {
   const svelteKitError = error as { status?: number; message?: string }
+  const status = svelteKitError?.status ?? 500
 
-  // Normalize the message so we can reliably match it
-  const message = String(svelteKitError.message || "")
-
-  // Special case: the noisy flutter_service_worker.js 404
-  const isIgnoredError =
-    svelteKitError?.status === 404 &&
-    message.includes("flutter_service_worker.js")
-
-  if (isIgnoredError) {
-    // fully silent: we don't even log in dev now
+  // Ignore ALL 404 errors (Page Not Found).
+  // These are usually bots, stale tabs, or bad URLs — not application bugs.
+  // This implicitly covers flutter_service_worker.js and any other missing file.
+  if (status === 404) {
     return {
       message: "Not Found",
       errorId: null,
