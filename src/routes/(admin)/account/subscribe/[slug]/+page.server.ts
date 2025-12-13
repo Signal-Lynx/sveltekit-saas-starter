@@ -10,13 +10,20 @@ import { lmFetch } from "$lib/server/subscription"
 // Keep the same Stripe API version used elsewhere in the project
 const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2023-08-16"
 
-// Bundle mapping (unchanged behavior):
-// If user buys Lynx-Relay, also add $0 Signal Shield.
-const LYNX_RELAY_PRICE_ID = "price_1RzTIuFAtbtBUt5cIXz6XaaH"
-const SIGNAL_SHIELD_FREE_PRICE_ID = "price_1RzUiMFAtbtBUt5cKcQIcz3S"
+// Bundle mapping for the template (buy Society, get Hoverboard free):
+// Matches src/lib/data/products.ts in the template
+const SOCIETY_PRICE_ID = "price_template_society_B"
+const HOVERBOARD_FREE_PRICE_ID = "price_template_hover_free_bundle"
 
-// Simple guard for Stripe price ID format (defensive only; behavior unchanged)
+// Simple guard for Stripe price ID format
 const PRICE_ID_RE = /^price_[A-Za-z0-9]+$/
+
+// Trial configuration (per product ID, in days).
+// Example: Timeline C (subscription) gets a 7-day trial.
+const PRODUCT_TRIAL_DAYS: Record<string, number> = {
+  timeline_c: 7,
+  antigrav: 7, // Society membership
+}
 
 export const load: PageServerLoad = async ({
   params,
@@ -30,18 +37,16 @@ export const load: PageServerLoad = async ({
     throw redirect(303, `/login?next=${next}`)
   }
 
-  // --- START: NEW HEALTH CHECK ---
+  // --- START: HEALTH CHECK (Ported from Production) ---
   const lmBase = env.PRIVATE_LICENSE_MANAGER_URL
   const lmKey = env.PRIVATE_LICENSE_MANAGER_API_KEY
   if (lmBase && lmKey) {
     try {
-      // Use a simple, lightweight endpoint. A dedicated /health endpoint is ideal.
-      // We assume one exists at /api/v1/health. If not, any simple GET endpoint works.
       const healthUrl = `${lmBase.replace(/\/+$/, "")}/api/v1/internal/user-entitlements/${user.id}`
       const res = await lmFetch(healthUrl, {
         method: "GET",
         headers: { "X-Internal-API-Key": lmKey },
-        firstTimeoutMs: 1500, // Very aggressive timeout for a health check
+        firstTimeoutMs: 1500,
         retryTimeoutMs: 2000,
       })
 
@@ -55,13 +60,12 @@ export const load: PageServerLoad = async ({
         "[Subscribe] License Manager health check failed, blocking purchase.",
         e,
       )
-      // Redirect back to billing with an error message
       throw redirect(303, "/account/billing?error=checkout_unavailable")
     }
   }
-  // --- END: NEW HEALTH CHECK ---
+  // --- END: HEALTH CHECK ---
 
-  // Ensure Stripe is configured; fail fast with a clear error
+  // Ensure Stripe is configured
   const stripeApiKey = env.PRIVATE_STRIPE_API_KEY
   if (!stripeApiKey) {
     console.error("[Subscribe] Missing env.PRIVATE_STRIPE_API_KEY")
@@ -83,7 +87,7 @@ export const load: PageServerLoad = async ({
 
   const priceId = params.slug
 
-  // Defensive check: do not change behavior, just fail earlier with clearer logs
+  // Defensive check
   if (!priceId || !PRICE_ID_RE.test(priceId)) {
     console.warn(`[Subscribe] Invalid priceId format: ${priceId}`)
     throw error(400, { message: "Invalid plan selected." } as any)
@@ -107,39 +111,54 @@ export const load: PageServerLoad = async ({
     } as any)
   }
 
-  // Build line items (preserves existing bundle behavior)
+  // Build line items (Template specific bundling logic)
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
     { price: priceId, quantity: 1 },
   ]
-  if (priceId === LYNX_RELAY_PRICE_ID) {
-    line_items.push({ price: SIGNAL_SHIELD_FREE_PRICE_ID, quantity: 1 })
+  // If user buys "Society" (antigrav), add free "Hoverboard" (schematics)
+  if (priceId === SOCIETY_PRICE_ID) {
+    line_items.push({ price: HOVERBOARD_FREE_PRICE_ID, quantity: 1 })
   }
 
-  // Compute mode with a safe default (unchanged default = "payment")
+  // Compute mode
   const mode: "payment" | "subscription" =
     productToPurchase.stripe_mode === "subscription"
       ? "subscription"
       : "payment"
 
-  // Lazily create Stripe client (ensures env is validated before instantiation)
   const stripe = new Stripe(stripeApiKey, { apiVersion: STRIPE_API_VERSION })
 
-  // Base session params (success/cancel URLs unchanged)
+  // Base session params
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     line_items,
     customer: customerId,
     mode,
     success_url: `${url.origin}/account/purchase-success`,
     cancel_url: `${url.origin}/account/billing`,
+
+    // --- NEW: Enable Stripe Tax (Ported from Production) ---
+    automatic_tax: { enabled: true },
+
+    // Collect billing address for tax calculation
+    billing_address_collection: "auto",
+    customer_update: {
+      address: "auto",
+    },
+
     // Store supabase user id on the session for reconciliation
     metadata: { supabase_user_id: user.id },
     client_reference_id: user.id,
   }
 
-  // Duplicate metadata on subordinate objects per original behavior
+  // Duplicate metadata on subordinate objects
   if (mode === "subscription") {
+    // --- NEW: Dynamic Trial Logic (Ported from Production) ---
+    const trialDays = PRODUCT_TRIAL_DAYS[productToPurchase.id] ?? undefined
+
     sessionParams.subscription_data = {
       metadata: { supabase_user_id: user.id },
+      // Apply trial if configured
+      ...(trialDays ? { trial_period_days: trialDays } : {}),
     }
   } else {
     sessionParams.payment_intent_data = {
@@ -147,12 +166,11 @@ export const load: PageServerLoad = async ({
     }
   }
 
-  // Create the Checkout Session; only this call is inside try/catch
+  // Create the Checkout Session
   let stripeSession: Stripe.Checkout.Session
   try {
     stripeSession = await stripe.checkout.sessions.create(sessionParams)
   } catch (e) {
-    // Keep original user-facing message; improve server log detail
     console.error("[Subscribe] Error creating Stripe Checkout Session", e)
     throw error(500, "Stripe Error (SSE): If issue persists please contact us.")
   }
@@ -162,10 +180,8 @@ export const load: PageServerLoad = async ({
     console.error("[Subscribe] Stripe returned no checkout URL", {
       sessionId: stripeSession.id,
     })
-    // Preserve original fallback redirect
     throw redirect(303, "/pricing")
   }
 
-  // Important: do NOT wrap this in try/catch — let SvelteKit handle the 303
   throw redirect(303, checkoutUrl)
 }
