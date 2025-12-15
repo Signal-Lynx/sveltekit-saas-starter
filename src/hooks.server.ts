@@ -99,6 +99,7 @@ function isJunkRequest(pathname: string): boolean {
     "xmlrpc",
     "cgi-bin",
     "phpmyadmin",
+    "/phpinfo",
 
     // Specific exploits seen in your logs
     "alfa_data", // Bot probe
@@ -112,6 +113,7 @@ function isJunkRequest(pathname: string): boolean {
     "/install/",
     "/temp/",
     ".well-knownold", // Bot typo seen in logs
+    "manifest.json",
 
     // Potentially dangerous admin probes
     // (Note: We rely on start/end slashes to avoid blocking valid words)
