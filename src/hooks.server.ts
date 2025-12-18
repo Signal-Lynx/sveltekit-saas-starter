@@ -518,7 +518,16 @@ const siteGate: Handle = async ({ event, resolve }) => {
     console.debug("[siteGate]", { pathname, hasCookie })
   }
 
-  if (pathname === "/access" || hasCookie) return resolve(event)
+  // Allow access page, authenticated users, and static assets
+  if (
+    pathname === "/access" ||
+    hasCookie ||
+    pathname === "/favicon.ico" ||
+    pathname === "/favicon.png" ||
+    pathname === "/robots.txt"
+  ) {
+    return resolve(event)
+  }
 
   const nextTarget = pathname + (search || "")
   const redirectTo = `/access?gate=site&next=${encodeURIComponent(nextTarget)}`
