@@ -40,23 +40,29 @@
     }
   }>()
 
-  // Narrow + safe defaults
-  const entitlements = (data?.entitlements ?? {
-    hoverboard: false,
-    timeline_c: false,
-  }) as { hoverboard: boolean; timeline_c: boolean }
+  // Narrow + safe defaults (Reactive)
+  const entitlements = $derived(
+    (data?.entitlements ?? {
+      hoverboard: false,
+      timeline_c: false,
+    }) as { hoverboard: boolean; timeline_c: boolean },
+  )
 
-  const licensesByProduct = (data?.licensesByProduct ?? {
-    hoverboard: [],
-    timeline_c: [],
-  }) as {
-    hoverboard: LMEntitlement[]
-    timeline_c: LMEntitlement[]
-  }
+  const licensesByProduct = $derived(
+    (data?.licensesByProduct ?? {
+      hoverboard: [],
+      timeline_c: [],
+    }) as {
+      hoverboard: LMEntitlement[]
+      timeline_c: LMEntitlement[]
+    },
+  )
 
-  const subscriptionState = (data?.subscriptionState ?? {}) as {
-    lmError?: string | null
-  }
+  const subscriptionState = $derived(
+    (data?.subscriptionState ?? {}) as {
+      lmError?: string | null
+    },
+  )
 
   type ProductKey = "hoverboard" | "timeline_c"
   type ProductConfig = {

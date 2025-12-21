@@ -1,15 +1,18 @@
-//src/routes/(admin)/account/sign_out/+server.ts
+// src/routes/(admin)/account/sign_out/+server.ts
 import { redirect, type RequestHandler } from "@sveltejs/kit"
 
 /**
  * Logs the user out (best-effort) and then redirects to "/".
  * Behavior is intentionally unchanged: always 303 -> "/".
  */
-export const POST = (async ({ locals }) => {
+export const POST = (async ({ locals, cookies }) => {
   // Supabase client is attached to locals by auth-helpers in your hooks.
   const supabase = (locals as any)?.supabase
   const requestId = (locals as any)?.requestId
   const clientIp = (locals as any)?.clientIp
+
+  // Force-clear the claim check cookie so next login performs a fresh sync
+  cookies.delete("lm_claim_check", { path: "/" })
 
   try {
     if (!supabase?.auth?.signOut) {

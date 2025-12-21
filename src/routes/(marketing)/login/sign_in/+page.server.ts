@@ -75,6 +75,9 @@ type ActionData = {
 
 export const actions: Actions = {
   signIn: async ({ request, locals: { supabase }, url, cookies }) => {
+    // 1. Force-clear the claim check cookie to ensure fresh sync on login
+    cookies.delete("lm_claim_check", { path: "/" })
+
     // Parse and validate incoming form data
     const formData = await request.formData()
     const { data, errors, isValid } = validateForm(formData, signInSchema)
