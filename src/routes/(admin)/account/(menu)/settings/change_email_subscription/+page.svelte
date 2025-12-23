@@ -14,8 +14,8 @@
   // Accept props (Svelte 5)
   const { data }: Props = $props()
 
-  // Gracefully handle absent profile
-  const profile: Profile | null | undefined = data?.profile
+  // Gracefully handle absent profile (Reactive)
+  const profile = $derived(data?.profile)
 
   // Optional context: if parent provides an admin section store, set it to "settings"
   const adminSection = getContext<Writable<string> | undefined>("adminSection")

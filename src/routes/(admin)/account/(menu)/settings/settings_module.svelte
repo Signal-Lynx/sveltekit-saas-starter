@@ -17,6 +17,10 @@
   type ButtonState = "idle" | "loading" | "success"
   let buttonState = $state<ButtonState>("idle")
 
+  // Track visibility for password fields by their ID
+  // Linter fix: use const because we only mutate properties, not the variable itself
+  const showPasswords = $state<Record<string, boolean>>({})
+
   type Field = {
     inputType?: string
     id: string
@@ -194,6 +198,39 @@
                     : (field.initialValue as boolean)) ?? false}
                   aria-invalid={inputAriaInvalid(field.id)}
                 />
+              {:else if field.inputType === "password"}
+                <div class="relative w-full max-w-xs">
+                  <input
+                    id={field.id}
+                    name={field.id}
+                    type={showPasswords[field.id] ? "text" : "password"}
+                    disabled={!editable || buttonState === "loading"}
+                    placeholder={field.placeholder ?? field.label ?? ""}
+                    class="input input-bordered w-full pr-12 {fieldError(
+                      $page?.form,
+                      field.id,
+                    )
+                      ? 'input-error'
+                      : ''}"
+                    value={$page.form
+                      ? ($page.form[field.id] as string)
+                      : field.initialValue}
+                    maxlength={field.maxlength ?? undefined}
+                    aria-invalid={inputAriaInvalid(field.id)}
+                    autocomplete={inputAutocomplete(field.id, field.inputType)}
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs absolute right-2 top-3"
+                    onclick={() =>
+                      (showPasswords[field.id] = !showPasswords[field.id])}
+                    aria-label={showPasswords[field.id]
+                      ? "Hide password"
+                      : "Show password"}
+                  >
+                    {showPasswords[field.id] ? "Hide" : "Show"}
+                  </button>
+                </div>
               {:else}
                 <input
                   id={field.id}

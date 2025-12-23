@@ -60,7 +60,9 @@
         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
-    <span>Your password has been successfully updated.</span>
+    <span
+      >Settings updated. Please check your inbox for confirmation details.</span
+    >
   </div>
 {/if}
 

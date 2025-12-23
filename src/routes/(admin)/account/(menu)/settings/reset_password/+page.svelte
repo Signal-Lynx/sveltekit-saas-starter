@@ -7,7 +7,6 @@
   adminSection.set("settings")
 </script>
 
-// src/routes/(admin)/account/(menu)/settings/delete_account/+page.svelte
 <svelte:head>
   <title>Reset Password</title>
 </svelte:head>

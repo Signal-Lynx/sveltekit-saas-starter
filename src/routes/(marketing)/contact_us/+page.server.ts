@@ -211,6 +211,7 @@ export const actions: Actions = {
       ]
 
       await sendAdminEmail({
+        toEmail: env.PRIVATE_CONTACT_FORM_EMAIL,
         subject: "New contact request",
         body: bodyLines.join("\n"),
       })

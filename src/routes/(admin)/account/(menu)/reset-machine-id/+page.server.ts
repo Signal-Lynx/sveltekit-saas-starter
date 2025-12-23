@@ -292,6 +292,7 @@ async function doTicket({ request, locals, getClientAddress }: ActionEvent) {
       )
     } else {
       await sendAdminEmail({
+        toEmail: to,
         subject: `Manual Machine Reset Request • ${user.email}`,
         body:
           `User: ${user.id} (${user.email})\n` +

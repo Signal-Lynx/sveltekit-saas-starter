@@ -136,8 +136,11 @@ export const load: PageServerLoad = async ({
     success_url: `${url.origin}/account/purchase-success`,
     cancel_url: `${url.origin}/account/billing`,
 
-    // --- NEW: Enable Stripe Tax (Ported from Production) ---
+    // --- NEW: Enable Stripe Tax ---
     automatic_tax: { enabled: true },
+
+    // --- NEW: Enable Promo Codes (e.g. for testing) ---
+    allow_promotion_codes: true,
 
     // Collect billing address for tax calculation
     billing_address_collection: "auto",
@@ -152,7 +155,7 @@ export const load: PageServerLoad = async ({
 
   // Duplicate metadata on subordinate objects
   if (mode === "subscription") {
-    // --- NEW: Dynamic Trial Logic (Ported from Production) ---
+    // --- NEW: Dynamic Trial Logic ---
     const trialDays = PRODUCT_TRIAL_DAYS[productToPurchase.id] ?? undefined
 
     sessionParams.subscription_data = {

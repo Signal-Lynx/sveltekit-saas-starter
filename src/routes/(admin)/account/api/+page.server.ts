@@ -60,9 +60,9 @@ function validateForm(formData: FormData, schema: Schema) {
 
 // Schema for the updateProfile action
 const updateProfileSchema: Schema = {
-  fullName: { required: true, max: 50 },
-  companyName: { required: true, max: 50 },
-  website: { required: true, max: 50, type: "url" },
+  fullName: { required: false, max: 50 },
+  companyName: { required: false, max: 50 },
+  website: { required: false, max: 50, type: "url" },
 }
 
 // --- END: Reusable Type-Safe Validation Logic ---
@@ -199,7 +199,13 @@ export const actions: Actions = {
       })
     }
 
-    const { error: supaErr } = await supabase.auth.updateUser({ email })
+    // Explicitly redirect to the callback handler so the token is exchanged properly
+    const { error: supaErr } = await supabase.auth.updateUser(
+      { email },
+      {
+        emailRedirectTo: `${new URL(request.url).origin}/auth/callback?next=/account/settings`,
+      },
+    )
     if (supaErr) {
       console.error("auth.updateUser(email) failed:", supaErr)
       return fail(500, {
@@ -412,15 +418,19 @@ export const actions: Actions = {
     } = validateForm(formData, updateProfileSchema)
     let isValid = initialIsValid
 
-    // 3) Specific, helpful required field messages (restored)
+    // 3) Specific, helpful required field messages
     if (!data.fullName) errors.fullName = "Name is required"
-    if (!data.companyName) {
-      errors.companyName =
-        "Company name is required. If this is a hobby project or personal app, please put your name."
-    }
-    if (!data.website) {
-      errors.website =
-        "Company website is required. An app store URL is a good alternative if you don't have a website."
+
+    // REMOVED: companyName and website required checks.
+
+    // Normalize website and re-validate ONLY if provided
+    if (data.website) {
+      data.website = normalizeWebsite(data.website)
+      if (!URL_RE.test(data.website.trim())) {
+        errors.website = "Please enter a valid website."
+      } else {
+        delete errors.website // ensure we don't keep a stale error
+      }
     }
 
     // Normalize website and re-validate

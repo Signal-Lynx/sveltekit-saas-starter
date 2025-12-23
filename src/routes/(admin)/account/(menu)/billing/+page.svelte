@@ -28,16 +28,18 @@
     }
   }
 
-  const {
-    isActiveCustomer,
-    hasEverHadSubscription,
-    activeProducts = [],
-    lmError = null,
-    // Defaults preserve current wording if server isn’t supplying copy yet
-    bannerSlowCopy = "Syncing your license status… this may take a few seconds.",
-    bannerErrorCopy = "We’re having trouble reaching the license server.",
-    lmSlow = null,
-  } = data
+  // Use $derived to ensure updates from the server reflect instantly
+  const isActiveCustomer = $derived(data.isActiveCustomer)
+  const hasEverHadSubscription = $derived(data.hasEverHadSubscription)
+  const activeProducts = $derived(data.activeProducts ?? [])
+  const lmError = $derived(data.lmError ?? null)
+  const bannerSlowCopy = $derived(
+    data.bannerSlowCopy ?? "Syncing your license status…",
+  )
+  const bannerErrorCopy = $derived(
+    data.bannerErrorCopy ?? "We’re having trouble reaching the license server.",
+  )
+  const lmSlow = $derived(data.lmSlow ?? null)
 
   // --- NEW: Read checkout error from URL ---
   const checkoutError = $derived(
