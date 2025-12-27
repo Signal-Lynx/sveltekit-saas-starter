@@ -47,6 +47,15 @@ declare global {
       requestId: string
       clientIp: string
       log: AppLogger
+
+      /**
+       * Optional Cloudflare Access metadata for the current request.
+       * Populated in hooks.server.ts when the app is running behind Cloudflare Access.
+       */
+      cfAccess?: {
+        email: string | null
+        hasJwt: boolean
+      }
     }
 
     /** Data returned from `+layout.server.ts`. */

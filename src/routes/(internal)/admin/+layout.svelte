@@ -1,15 +1,18 @@
-<svelte:options immutable />
-
 <script lang="ts">
   import { page } from "$app/stores"
 
-  // Input contract preserved exactly
-  export let data: {
-    nav: { href: string; label: string }[]
-    admin: { actorId: string; email: string }
+  // 1. We added 'children' here to satisfy the Svelte 5 requirement
+  interface Props {
+    data: {
+      nav: { href: string; label: string }[]
+      admin: { actorId: string; email: string }
+    }
+    children: import("svelte").Snippet
   }
 
-  // Normalize paths so `/admin` and `/admin/` are treated the same
+  // 2. Destructure children along with data
+  const { data, children }: Props = $props()
+
   const normalize = (p: string) => {
     if (!p) return "/"
     const noQuery = p.split("?")[0].split("#")[0]
@@ -28,6 +31,10 @@
   const linkIdle = "hover:bg-base-200 focus:bg-base-200 text-base-content"
   const linkActive = "bg-base-200 font-medium"
 </script>
+
+<svelte:head>
+  <meta name="robots" content="noindex, nofollow" />
+</svelte:head>
 
 <div class="min-h-screen flex flex-col lg:flex-row">
   <aside
@@ -61,8 +68,8 @@
     </nav>
   </aside>
 
-  <!-- Remove redundant role="main" -->
   <main class="flex-1 min-w-0 p-4 sm:p-6">
-    <slot />
+    <!-- 3. THIS IS THE FIX: Replaced <slot /> with the new Svelte 5 render tag -->
+    {@render children?.()}
   </main>
 </div>

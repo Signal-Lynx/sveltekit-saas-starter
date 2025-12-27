@@ -1,3 +1,11 @@
 User-agent: *
 Disallow: /account/
+Disallow: /admin/
 
+# Optional: keep these out of search results
+Disallow: /legal/open-source
+Disallow: /legal/subprocessors
+Disallow: /legal/promotions-rules
+
+# Note to template user: Replace this URL with your production domain
+Sitemap: https://www.yourdomain.com/sitemap.xml

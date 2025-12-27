@@ -12,10 +12,10 @@
   const { children }: Props = $props()
 </script>
 
-<!--
-  This wrapper preserves a stable DOM structure so styles from parent layouts
-  cascade consistently across all /account pages.
--->
+<svelte:head>
+  <meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 <div>
   <!-- Render the child layout/page when present -->
   {@render children?.()}

@@ -1,47 +1,50 @@
-<!-- FILE: src/routes/(marketing)/docs/+page.svelte (Corrected and Final) -->
+<!-- FILE: src/routes/(marketing)/docs/+page.svelte -->
 <script lang="ts">
-  import { onMount } from "svelte"
-  import { WebsiteName } from "../../../config"
+  import { WebsiteName, WebsiteBaseUrl } from "../../../config"
   import type { PageData } from "./$types"
   import type { DocumentMeta } from "$lib/data/docsData"
 
-  // Data now comes from the server loader via $props
+  // Data comes from the server loader via $props
   const { data } = $props<{ data: PageData }>()
-  const { documents } = data
 
-  // --- SEO: JSON-LD (dynamic) ------------------------------------------------
-  const ld = {
+  // 1. Define the desired display order (Maintains SaaS template context)
+  const displayOrder = ["Hoverboard Schematics", "Timeline C Manual"]
+
+  // 2. Prepare documents for UI and build the SEO data in the script.
+  // This ensures ESLint sees WebsiteBaseUrl and DocumentMeta as "Used."
+  const processedDocs = [...data.documents]
+    .sort((a, b) => {
+      const indexA = displayOrder.indexOf(a.title)
+      const indexB = displayOrder.indexOf(b.title)
+      const safeA = indexA === -1 ? 999 : indexA
+      const safeB = indexB === -1 ? 999 : indexB
+      return safeA - safeB
+    })
+    .map((doc: DocumentMeta) => {
+      return {
+        ...doc,
+        // Generate the absolute URL here so the linter sees WebsiteBaseUrl in use
+        absoluteUrl: doc.href?.startsWith("http")
+          ? doc.href
+          : `${WebsiteBaseUrl}${doc.href}`,
+      }
+    })
+
+  // 3. Build the final JSON string here.
+  // This ensures Google gets valid JSON and the linter sees "processedDocs" in use.
+  const ldJson = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `Documentation - ${WebsiteName}`,
-    description:
-      "Owner's manuals for Signal Shield, Lynx-Relay, and Key Commander.",
-    hasPart: documents.map((d: DocumentMeta) => ({
+    description: "Owner's manuals for Hoverboard Schematics and Timeline C.",
+    hasPart: processedDocs.map((d) => ({
       "@type": "CreativeWork",
       name: d.title,
       about: d.subtitle,
       description: d.description,
-      // We now know 'd' has a dynamic 'href', but the base type is enough
-      url: d.href,
+      url: d.absoluteUrl,
     })),
-  }
-
-  // Inject the JSON-LD script into <head> at runtime
-  onMount(() => {
-    const id = "jsonld-docs"
-    const existing = document.getElementById(id)
-    if (existing) existing.remove()
-
-    const el = document.createElement("script")
-    el.id = id
-    el.type = "application/ld+json"
-    el.text = JSON.stringify(ld).replace(/</g, "\\u003c")
-    document.head.appendChild(el)
-
-    return () => {
-      el.remove()
-    }
-  })
+  }).replace(/</g, "\\u003c")
 </script>
 
 <svelte:head>
@@ -50,6 +53,7 @@
     name="description"
     content={`The Owner's Manuals. Downloadable READMEs, setup guides, and technical deep-dives for all ${WebsiteName} products.`}
   />
+  {@html `<script type="application/ld+json">${ldJson}<\/script>`}
 </svelte:head>
 
 <main class="py-12 px-4 bg-base-100" aria-labelledby="owner-manuals-heading">
@@ -71,10 +75,10 @@
 
     <section aria-describedby="owner-manuals-desc">
       <ul class="space-y-8">
-        {#each documents as doc (doc.title)}
+        {#each processedDocs as doc (doc.title)}
           <li>
             <article
-              class="card card-bordered bg-base-200 shadow-xl transition-all duration-300 hover:border-accent"
+              class="card card-bordered bg-base-200 shadow-xl transition-all duration-300 border-2 border-transparent hover:border-accent"
             >
               <div class="card-body">
                 <h2 class="card-title text-2xl text-secondary">{doc.title}</h2>
@@ -96,7 +100,6 @@
                       viewBox="0 0 20 20"
                       fill="currentColor"
                       aria-hidden="true"
-                      focusable="false"
                     >
                       <path
                         d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"

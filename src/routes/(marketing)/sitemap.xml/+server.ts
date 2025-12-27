@@ -36,8 +36,34 @@ export const GET: RequestHandler = async ({ url }) => {
     const res = await sitemap.response({
       origin,
       excludeRoutePatterns: [
-        ".*\\(internal\\).*", // Exclude routes within the (internal) group
-        "^/blog.*", // Keep excluded now; easy to enable later
+        // 1. Exclude Internal groups
+        ".*\\(internal\\).*",
+
+        // 2. Exclude Protected/Private Paths (Regex handles route groups like (admin)/account)
+        ".*\\/account(\\/|$).*",
+        ".*\\/login(\\/|$).*",
+        ".*\\/admin(\\/|$).*",
+        ".*\\/api(\\/|$).*",
+        ".*\\/access(\\/|$).*",
+
+        // 3. Exclude technical/test routes
+        ".*\\/test(\\/|$).*",
+        ".*\\/test-email(\\/|$).*",
+
+        // 4. Exclude common non-page endpoints if they appear
+        ".*\\/favicon\\.ico$",
+
+        // 5. Exclude Specific Legal Pages
+        ".*\\/legal\\/open-source(\\/|$).*",
+        ".*\\/legal\\/subprocessors(\\/|$).*",
+        ".*\\/legal\\/promotions-rules(\\/|$).*",
+
+        // 6. Optional: Exclude internal search
+        ".*\\/search(\\/|$).*",
+
+        // 7. CRITICAL: Exclude any route with dynamic brackets [ ]
+        // This fixes "paramValues not provided" for routes like /account/downloads/beta/[productId]
+        ".*\\[.*\\]",
       ],
     })
 

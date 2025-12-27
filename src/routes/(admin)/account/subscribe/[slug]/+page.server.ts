@@ -136,6 +136,18 @@ export const load: PageServerLoad = async ({
     success_url: `${url.origin}/account/purchase-success`,
     cancel_url: `${url.origin}/account/billing`,
 
+    // --- SECURITY & COMPLIANCE ---
+    // Force 3D Secure (Any = attempt 3DS if card supports it, regardless of risk score)
+    payment_method_options: {
+      card: {
+        request_three_d_secure: "any",
+      } as any, // Cast to any to bypass strict type definition missing this property
+    },
+    // Force user to check a box agreeing to Terms of Service
+    consent_collection: {
+      terms_of_service: "required",
+    },
+
     // --- NEW: Enable Stripe Tax ---
     automatic_tax: { enabled: true },
 

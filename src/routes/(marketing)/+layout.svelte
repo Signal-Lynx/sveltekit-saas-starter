@@ -1,6 +1,7 @@
 <!-- FILE: src/routes/(marketing)/+layout.svelte -->
 <script lang="ts">
   import { dev } from "$app/environment"
+  import { page } from "$app/stores"
   import { WebsiteName, SITE_CONFIG, WebsiteBaseUrl } from "./../../config"
   import "../../app.css"
 
@@ -9,10 +10,16 @@
   }
 
   const { children }: Props = $props()
-
-  // Use canonical base URL in prod, but keep "/" in dev/preview/local
   const HOME_HREF = dev ? "/" : WebsiteBaseUrl
 </script>
+
+<svelte:head>
+  <!-- Improved Syntax: Handles dev and prod URLs perfectly -->
+  <link
+    rel="canonical"
+    href={(dev ? $page.url.origin : WebsiteBaseUrl) + $page.url.pathname}
+  />
+</svelte:head>
 
 <div class="navbar bg-base-100 container mx-auto relative z-40">
   <div class="flex-1">
@@ -25,8 +32,8 @@
       {WebsiteName}
     </a>
   </div>
+  <!-- ... existing navigation markup remains unchanged ... -->
   <div class="flex-none">
-    <!-- Desktop menu (unchanged UIX) -->
     <ul class="menu menu-horizontal px-1 hidden sm:flex font-bold text-lg">
       <li class="dropdown dropdown-hover md:mx-2">
         <div tabindex="0" role="button">Products</div>
@@ -58,7 +65,6 @@
       </li>
     </ul>
 
-    <!-- Mobile menu (accessibility-only upgrade; visual style unchanged) -->
     <div class="dropdown dropdown-end sm:hidden">
       <button
         id="mobile-menu-button"
@@ -100,7 +106,6 @@
           <li><a href={item.href} role="menuitem">{item.name}</a></li>
         {/each}
         <li><a href="/account" role="menuitem">Account</a></li>
-        <!-- Removed Search item on mobile to align with desktop nav -->
       </ul>
     </div>
   </div>
@@ -110,7 +115,6 @@
   {@render children?.()}
 </div>
 
-<!-- Spacer grows so the footer can be at bottom on short pages -->
 <div class="grow"></div>
 
 <div class="bg-base-100">

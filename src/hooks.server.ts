@@ -1,4 +1,4 @@
-// FILE: src/hooks.server.ts (COMPLETE REPLACEMENT)
+// FILE: src/hooks.server.ts (Template File - COMPLETE REPLACEMENT)
 import { env } from "$env/dynamic/private"
 import { building, dev } from "$app/environment"
 import { createServerClient } from "@supabase/ssr"
@@ -430,6 +430,46 @@ const captureClientIp: Handle = async ({ event, resolve }) => {
   return resolve(event)
 }
 
+// -------------------------------
+// 5b) Cloudflare Access metadata (optional, defense-in-depth)
+// -------------------------------
+const cloudflareAccessMeta: Handle = async ({ event, resolve }) => {
+  const headers = event.request.headers
+
+  // Primary email header for Cloudflare Access, with a couple of fallbacks.
+  const email =
+    headers.get("cf-access-authenticated-user-email") ??
+    headers.get("cf-access-authenticated-user") ??
+    null
+
+  // Access JWT – presence indicates the request passed through Cloudflare Access.
+  const jwt =
+    headers.get("cf-access-jwt-assertion") ??
+    headers.get("cf_authorization") ??
+    null
+
+  event.locals.cfAccess = {
+    email,
+    hasJwt: !!jwt,
+  }
+
+  const isAdminPath = event.url.pathname.startsWith("/admin")
+  const requireAccess = env.PRIVATE_CF_ACCESS_ENFORCE_ADMIN === "1"
+  const isProd = !dev && !building
+
+  // If we *require* Cloudflare Access on /admin in prod and see no JWT,
+  // fail closed with a 404 to avoid leaking the existence of the portal.
+  if (isProd && requireAccess && isAdminPath && !jwt) {
+    console.warn("[cf-access] Missing Access token on admin route", {
+      path: event.url.pathname,
+      clientIp: event.locals.clientIp,
+    })
+    return new Response("Not Found", { status: 404 })
+  }
+
+  return resolve(event)
+}
+
 const rlBuckets = new Map<string, number[]>()
 
 function isAllowed(key: string, limit: number, windowMs: number): boolean {
@@ -581,6 +621,7 @@ export const handle: Handle = sequence(
   junkFilter,
   requestContext,
   captureClientIp,
+  cloudflareAccessMeta, // enrich + (optionally) enforce Cloudflare Access for /admin
   siteGate,
   securityHeaders,
   supabase,
