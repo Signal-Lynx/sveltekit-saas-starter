@@ -1,105 +1,284 @@
 # 🛠️ Customization Guide
 
-Welcome, Pilot. This guide will walk you through the key files to edit to rebrand the template, strip out the "Paradox Innovations" theme, and customize it for your own SaaS.
+This doc is the practical “make it yours” path. If you want the fastest win: change branding, theme, products, then ship.
+
+## Quick path (the weekend build)
+
+1. Update branding in `src/config.ts`.
+2. Update theme colors in `src/lib/theme.ts`.
+3. Define products in `src/lib/data/products.ts` (including Stripe IDs).
+4. Create a Supabase project and push the schema.
+5. Add environment variables. Then run locally. Then deploy.
+
+## Key Commander first (recommended)
+
+If you want the fastest path to a real, revenue-safe SaaS, start here.
+
+Key Commander is the optional self-hosted backend that handles the heavy lifting most templates leave to you. When you connect it, this site becomes license-aware and entitlement-aware without you wiring every moving part from scratch.
+
+### What Key Commander handles for you
+
+1. Stripe purchase intelligence and state accuracy  
+   Key Commander keeps paid status, trials, renewals, cancellations, and plan changes consistent, even when real-world webhook timing gets messy.
+
+2. Licensing and entitlements  
+   License issuance, entitlement assignment, and “who should have access to what” stays centralized and auditable.
+
+3. Email-based promo and seat assignment  
+   Assign a license to an email in Key Commander, and the site can auto-entitle the user on signup or next login. This is ideal for testers, promo seats, and internal users.
+
+4. Self-serve reset patterns  
+   Reduce support loops by supporting controlled resets or re-activations (when enabled for a product).
+
+5. Ops tooling that keeps you sane  
+   Audit trails, system integrity patterns, and operational visibility that help you run a real service, not a demo.
+
+### How to connect Key Commander
+
+Set the following in your `.env`:
+
+```env
+PRIVATE_LICENSE_MANAGER_URL="YOUR_KEY_COMMANDER_URL"
+PRIVATE_LICENSE_MANAGER_API_KEY="YOUR_KEY_COMMANDER_API_KEY"
+```
+
+Then ensure your product IDs in `src/lib/data/products.ts` match the product IDs configured in your Key Commander instance.
+
+Bot protection note  
+Cloudflare or Vercel “basic Bot Fight Mode” can break server-to-server calls between this website and the Key Commander backend. If you want bot protection, use Turnstile plus WAF and rate limits. If you upgrade plans later, use allowlists and Super Bot Fight.
+
+### If you choose not to use Key Commander
+
+You can absolutely run this template standalone. Just understand what you are opting into building and maintaining:
+
+1. Stripe webhook ingestion, verification, and retry logic
+2. Subscription state machine and reconciliation (trial, renewals, cancellations, upgrades, downgrades, failed payments)
+3. Entitlements logic, gating, and a source of truth you can audit
+4. Licensing, activations, device tracking, and reset flows (if you ship licensed software)
+5. Promo seats and internal testing workflows (email-based assignment is a huge time saver)
+6. Operational visibility and support tooling (logs, admin actions, audit trails)
+
+If you are shipping a paid product, Key Commander is the option that keeps billing and access control honest without turning your weekend build into real development effort.
 
 ---
 
-## Rebranding Checklist
+## Prereqs
 
-Follow these steps to customize the template with your own brand, products, and content.
+- Node.js 18+
+- Git
+- Supabase account
+- Stripe account
+- Supabase CLI (via `npx` is fine)
 
-### 1. Configure Core Branding (`src/config.ts`)
+## 1) Core branding (your name, domain, emails)
 
-This is your main control panel. Open this file to change:
+Edit: `src/config.ts`
 
-- `WebsiteName`: The name of your site (e.g., "My SaaS").
-- `WebsiteBaseUrl`: Your production domain (e.g., `https://my-saas.com`).
-- `WebsiteDescription`: The default meta description for SEO.
-- **SITE_CONFIG**:
-  - `logoPath` & `logoAlt`: Path and alt text for your logo.
-  - `companyLegalName`: Your legal company name for documents.
-  - `*Email`: All contact emails used across the site (Support, Legal, etc.).
-  - `socials`: Links for your social media accounts.
-  - `footerNav`: The links that appear in your site's footer.
+Common fields to update:
 
-### 2. Set Your Color Theme (`src/lib/theme.ts`)
+- `WebsiteName`
+- `WebsiteBaseUrl`
+- `WebsiteDescription`
+- Legal name and footer links
+- Support / legal / contact email addresses
+- Social links
 
-This file controls the visual theme. The site uses **DaisyUI**, so changing these hex codes updates the entire UI instantly.
+Tip: This file is meant to be your control panel. If you find yourself hardcoding brand text elsewhere, it usually belongs here.
 
-- **Primary:** Your main brand color (Buttons, Headers).
-- **Secondary:** Your accent color (cards, highlights).
-- **Base-100/200/300:** Your background shades (Light or Dark).
+## 2) Theme colors (easy re-skin)
 
-### 3. Define Your Products (`src/lib/data/products.ts`)
+Edit: `src/lib/theme.ts`
 
-This file is the static source of truth for your product offerings.
+The UI uses DaisyUI theming, so changing these hex values updates the whole site without hunting down CSS:
 
-1.  **Delete** the example products ("Hoverboard Schematics", "Timeline C", "Anti-Gravity Society").
-2.  **Add** your own product objects to the `allProducts` array. Each product needs:
-    - `id`: Internal ID used for logic (e.g., "pro_plan").
-    - `stripe_product_id` & `stripe_price_id`: From your Stripe Dashboard.
-    - `stripe_mode`: "payment" (one-time) or "subscription".
-3.  **Update Exports:**
-    - Modify `displayProducts` or create new exports (e.g., `mySoftwareProducts`) to filter for your new items.
-    - Set `defaultPlanId` to the ID of the product you want new users to see first.
+- primary
+- secondary
+- accent
+- base-100 / base-200 / base-300
 
-### 3.1 (Optional) Dynamic Product Overrides
+## 3) Products + pricing (and the Stripe wiring)
 
-For more flexibility, you can override product details without a code deployment using the `product_overrides` table in your Supabase database.
+Edit: `src/lib/data/products.ts`
 
-- **How it works:** The application checks this table for entries matching a product ID. If found, it uses the DB values instead of the file.
-- **Why use it:** Run A/B tests on pricing, temporarily hide a product, or update CTA text instantly.
-- **Fallback:** If the DB is empty or unreachable, the site gracefully falls back to `src/lib/data/products.ts`.
+What to do:
 
-### 4. Update Content Pages
+1. Remove the sample products you do not want.
+2. Add your products to the `allProducts` list.
+3. Set the Stripe IDs:
+   - `stripe_product_id` (prod\_…)
+   - `stripe_price_id` (price\_…)
+4. Choose your billing mode:
+   - one time: `stripe_mode: "payment"`
+   - subscription: `stripe_mode: "subscription"`
+5. Set `defaultPlanId` to the plan you want users to see first.
 
-This is where you edit the main marketing text.
+Optional: “Dynamic overrides”
+If you want to change product names, CTA text, or visibility without redeploying, use the Supabase `product_overrides` table. The app falls back cleanly if the DB is empty or unreachable.
 
-- **Product Pages:**
-  - Delete the example folders: `src/routes/(marketing)/products/hover` and `timeline`.
-  - Create your own folders (e.g., `/pricing`, `/features`).
-  - Use `src/lib/components/ProductCard.svelte` to easily render pricing cards.
-- **Homepage:** Edit `src/routes/(marketing)/+page.svelte` to remove the "Paradox Innovations" hero section and add your own copy.
-- **FAQ:** Edit `src/lib/data/faqData.ts`. Remove the "Is the hoverboard real?" jokes and add your actual FAQs.
-- **Homepage Features:** Edit `src/lib/data/homepageFeatures.ts` to change the feature cards on the homepage.
-- **Legal Pages:** Review and edit `src/routes/(marketing)/legal/` (Terms, Privacy, etc.) to match your jurisdiction.
+## 4) Supabase (Auth + DB + schema)
 
-### 5. Update Static Assets (`/static`)
+This repo includes a ready schema migration.
 
-Manually replace the following files with your own:
+Migration file:
 
-- `/static/images/`: Add your logo (`logo.png`) and marketing images.
-- `/static/favicon.png`: Your site's favicon.
-- `/static/robots.txt`: Update if you have specific SEO needs.
-- `/static/.well-known/security.txt`: Update with your security contact info.
+- `supabase/migrations/20240801000000_initial_schema.sql`
 
-### 6. Configure Environment Variables
+Typical flow:
 
-Copy `.env.example` to `.env` and fill in your keys.
+```bash
+npx supabase login
+npx supabase link
+npx supabase db push
+```
 
-- **Supabase:** Required for Auth and Database.
-- **Stripe:** Required for billing.
-- **License Manager:** Required if you are using Key Commander.
-- **AWS SES:** Optional, for sending emails.
-- **Cloudflare R2:** Required if you are selling digital downloads.
+If you prefer UI-only, you can also copy SQL into Supabase’s SQL editor, but `db push` is the cleanest “one command” path.
 
-### 7. Digital Downloads (Cloudflare R2)
+## 5) Environment variables (minimum required)
 
-If you are selling files (like software installers or PDFs):
+Copy:
 
-1.  **Bucket Setup:** Create a private bucket in Cloudflare R2.
-2.  **Folder Structure:** Organize files by product ID (e.g., `my-app/v1.0/installer.exe`).
-3.  **Update Config:**
-    - Open `src/config.ts` and update `DOWNLOAD_PREFIXES`.
-    - Map your product IDs to these folder prefixes.
-4.  **Env Vars:** Ensure `PRIVATE_R2_BUCKET_NAME` is set in `.env`.
+```bash
+cp .env.example .env
+```
 
----
+Minimum required values:
 
-## 8. Key Commander Integration
+- Supabase public URL + anon key
+- Supabase service role key
+- Stripe API key + webhook secret
 
-This template is the official frontend for **Key Commander**.
+Optional extras (already supported by the template):
 
-- If you are using Key Commander, set `PRIVATE_LICENSE_MANAGER_URL` and `PRIVATE_LICENSE_MANAGER_API_KEY` in `.env`.
-- The dashboard (`/account`) will automatically fetch license keys for the logged-in user based on their email.
-- **Important:** Ensure the `Product ID` in Key Commander matches the `id` you set in `src/lib/data/products.ts`.
+- Cloudflare Turnstile
+- Cloudflare R2 (public assets + private downloads)
+- AWS SES email sending
+- Key Commander licensing backend
+
+## 6) Marketing pages (make the copy yours)
+
+Core places people will read first:
+
+- Homepage: `src/routes/(marketing)/+page.svelte`
+- FAQ: `src/lib/data/faqData.ts`
+- Homepage feature cards: `src/lib/data/homepageFeatures.ts`
+- Legal boilerplate: `src/routes/(marketing)/legal/`
+
+Product pages (examples you can clone as a blueprint):
+
+- `src/routes/(marketing)/key-commander/`
+- `src/routes/(marketing)/trading-automation/`
+
+## 7) Account dashboard features (users actually touch these)
+
+The account dashboard is under the `(admin)` route group. These are the flows most SaaS templates skip. Yours are already implemented.
+
+Examples:
+
+- Profile editing: `src/routes/(admin)/account/(menu)/settings/edit_profile/+page.svelte`
+- Change password: `src/routes/(admin)/account/(menu)/settings/change_password/+page.svelte`
+- Change email: `src/routes/(admin)/account/(menu)/settings/change_email/+page.svelte`
+- Delete account: `src/routes/(admin)/account/(menu)/settings/delete_account/+page.svelte`
+
+## 8) Admin suite (internal ops pages)
+
+Admin pages live under:
+
+- `src/routes/(internal)/admin/`
+
+Server-side admin helpers (audit logs, metrics, customer ops):
+
+- `src/lib/server/admin/`
+
+If you want to rename admin navigation labels, search the `(internal)/admin` routes first. If you want to change what data admins can view or edit, the server files under `src/lib/server/admin/` are the usual entry point.
+
+## 9) Access gates (setup and beta flows)
+
+This template supports “access gate” passwords for controlled launches.
+
+Env vars (set to enable, blank to disable):
+
+- `PRIVATE_SITE_ACCESS_PASSWORD`
+- `PRIVATE_BETA_PURCHASE_PASSWORD`
+- `PRIVATE_BETA_PASSPHRASE_SignalShield_Beta`
+- `PRIVATE_BETA_PASSPHRASE_LynxRelay_Beta`
+- `PRIVATE_BETA_PASSPHRASE_KeyCommander_Beta`
+
+The access page routes are:
+
+- `src/routes/access/+page.svelte`
+- `src/routes/access/+page.server.ts`
+
+## 10) SEO basics (already wired)
+
+Two key files:
+
+- Sitemap endpoint: `src/routes/(marketing)/sitemap.xml/+server.ts`
+- Robots: `static/robots.txt`
+
+If you add or rename product pages, make sure your sitemap output still matches your public routes.
+
+## 11) Contact form (working out of the box)
+
+- UI: `src/routes/(marketing)/contact_us/+page.svelte`
+- Action handler: `src/routes/(marketing)/contact_us/+page.server.ts`
+
+Update your destination email in config, then test it locally before you ship.
+
+## 12) Digital delivery pattern (open + paid downloads)
+
+If you distribute binaries (zip, exe, dmg, pdf), do not serve them from a typical web host that charges egress.
+This template supports Cloudflare R2 for:
+
+- public assets
+- private downloads, gated by entitlements
+
+Look at:
+
+- `.env.example` for R2 variables
+- `src/config.ts` for download prefix mapping
+
+## 13) Key Commander integration (optional, but plug and play)
+
+If you want the site to be “license aware” with entitlements and license-key dashboards, connect Key Commander.
+
+Set in `.env`:
+
+- `PRIVATE_LICENSE_MANAGER_URL`
+- `PRIVATE_LICENSE_MANAGER_API_KEY`
+
+Important:
+
+- Product IDs must match between Key Commander and your product definitions in `src/lib/data/products.ts`.
+
+Operational note:
+Cloudflare “basic Bot Fight Mode” can break service-to-service calls between this website and the Key Commander backend.
+If you want bot protection, use Turnstile plus WAF and rate limits. If you upgrade Cloudflare plans later, use allowlists and Super Bot Fight.
+
+## 14) Run and ship
+
+Local dev:
+
+```bash
+npm run dev -- --open
+```
+
+Build:
+
+```bash
+npm run build
+npm run preview
+```
+
+Full checks:
+
+```bash
+./checks.sh
+```
+
+If you get stuck
+Open an issue on the repo with:
+
+- what you tried
+- your route (URL path)
+- your server logs
+- the last change you made
