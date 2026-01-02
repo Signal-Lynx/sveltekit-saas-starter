@@ -1,5 +1,6 @@
 // FILE: src/hooks.server.ts (Template File - COMPLETE REPLACEMENT)
 import { env } from "$env/dynamic/private"
+import { env as publicEnv } from "$env/dynamic/public"
 import { building, dev } from "$app/environment"
 import { createServerClient } from "@supabase/ssr"
 import type { Handle, HandleServerError } from "@sveltejs/kit"
@@ -8,6 +9,36 @@ import { withContext } from "$lib/server/logger"
 import type { Database } from "$lib/types/database"
 import { reportWebsiteError } from "$lib/server/errorApi"
 import { redirect, error } from "@sveltejs/kit"
+
+// --- DYNAMIC DOMAIN CONFIGURATION -----------------------------------
+// Automatically derives 'admin.' and root domains from your PUBLIC_WEBSITE_BASE_URL
+// Example: If base URL is "https://www.signallynx.com"
+// MAIN_HOST = "www.signallynx.com"
+// ADMIN_HOST = "admin.signallynx.com"
+// ROOT_DOMAIN_COOKIE = ".signallynx.com"
+
+const getDomainConfig = () => {
+  const baseUrl = publicEnv.PUBLIC_WEBSITE_BASE_URL || "http://localhost:5173"
+
+  let hostname = "localhost"
+  try {
+    hostname = new URL(baseUrl).hostname
+  } catch {
+    // Fallback if env var is malformed
+  }
+
+  // Strip 'www.' to get the root domain
+  const rootDomain = hostname.startsWith("www.") ? hostname.slice(4) : hostname
+
+  return {
+    MAIN_HOST: hostname,
+    ADMIN_HOST: `admin.${rootDomain}`,
+    ROOT_DOMAIN_COOKIE: `.${rootDomain}`,
+  }
+}
+
+const { MAIN_HOST, ADMIN_HOST, ROOT_DOMAIN_COOKIE } = getDomainConfig()
+// --------------------------------------------------------------------
 
 // ERROR TEST FUNCTION
 const forceErrorForTest: Handle = async ({ event, resolve }) => {
@@ -137,6 +168,50 @@ const junkFilter: Handle = async ({ event, resolve }) => {
 }
 
 // -------------------------------
+// Admin Domain Guard (The Split)
+// -------------------------------
+const adminDomainGuard: Handle = async ({ event, resolve }) => {
+  // Skip logic if:
+  // 1. Dev mode
+  // 2. Building
+  // 3. Vercel Preview URLs (ends with .vercel.app)
+  if (dev || building || event.url.hostname.endsWith(".vercel.app")) {
+    return resolve(event)
+  }
+
+  const path = event.url.pathname
+  const host = event.url.hostname
+
+  // CRITICAL: Never redirect .well-known paths.
+  // This ensures Vercel's SSL bot stays on the correct host to verify certificates.
+  if (path.startsWith("/.well-known/")) {
+    return resolve(event)
+  }
+
+  // Treat BOTH the admin UI AND admin API routes as "admin traffic"
+  const isAdminTraffic =
+    path.startsWith("/admin") || path.startsWith("/api/admin")
+
+  // 1. Force admin traffic onto the protected admin subdomain
+  if (isAdminTraffic && host !== ADMIN_HOST) {
+    const url = new URL(event.url)
+    url.hostname = ADMIN_HOST
+    url.protocol = "https:"
+    throw redirect(308, url.toString())
+  }
+
+  // 2. Force non-admin traffic OFF the admin subdomain
+  if (!isAdminTraffic && host === ADMIN_HOST) {
+    const url = new URL(event.url)
+    url.hostname = MAIN_HOST
+    url.protocol = "https:"
+    throw redirect(308, url.toString())
+  }
+
+  return resolve(event)
+}
+
+// -------------------------------
 // 1) Per-request correlation + structured logging
 // -------------------------------
 const requestContext: Handle = async ({ event, resolve }) => {
@@ -187,6 +262,11 @@ const securityHeaders: Handle = async ({ event, resolve }) => {
   const supabaseOrigin = safeOrigin(env.PRIVATE_SUPABASE_URL!)
   const lmOrigin = safeOrigin(env.PRIVATE_LICENSE_MANAGER_URL!)
 
+  // Allow unsafe-eval on the main site (GTM often needs it),
+  // but keep admin strict.
+  const host = event.url.hostname
+  const allowUnsafeEval = isDev || host !== ADMIN_HOST
+
   const scriptSrc = [
     "'self'",
     "https://www.googletagmanager.com",
@@ -197,8 +277,7 @@ const securityHeaders: Handle = async ({ event, resolve }) => {
     "'unsafe-inline'",
     // Allow Wasm compilation without enabling general eval; helps quiet Turnstile warnings.
     "'wasm-unsafe-eval'",
-    // Keep 'unsafe-eval' dev-only so we don’t weaken prod more than necessary.
-    ...(isDev ? ["'unsafe-eval'"] : []),
+    ...(allowUnsafeEval ? ["'unsafe-eval'"] : []),
   ]
 
   const styleSrc = ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"]
@@ -300,8 +379,13 @@ const supabase: Handle = async ({ event, resolve }) => {
         getAll: () => event.cookies.getAll(),
         setAll: (cookiesToSet) => {
           cookiesToSet.forEach(({ name, value, options }) => {
-            // SvelteKit requires path to be set explicitly
-            event.cookies.set(name, value, { ...(options ?? {}), path: "/" })
+            event.cookies.set(name, value, {
+              ...options,
+              path: "/",
+              // CRITICAL: Force cookie to root domain so it works on 'www' AND 'admin'
+              // (Keep undefined in dev so localhost works)
+              domain: dev ? undefined : ROOT_DOMAIN_COOKIE,
+            })
           })
         },
       },
@@ -453,16 +537,23 @@ const cloudflareAccessMeta: Handle = async ({ event, resolve }) => {
     hasJwt: !!jwt,
   }
 
-  const isAdminPath = event.url.pathname.startsWith("/admin")
-  const requireAccess = env.PRIVATE_CF_ACCESS_ENFORCE_ADMIN === "1"
+  // Treat both UI and API admin routes as requiring protection
+  const isAdminPath =
+    event.url.pathname.startsWith("/admin") ||
+    event.url.pathname.startsWith("/api/admin")
+
+  // Remove env var check - security is mandatory in production
   const isProd = !dev && !building
 
-  // If we *require* Cloudflare Access on /admin in prod and see no JWT,
-  // fail closed with a 404 to avoid leaking the existence of the portal.
-  if (isProd && requireAccess && isAdminPath && !jwt) {
+  // Check if we are actually on the admin host
+  const isAdminHost = event.url.hostname === ADMIN_HOST
+
+  // Fail closed: If Prod + Admin Host + Admin Path + No Token = BLOCK
+  if (isProd && isAdminHost && isAdminPath && !jwt) {
     console.warn("[cf-access] Missing Access token on admin route", {
       path: event.url.pathname,
       clientIp: event.locals.clientIp,
+      host: event.url.hostname,
     })
     return new Response("Not Found", { status: 404 })
   }
@@ -619,6 +710,7 @@ export const handleError: HandleServerError = async ({ error, event }) => {
 export const handle: Handle = sequence(
   forceErrorForTest,
   junkFilter,
+  adminDomainGuard,
   requestContext,
   captureClientIp,
   cloudflareAccessMeta, // enrich + (optionally) enforce Cloudflare Access for /admin

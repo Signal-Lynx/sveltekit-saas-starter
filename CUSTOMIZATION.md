@@ -256,6 +256,19 @@ If you want bot protection, use Turnstile plus WAF and rate limits. If you upgra
 
 ## 14) Run and ship
 
+## 14) Run and ship
+
+### Domain Setup (Production)
+
+Because this template splits traffic for security, you must configure **two** domains on your host (Vercel/Netlify):
+
+1. The root/www domain (e.g., `www.yourdomain.com`)
+2. The admin subdomain (e.g., `admin.yourdomain.com`)
+
+If you skip adding the `admin` subdomain to your host, admin panel links will redirect to a 404.
+
+### Commands
+
 Local dev:
 
 ```bash

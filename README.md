@@ -127,6 +127,26 @@ Deploy: Cloudflare Pages, Vercel, or any Node.js host
 
 ---
 
+## Deployment Architecture (Important)
+
+This template uses a **Domain Split** security pattern in production:
+
+1.  **Main Domain** (`www.yourdomain.com`): Hosting the public marketing site and user dashboard.
+2.  **Admin Domain** (`admin.yourdomain.com`): Hosting the internal admin panel.
+
+**Why?**
+This allows you to keep your main domain compatible with hosts like Vercel (which prefer "DNS Only" / Grey Cloud), while routing your sensitive Admin panel through Cloudflare's Proxy (Orange Cloud) to enable Zero Trust, strict WAF rules, and IP locking without breaking your public site.
+
+**Configuration Requirements:**
+
+1.  **Hosting:** Add **both** `www.yourdomain.com` and `admin.yourdomain.com` as custom domains in your hosting project (Vercel/Netlify/Cloudflare Pages).
+2.  **DNS:**
+    - `www`: DNS Only (Grey Cloud) recommended for Vercel.
+    - `admin`: Proxied (Orange Cloud) recommended for security.
+3.  **Environment:** Set `PUBLIC_WEBSITE_BASE_URL` to your main URL (e.g., `https://www.yourdomain.com`). The app will automatically derive the admin domain (`admin.yourdomain.com`) from this.
+
+---
+
 ## Quick start (local dev)
 
 ### Prereqs
