@@ -391,7 +391,7 @@ If you protect `admin.yourdomain.com` with Cloudflare Access / Zero Trust, let t
 - **Request Path** `starts with` `/api/`
 - **IP Address** `is any of` `YOUR_LICENSE_SERVER_IP/32`
 
-**Example IP CIDR:** `158.69.212.133/32`
+**Example IP CIDR:** `123.45.678.901/32`
 
 - `/32` means “exactly one IPv4 address”.
 
