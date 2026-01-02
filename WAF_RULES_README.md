@@ -427,7 +427,7 @@ Bot protection and managed rules can break automation. This bypass keeps your tr
 
 **Branch D**
 
-- Request Path `equals` `/favicon.ico`
+- Request Path `is any of` `/favicon.ico, /favicon.png, /favicon-48.png, /favicon-192.png`
 - AND Hostname `is any of` (same 3)
 
 **Why:**  

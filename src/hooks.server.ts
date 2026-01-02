@@ -102,6 +102,8 @@ function isJunkRequest(pathname: string): boolean {
     pathname === "/access" ||
     pathname === "/favicon.ico" ||
     pathname === "/favicon.png" ||
+    pathname === "/favicon-48.png" ||
+    pathname === "/favicon-192.png" ||
     pathname === "/robots.txt" ||
     pathname === "/sitemap.xml" ||
     pathname === "/flutter_service_worker.js" || // Keep this to quiet 404s
@@ -655,6 +657,8 @@ const siteGate: Handle = async ({ event, resolve }) => {
     hasCookie ||
     pathname === "/favicon.ico" ||
     pathname === "/favicon.png" ||
+    pathname === "/favicon-48.png" ||
+    pathname === "/favicon-192.png" ||
     pathname === "/robots.txt"
   ) {
     return resolve(event)
