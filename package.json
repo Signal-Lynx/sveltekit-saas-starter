@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.917.0",
-    "@aws-sdk/client-sesv2": "3.633.0",
+    "@aws-sdk/client-sesv2": "3.965.0",
     "@aws-sdk/s3-request-presigner": "^3.917.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.50.0",
