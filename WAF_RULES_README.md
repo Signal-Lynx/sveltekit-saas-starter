@@ -463,7 +463,7 @@ This blocks direct access via Vercel’s default deployment domains (and any oth
 **Value (copy/paste):**
 
 ```regex
-.*\.(php|asp|aspx|jsp|cgi|env|git|ini|config|bak|sql|sqlite|log|sh|swp|yaml|yml|action)$|\/(wp-|wp\/|xmlrpc|phpmyadmin|pma\/|myadmin|alfa_data|fckeditor|phpunit|sftp-config|laravel|_ignition|\.ssh\/|\.aws|id_rsa|id_dsa|\.ds_store|\.vscode\/|server-status|manager\/html|solr\/admin|actuator|backup|old\/|install\/|temp\/|components\/|modules\/|admin\/uploads|admin\/images|site\/|public\/|plugins\/|include\/|local\/|shop\/|magento|ecp\/|v2\/_catalog|_all_dbs$|s\/[^\/]+\/_\/;?\/META-INF\/|https?%3A)|^/\.well-known/.*\.php(?:$|\?)
+^/cdn-cgi/|.*\.(php|asp|aspx|jsp|cgi|env|git|ini|config|bak|sql|sqlite|log|sh|swp|yaml|yml|action)$|\/(wp-|wp\/|xmlrpc|phpmyadmin|pma\/|myadmin|alfa_data|fckeditor|phpunit|sftp-config|laravel|_ignition|\.ssh\/|\.aws|id_rsa|id_dsa|\.ds_store|\.vscode\/|server-status|manager\/html|solr\/admin|actuator|backup|old\/|install\/|temp\/|components\/|modules\/|admin\/uploads|admin\/images|site\/|public\/|plugins\/|include\/|local\/|shop\/|magento|ecp\/|v2\/_catalog|_all_dbs$|s\/[^\/]+\/_\/;?\/META-INF\/|https?%3A)|^/\.well-known/.*\.php(?:$|\?)
 ```
 
 **Why:**  
