@@ -5,6 +5,7 @@
 
 import Fuse from "fuse.js"
 import { allProducts } from "$lib/data/products"
+import { articlesMeta, articleHref } from "$lib/data/articles/meta"
 
 // ---- Types -----------------------------------------------------------------
 
@@ -89,8 +90,16 @@ export async function buildSearchIndex(): Promise<BuildResult> {
   // Preserve ordering: products first, then static pages
   const productRecords: SearchRecord[] = allProducts.map(productToRecord)
 
+  const articleRecords: SearchRecord[] = articlesMeta.map((n) => ({
+    title: toCleanText(n.title),
+    description: toCleanText(n.description),
+    body: toCleanText(n.tags.join(" ")),
+    path: articleHref(n.slug),
+  }))
+
   const indexData: SearchRecord[] = [
     ...productRecords,
+    ...articleRecords,
     ...otherPages.map((p) => ({
       // Ensure fields are sanitized even though otherPages is already typed
       title: toCleanText(p.title),

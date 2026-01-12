@@ -182,6 +182,7 @@ export const SITE_CONFIG = Object.freeze({
     ],
     company: [
       { name: "Docs", href: "/docs" },
+      { name: "Articles", href: "/articles" },
       { name: "FAQ", href: "/faq" },
       { name: "Contact Us", href: "/contact_us" },
     ],

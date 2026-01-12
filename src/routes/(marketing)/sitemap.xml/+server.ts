@@ -3,6 +3,7 @@ import type { RequestHandler } from "@sveltejs/kit"
 import * as sitemap from "super-sitemap"
 import { WebsiteBaseUrl } from "../../../config"
 import { dev } from "$app/environment"
+import { articlesMeta } from "$lib/data/articles/meta"
 
 export const prerender = false
 
@@ -63,8 +64,13 @@ export const GET: RequestHandler = async ({ url }) => {
 
         // 7. CRITICAL: Exclude any route with dynamic brackets [ ]
         // This fixes "paramValues not provided" for routes like /account/downloads/beta/[productId]
-        ".*\\[.*\\]",
+        // REMOVED to allow articles to generate
+        // ".*\\[.*\\]",
       ],
+      // ADD THIS SECTION:
+      paramValues: {
+        "/articles/[slug]": articlesMeta.map((n) => n.slug),
+      },
     })
 
     // Clone response to add robust caching & explicit content type

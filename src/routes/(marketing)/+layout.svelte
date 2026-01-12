@@ -46,6 +46,7 @@
         </ul>
       </li>
       <li class="md:mx-2"><a href="/docs">Docs</a></li>
+      <li class="md:mx-2"><a href="/articles">Articles</a></li>
       <li class="md:mx-2"><a href="/faq">FAQ</a></li>
       <li class="md:mx-2"><a href="/contact_us">Contact</a></li>
       <li class="md:mx-2"><a href="/account">Account</a></li>
