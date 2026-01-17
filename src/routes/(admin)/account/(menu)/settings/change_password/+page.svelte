@@ -17,14 +17,17 @@
 
   const { data, form }: { data: { user?: UserLike }; form?: FormShape } =
     $props()
-  const { user } = data ?? {}
 
-  // AMR checks w/o ts-ignore
-  const amr = Array.isArray(user?.amr)
-    ? (user?.amr as Array<{ method?: string }>)
-    : []
-  const hasPassword = amr.some((x) => x?.method === "password")
-  const usingOAuth = amr.some((x) => x?.method === "oauth")
+  const user = $derived.by(() => data?.user ?? null)
+
+  const amr = $derived.by(() =>
+    Array.isArray(user?.amr) ? (user.amr as Array<{ method?: string }>) : [],
+  )
+
+  const hasPassword = $derived.by(() =>
+    amr.some((x) => x?.method === "password"),
+  )
+  const usingOAuth = $derived.by(() => amr.some((x) => x?.method === "oauth"))
 
   let isLoading = $state(false)
 </script>

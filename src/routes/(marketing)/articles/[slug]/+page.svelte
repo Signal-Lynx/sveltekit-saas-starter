@@ -5,24 +5,29 @@
   import ContentPage from "$lib/components/layout/ContentPage.svelte"
 
   const { data } = $props<{ data: PageData }>()
-  const { meta, post, href } = data
 
-  const canonicalUrl = `${WebsiteBaseUrl}${href}`
+  const meta = $derived(data.meta)
+  const post = $derived(data.post)
+  const href = $derived(data.href)
 
-  const ldJson = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: meta.title,
-    description: meta.description,
-    datePublished: meta.publishedAt,
-    author: { "@type": "Organization", name: meta.author },
-    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-    publisher: {
-      "@type": "Organization",
-      name: WebsiteName,
-      url: WebsiteBaseUrl,
-    },
-  }).replace(/</g, "\\u003c")
+  const canonicalUrl = $derived.by(() => `${WebsiteBaseUrl}${href}`)
+
+  const ldJson = $derived.by(() =>
+    JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: meta.title,
+      description: meta.description,
+      datePublished: meta.publishedAt,
+      author: { "@type": "Organization", name: meta.author },
+      mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+      publisher: {
+        "@type": "Organization",
+        name: WebsiteName,
+        url: WebsiteBaseUrl,
+      },
+    }).replace(/</g, "\\u003c"),
+  )
 
   function formatDate(iso: string) {
     if (!iso) return ""

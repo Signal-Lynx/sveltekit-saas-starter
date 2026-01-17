@@ -139,56 +139,66 @@ Custom, fire after Block Bots - Rule 1
 
 Expression
 
-(http.host in {"yourdomain.com" "www.yourdomain.com" "admin.yourdomain.com"}) and not cf.client.bot and (
-lower(http.request.uri.path) contains ".log"
-or lower(http.request.uri.path) contains "../"
-or lower(http.request.uri.path) contains "%2e%2e%2f"
-or lower(http.request.uri.path) contains "%2f..%2f"
-or lower(http.request.uri.path) contains "/.svn"
-or lower(http.request.uri.path) contains "/.hg"
-or lower(http.request.uri.path) contains "/.bzr"
-or lower(http.request.uri.path) contains ".ds_store"
-or lower(http.request.uri.path) contains "thumbs.db"
-or lower(http.request.uri.path) contains "id_rsa"
-or lower(http.request.uri.path) contains "id_dsa"
-or lower(http.request.uri.path) contains "/.ssh/"
-or lower(http.request.uri.path) contains "/.aws"
-or lower(http.request.uri.path) contains "/server-status"
-or lower(http.request.uri.path) contains "/manager/html"
-or lower(http.request.uri.path) contains "/jenkins"
-or lower(http.request.uri.path) contains "/hudson"
-or lower(http.request.uri.path) contains "/solr/admin"
-or lower(http.request.uri.path) contains "/actuator"
-or lower(http.request.uri.path) contains "/update/"
-or lower(http.request.uri.path) contains "/upload"
-or lower(http.request.uri.path) contains "/css/"
-or lower(http.request.uri.path) contains "/assets/images/"
-or (
+(http.host in {"signallynx.com" "www.signallynx.com" "admin.signallynx.com"})
+and not cf.client.bot
+and not starts_with(lower(http.request.uri.path), "/.well-known/acme-challenge/")
+and not starts_with(lower(http.request.uri.path), "/.well-known/vercel/")
+and
+(
+lower(http.request.uri.path) contains ".log" or
+lower(http.request.uri.path) contains "../" or
+lower(http.request.uri.path) contains "%2e%2e%2f" or
+lower(http.request.uri.path) contains "%2f..%2f" or
+lower(http.request.uri.path) contains "/.svn" or
+lower(http.request.uri.path) contains "/.hg" or
+lower(http.request.uri.path) contains "/.bzr" or
+lower(http.request.uri.path) contains ".ds_store" or
+lower(http.request.uri.path) contains "thumbs.db" or
+lower(http.request.uri.path) contains "id_rsa" or
+lower(http.request.uri.path) contains "id_dsa" or
+lower(http.request.uri.path) contains "/.ssh/" or
+lower(http.request.uri.path) contains "/.aws" or
+lower(http.request.uri.path) contains "/server-status" or
+lower(http.request.uri.path) contains "/manager/html" or
+lower(http.request.uri.path) contains "/jenkins" or
+lower(http.request.uri.path) contains "/hudson" or
+lower(http.request.uri.path) contains "/solr/admin" or
+lower(http.request.uri.path) contains "/actuator" or
+lower(http.request.uri.path) contains "/update/" or
+lower(http.request.uri.path) contains "/upload" or
+lower(http.request.uri.path) contains "/css/" or
+lower(http.request.uri.path) contains "/assets/images/" or
+
+(
 starts_with(lower(http.request.uri.path), "/.well-known/")
 and not (
-lower(http.request.uri.path) eq "/.well-known/security.txt"
-or lower(http.request.uri.path) eq "/.well-known/assetlinks.json"
-or lower(http.request.uri.path) eq "/.well-known/apple-app-site-association"
+lower(http.request.uri.path) eq "/.well-known/security.txt" or
+lower(http.request.uri.path) eq "/.well-known/assetlinks.json" or
+lower(http.request.uri.path) eq "/.well-known/apple-app-site-association" or
+starts_with(lower(http.request.uri.path), "/.well-known/acme-challenge/") or
+starts_with(lower(http.request.uri.path), "/.well-known/vercel/")
 )
 )
-or lower(http.request.uri.path) contains "/\_ignition"
-or lower(http.request.uri.path) contains "/feed/"
-or lower(http.request.uri.query) contains "feed="
-or lower(http.request.uri.path) contains "execute-solution"
-or lower(http.request.uri.path) contains "enhancecp"
-or lower(http.request.uri.path) contains "/test"
-or lower(http.request.uri.path) contains "/info/"
-or lower(http.request.uri.path) contains "/debug/"
-or lower(http.request.uri.path) eq "/fwc"
-or starts_with(lower(http.request.uri.path), "/fwc/")
-or ends_with(lower(http.request.uri.path), ".fwz")
-or lower(http.request.uri.path) eq "/apps"
-or starts_with(lower(http.request.uri.path), "/apps/")
-or lower(http.request.uri.path) eq "/api/action"
-or starts_with(lower(http.request.uri.path), "/api/action/")
-or lower(http.request.uri.path) contains "sftp-config.json"
-or lower(http.request.uri.path) contains "/.vscode/"
-or lower(http.request.uri.path) contains "/my-account"
+or
+
+lower(http.request.uri.path) contains "/\_ignition" or
+lower(http.request.uri.path) contains "/feed/" or
+lower(http.request.uri.query) contains "feed=" or
+lower(http.request.uri.path) contains "execute-solution" or
+lower(http.request.uri.path) contains "enhancecp" or
+starts_with(lower(http.request.uri.path), "/test") or
+lower(http.request.uri.path) contains "/info/" or
+lower(http.request.uri.path) contains "/debug/" or
+lower(http.request.uri.path) eq "/fwc" or
+starts_with(lower(http.request.uri.path), "/fwc/") or
+ends_with(lower(http.request.uri.path), ".fwz") or
+lower(http.request.uri.path) eq "/apps" or
+starts_with(lower(http.request.uri.path), "/apps/") or
+lower(http.request.uri.path) eq "/api/action" or
+starts_with(lower(http.request.uri.path), "/api/action/") or
+lower(http.request.uri.path) contains "sftp-config.json" or
+lower(http.request.uri.path) contains "/.vscode/" or
+lower(http.request.uri.path) contains "/my-account"
 )
 
 Notes  

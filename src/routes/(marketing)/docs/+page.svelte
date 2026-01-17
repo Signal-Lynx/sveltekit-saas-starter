@@ -11,40 +11,41 @@
   const displayOrder = ["Hoverboard Schematics", "Timeline C Manual"]
 
   // 2. Prepare documents for UI and build the SEO data in the script.
-  // This ensures ESLint sees WebsiteBaseUrl and DocumentMeta as "Used."
-  const processedDocs = [...data.documents]
-    .sort((a, b) => {
-      const indexA = displayOrder.indexOf(a.title)
-      const indexB = displayOrder.indexOf(b.title)
-      const safeA = indexA === -1 ? 999 : indexA
-      const safeB = indexB === -1 ? 999 : indexB
-      return safeA - safeB
-    })
-    .map((doc: DocumentMeta) => {
-      return {
+  const processedDocs = $derived.by(() => {
+    const docs = Array.isArray(data?.documents) ? data.documents : []
+    return [...docs]
+      .sort((a, b) => {
+        const indexA = displayOrder.indexOf(a.title)
+        const indexB = displayOrder.indexOf(b.title)
+        const safeA = indexA === -1 ? 999 : indexA
+        const safeB = indexB === -1 ? 999 : indexB
+        return safeA - safeB
+      })
+      .map((doc: DocumentMeta) => ({
         ...doc,
-        // Generate the absolute URL here so the linter sees WebsiteBaseUrl in use
         absoluteUrl: doc.href?.startsWith("http")
           ? doc.href
           : `${WebsiteBaseUrl}${doc.href}`,
-      }
-    })
+      }))
+  })
 
   // 3. Build the final JSON string here.
-  // This ensures Google gets valid JSON and the linter sees "processedDocs" in use.
-  const ldJson = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: `Documentation - ${WebsiteName}`,
-    description: "Owner's manuals for Hoverboard Schematics and Timeline C.",
-    hasPart: processedDocs.map((d) => ({
-      "@type": "CreativeWork",
-      name: d.title,
-      about: d.subtitle,
-      description: d.description,
-      url: d.absoluteUrl,
-    })),
-  }).replace(/</g, "\\u003c")
+  const ldJson = $derived.by(() =>
+    JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: `Documentation - ${WebsiteName}`,
+      description:
+        "Owner's manuals for Key Commander, Lynx-Relay, and Signal Shield.",
+      hasPart: processedDocs.map((d) => ({
+        "@type": "CreativeWork",
+        name: d.title,
+        about: d.subtitle,
+        description: d.description,
+        url: d.absoluteUrl,
+      })),
+    }).replace(/</g, "\\u003c"),
+  )
 </script>
 
 <svelte:head>

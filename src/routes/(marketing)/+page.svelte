@@ -12,7 +12,13 @@
 
   // Data comes from +page.server.ts
   const { data } = $props() as { data: { products: Product[] } }
-  const allProducts = data.products
+
+  // Use derived to sort safely without stale closure warnings
+  const allProducts = $derived.by(() => {
+    const products = Array.isArray(data?.products) ? data.products : []
+    // Optional: Add custom sorting here if needed, otherwise just pass through
+    return products
+  })
 
   const ldJson = {
     "@context": "https://schema.org",

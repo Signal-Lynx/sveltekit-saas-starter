@@ -26,8 +26,8 @@
   const { data } = $props() as { data: PageData }
 
   // Destructure with safe fallbacks
-  const user = data?.user ?? null
-  const profile = data?.profile ?? null
+  const user = $derived.by(() => data?.user ?? null)
+  const profile = $derived.by(() => data?.profile ?? null)
 
   // Derive query flag (client-only to avoid SSR hazards)
   const pwUpdated = $derived(

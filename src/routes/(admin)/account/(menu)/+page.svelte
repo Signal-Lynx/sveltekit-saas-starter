@@ -15,16 +15,22 @@
   const { data } = $props() as { data: PageData & { lmError?: string | null } }
 
   // Booleans & safe fallbacks
-  const isActiveCustomer: boolean = data?.isActiveCustomer === true
+  const isActiveCustomer = $derived.by(() => data?.isActiveCustomer === true)
 
   // Defensive normalization for products array
-  const activeProducts: ActiveProductRow[] = Array.isArray(data?.activeProducts)
-    ? (data!.activeProducts!.filter(Boolean) as ActiveProductRow[])
-    : []
+  const activeProducts = $derived.by(() =>
+    Array.isArray(data?.activeProducts)
+      ? (data.activeProducts.filter(Boolean) as ActiveProductRow[])
+      : [],
+  )
 
   // Friendly display name with safe trimming
-  const displayName =
-    data?.profile?.full_name?.trim() || data?.user?.email?.trim() || "Operator"
+  const displayName = $derived.by(
+    () =>
+      data?.profile?.full_name?.trim() ||
+      data?.user?.email?.trim() ||
+      "Operator",
+  )
 
   const lmError = $derived(data?.lmError ?? null)
 

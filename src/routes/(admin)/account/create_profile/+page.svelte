@@ -32,15 +32,16 @@
   }
 
   const { data, form }: Props = $props()
-  const { user, profile } = data
+  const user = $derived(data.user)
+  const profile = $derived(data.profile)
 
   // Local state (kept as runes for Svelte 5)
   let loading = $state(false)
 
-  // Initial values (unchanged field names & values)
-  const fullName = profile?.full_name ?? ""
-  const companyName = profile?.company_name ?? ""
-  const website = profile?.website ?? ""
+  // Initial values
+  const fullName = $derived(profile?.full_name ?? "")
+  const companyName = $derived(profile?.company_name ?? "")
+  const website = $derived(profile?.website ?? "")
 
   // Field error helper (same behavior, just safer typing)
   function fieldError(

@@ -90,14 +90,23 @@
             />
           </svg>
           <input
+            id="article-search"
+            name="article-search"
             class="grow"
             type="text"
             placeholder="Search logs…"
             bind:value={query}
+            aria-label="Search articles"
           />
         </label>
 
-        <select class="select select-bordered w-full sm:w-56" bind:value={tag}>
+        <select
+          id="article-tag"
+          name="article-tag"
+          class="select select-bordered w-full sm:w-56"
+          bind:value={tag}
+          aria-label="Filter articles by tag"
+        >
           <option value="all">All tags</option>
           {#each TAGS as t}
             <option value={t}>{t}</option>

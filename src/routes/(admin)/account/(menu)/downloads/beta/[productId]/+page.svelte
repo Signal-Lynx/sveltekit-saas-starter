@@ -4,7 +4,8 @@
 
   // Data now comes directly from the server loader we created.
   const { data } = $props<{ data: PageData }>()
-  const { product, files } = data
+  const product = $derived(data.product)
+  const files = $derived(data.files)
 </script>
 
 <svelte:head>

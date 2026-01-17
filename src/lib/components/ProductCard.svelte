@@ -5,15 +5,23 @@
   const { product }: { product: Product } = $props()
 
   // Helpers
-  const isEmphasized =
-    product?.id === "antigrav" || product?.id === "timeline_c"
+  // Fix: Use $derived.by to prevent "state_referenced_locally" warnings and ensure reactivity
+  const isEmphasized = $derived.by(
+    () => product?.id === "antigrav" || product?.id === "timeline_c",
+  )
 
-  const subscribeHref = product?.stripe_price_id
-    ? `/account/subscribe/${product.stripe_price_id}`
-    : "/login"
+  const subscribeHref = $derived.by(() =>
+    product?.stripe_price_id
+      ? `/account/subscribe/${product.stripe_price_id}`
+      : "/login",
+  )
 
-  const headingId = `product-heading-${product?.id ?? "item"}`
-  const footnoteId = `product-footnote-${product?.id ?? "item"}`
+  const headingId = $derived.by(
+    () => `product-heading-${product?.id ?? "item"}`,
+  )
+  const footnoteId = $derived.by(
+    () => `product-footnote-${product?.id ?? "item"}`,
+  )
 </script>
 
 <div

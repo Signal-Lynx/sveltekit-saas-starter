@@ -11,7 +11,7 @@
   const { form }: { form: FormState } = $props()
   let isLoading = $state(false)
 
-  const initialEmail = (form?.email ?? "").toString()
+  const initialEmail = $derived((form?.email ?? "").toString())
 </script>
 
 <svelte:head>
