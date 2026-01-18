@@ -378,13 +378,10 @@ create policy "service role only" on public.contact_requests for all to service_
 drop policy if exists "service role only" on public.product_overrides;
 create policy "service role only" on public.product_overrides for all to service_role using (true) with check (true);
 
--- CONTACT FORM (allow anonymous inserts)
+-- CONTACT FORM
+-- Insert is performed server-side using the service_role key (keeps CAPTCHA + validation in your app layer).
+-- Do NOT allow direct anon inserts to the table (prevents bypassing app-layer protections).
 drop policy if exists "anon can submit contact form" on public.contact_requests;
-create policy "anon can submit contact form"
-on public.contact_requests
-for insert
-to anon
-with check (true);
 
 -- =========================
 -- Scheduled maintenance (pg_cron)
@@ -438,8 +435,8 @@ GRANT SELECT ON TABLE public.profiles TO authenticated;
 -- Stripe customers: clients read their own mapping (no writes).
 GRANT SELECT ON TABLE public.stripe_customers TO authenticated;
 
--- Contact form: allow anonymous submissions only (RLS policy already added).
-GRANT INSERT ON TABLE public.contact_requests TO anon;
+-- Contact form: server-side only (service_role). No direct client inserts.
+REVOKE INSERT ON TABLE public.contact_requests FROM anon, authenticated;
 
 -- (Intentionally NO grant on admin tables, product_overrides, webhook audit to anon/authenticated)
 
