@@ -32,7 +32,7 @@
   "devDependencies": {
     "@playwright/test": "^1.45.3",
     "@sveltejs/adapter-auto": "^3.0.0",
-    "@sveltejs/adapter-vercel": "^5.10.2",
+    "@sveltejs/adapter-vercel": "^6.3.1",
     "@sveltejs/kit": "^2.49.5",
     "@sveltejs/vite-plugin-svelte": "^6.0.0",
     "@sveltejs/vite-plugin-svelte-inspector": "^5.0.0",
@@ -52,7 +52,6 @@
     "postcss": "^8.4.39",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.6",
-    "super-sitemap": "^0.15.1",
     "svelte": "^5.46.4",
     "svelte-check": "^4.0.0",
     "svelte-eslint-parser": "^0.43.0",
@@ -66,6 +65,7 @@
     "cookie": "^0.7.2",
     "devalue": "^5.6.2",
     "tar": "^7.5.7",
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "fast-xml-parser": "5.3.4"
   }
 }

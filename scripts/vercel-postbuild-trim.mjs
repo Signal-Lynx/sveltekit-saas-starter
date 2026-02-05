@@ -3,6 +3,9 @@
 import fs from "node:fs"
 import path from "node:path"
 
+// Fail build if function exceeds this after trim (Vercel limit is ~250MB)
+const MAX_FUNC_MB = 240
+
 function exists(p) {
   try {
     fs.accessSync(p)
@@ -74,6 +77,10 @@ function bytesToMb(n) {
   return (n / (1024 * 1024)).toFixed(1) + "MB"
 }
 
+function mbToBytes(mb) {
+  return mb * 1024 * 1024
+}
+
 // Reports largest top-level folders so you can SEE that 'uv' is the bloat
 function reportLargestTopLevel(funcDir, topN = 15) {
   let ents = []
@@ -102,11 +109,16 @@ function reportLargestTopLevel(funcDir, topN = 15) {
 function pruneFunctionDir(funcDir) {
   let removed = 0
 
-  // ULTRA-CONSERVATIVE KILL LIST
-  // We are ONLY removing the confirmed massive Python runtime.
-  // We are keeping all node_modules to avoid breaking the app.
-  const killExact = ["uv", "uv/python"]
+  // KILL LIST: Remove Vercel runtime layers that should not be in the bundle
+  // We keep all node_modules - only removing environment/toolchain bloat
 
+  // 1. Exact directory names
+  const killExact = ["uv", "uv/python", "rust", ".rustup", ".cargo"]
+
+  // 2. Regex patterns (node24, nodejs24, etc.)
+  const killRegex = [/^node\d+$/i, /^python/i]
+
+  // Pass 1: Kill exact matches
   for (const rel of killExact) {
     const target = path.join(funcDir, rel)
     if (exists(target) && rmrf(target)) {
@@ -114,6 +126,28 @@ function pruneFunctionDir(funcDir) {
       removed++
     }
   }
+
+  // Pass 2: Kill by regex (top-level only, skip node_modules)
+  let ents = []
+  try {
+    ents = fs.readdirSync(funcDir, { withFileTypes: true })
+  } catch {
+    return removed
+  }
+
+  for (const e of ents) {
+    if (!e.isDirectory()) continue
+    if (e.name === "node_modules") continue // Safety: never touch node_modules
+
+    if (killRegex.some((re) => re.test(e.name))) {
+      const target = path.join(funcDir, e.name)
+      if (exists(target) && rmrf(target)) {
+        console.log(`[postbuild-trim] killed: ${e.name}`)
+        removed++
+      }
+    }
+  }
+
   return removed
 }
 
@@ -134,6 +168,7 @@ function main() {
 
   const funcDirs = findFunctionDirs(functionsRoot)
   let totalRemoved = 0
+  let buildFailed = false
 
   for (const dir of funcDirs) {
     const before = dirSize(dir)
@@ -151,12 +186,28 @@ function main() {
     console.log(
       `[postbuild-trim] ${path.basename(dir)} AFTER trim: ${bytesToMb(after)}`,
     )
+
+    // Safety check: Fail build if still oversized
+    if (after > mbToBytes(MAX_FUNC_MB)) {
+      console.error(
+        `[postbuild-trim] ERROR: ${path.basename(dir)} is ${bytesToMb(after)}, ` +
+          `exceeds ${MAX_FUNC_MB}MB limit. Build must fail.`,
+      )
+      buildFailed = true
+    }
   }
 
   console.log(
     `[postbuild-trim] scanned=${funcDirs.length} removed_targets=${totalRemoved}`,
   )
   console.log(`[postbuild-trim] done.`)
+
+  if (buildFailed) {
+    console.error(
+      `[postbuild-trim] BUILD FAILED: One or more functions exceed size limit.`,
+    )
+    process.exit(1)
+  }
 }
 
 main()
