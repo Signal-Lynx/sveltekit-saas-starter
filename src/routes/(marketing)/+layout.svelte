@@ -36,7 +36,7 @@
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1 hidden sm:flex font-bold text-lg">
       <li class="dropdown dropdown-hover md:mx-2">
-        <div tabindex="0" role="button">Products</div>
+        <a href="/products" role="button">Products</a>
         <ul
           class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
         >
@@ -96,7 +96,7 @@
         aria-labelledby="mobile-menu-button"
       >
         <li>
-          <span>Products</span>
+          <a href="/products">Products</a>
           <ul class="p-2">
             {#each SITE_CONFIG.footerNav.products as item}
               <li><a href={item.href} role="menuitem">{item.name}</a></li>
