@@ -1,20 +1,29 @@
-<!-- FILE: src/lib/components/layout/ContentPage.svelte (NEW FILE) -->
+<!-- FILE: src/lib/components/layout/ContentPage.svelte  -->
+
 <script lang="ts">
   import { WebsiteName } from "../../../config"
 
   interface Props {
     title: string
     description?: string
+    seoTitle?: string
+    seoDescription?: string
     children?: import("svelte").Snippet
   }
 
-  const { title, description = "", children }: Props = $props()
+  const {
+    title,
+    description = "",
+    seoTitle,
+    seoDescription,
+    children,
+  }: Props = $props()
 </script>
 
 <svelte:head>
-  <title>{title} | {WebsiteName}</title>
-  {#if description}
-    <meta name="description" content={description} />
+  <title>{seoTitle ?? title} | {WebsiteName}</title>
+  {#if seoDescription ?? description}
+    <meta name="description" content={seoDescription ?? description} />
   {/if}
 </svelte:head>
 

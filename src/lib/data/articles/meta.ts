@@ -7,6 +7,12 @@ export interface ArticleMeta {
   publishedAt: string // YYYY-MM-DD
   author: string
   tags: readonly string[]
+
+  // Optional “dual-title” SEO fields:
+  // - seoTitle: what goes into the HTML <title> tag (SERP title)
+  // - seoDescription: what goes into meta description (SERP snippet)
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export const articlesMeta: readonly ArticleMeta[] = [

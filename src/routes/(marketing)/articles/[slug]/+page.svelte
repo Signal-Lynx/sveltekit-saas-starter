@@ -12,20 +12,61 @@
 
   const canonicalUrl = $derived.by(() => `${WebsiteBaseUrl}${href}`)
 
+  // Dual-title values (SERP title/description)
+  const seoTitle = $derived.by(() => meta.seoTitle ?? meta.title)
+  const seoDescription = $derived.by(
+    () => meta.seoDescription ?? meta.description,
+  )
+
+  // Conservative default. If you later add a dedicated OG image per article, update logic here.
+  const ogImageUrl = $derived.by(() => `${WebsiteBaseUrl}/logo.png`)
+
+  // Structured data (Article + Breadcrumbs)
   const ldJson = $derived.by(() =>
     JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "Article",
-      headline: meta.title,
-      description: meta.description,
-      datePublished: meta.publishedAt,
-      author: { "@type": "Organization", name: meta.author },
-      mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-      publisher: {
-        "@type": "Organization",
-        name: WebsiteName,
-        url: WebsiteBaseUrl,
-      },
+      "@graph": [
+        {
+          "@type": "Article",
+          headline: seoTitle,
+          alternativeHeadline: meta.title,
+          description: seoDescription,
+          datePublished: meta.publishedAt,
+          author: { "@type": "Organization", name: meta.author },
+          mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+          url: canonicalUrl,
+          keywords: (meta.tags ?? []).join(", "),
+          image: [ogImageUrl],
+          publisher: {
+            "@type": "Organization",
+            name: WebsiteName,
+            url: WebsiteBaseUrl,
+          },
+        },
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: WebsiteBaseUrl,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Articles",
+              item: `${WebsiteBaseUrl}/articles`,
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: meta.title,
+              item: canonicalUrl,
+            },
+          ],
+        },
+      ],
     }).replace(/</g, "\\u003c"),
   )
 
@@ -43,14 +84,26 @@
 
 <svelte:head>
   <meta property="og:type" content="article" />
-  <meta property="og:title" content={meta.title} />
-  <meta property="og:description" content={meta.description} />
+  <meta property="og:title" content={seoTitle} />
+  <meta property="og:description" content={seoDescription} />
   <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImageUrl} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={seoTitle} />
+  <meta name="twitter:description" content={seoDescription} />
+  <meta name="twitter:image" content={ogImageUrl} />
+
   {@html `<script type="application/ld+json">${ldJson}<\/script>`}
   <link rel="canonical" href={canonicalUrl} />
 </svelte:head>
 
-<ContentPage title={meta.title} description={meta.description}>
+<ContentPage
+  title={meta.title}
+  description={meta.description}
+  {seoTitle}
+  {seoDescription}
+>
   <div
     class="flex flex-wrap gap-4 items-center mb-8 text-sm text-base-content/60 font-mono border-b border-base-content/10 pb-4"
   >
