@@ -12,7 +12,7 @@ if (!envPriv.PRIVATE_STRIPE_API_KEY) {
 }
 
 const stripe = new Stripe(envPriv.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2023-08-16",
+  apiVersion: "2026-01-28.clover",
 })
 
 // ---------- Types ----------

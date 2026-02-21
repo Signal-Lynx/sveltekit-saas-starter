@@ -49,7 +49,7 @@ let stripeClient: Stripe | null = null
 function getStripe(): Stripe {
   const key = requireEnv("PRIVATE_STRIPE_API_KEY")
   if (stripeClient) return stripeClient
-  stripeClient = new Stripe(key, { apiVersion: "2023-08-16" })
+  stripeClient = new Stripe(key, { apiVersion: "2026-01-28.clover" })
   return stripeClient
 }
 
@@ -373,27 +373,57 @@ export async function refundLatestCharge(
     customer: customerId,
     limit: 1,
     status: "paid",
-    expand: ["data.payment_intent"],
   })
 
   const inv = invoices.data.at(0)
   if (!inv) throw new Error("No paid invoices to refund.")
 
-  // Determine the charge id from the payment intent (preferred) or invoice.charge
+  /**
+   * Stripe removed invoice.payment_intent / invoice.charge in newer API versions.
+   * Use Invoice Payments to find the PaymentIntent/Charge backing this invoice.
+   */
+  const invPays = await stripe.invoicePayments.list({
+    invoice: inv.id,
+    limit: 10,
+    status: "paid",
+  })
+
+  const latestPay = invPays.data
+    .slice()
+    .sort((a, b) => (b.created ?? 0) - (a.created ?? 0))[0]
+
+  if (!latestPay)
+    throw new Error("No invoice payments found on latest paid invoice.")
+
   let chargeId: string | null = null
 
-  if (typeof inv.payment_intent === "string") {
-    const pi = await stripe.paymentIntents.retrieve(inv.payment_intent)
-    chargeId = (pi.latest_charge as string) ?? null
-  } else if (inv.payment_intent && typeof inv.payment_intent === "object") {
-    chargeId = (inv.payment_intent.latest_charge as string) ?? null
+  const pay = latestPay.payment ?? null
+  const piRef = (pay as any)?.payment_intent ?? null
+  const chRef = (pay as any)?.charge ?? null
+
+  if (piRef) {
+    const piId = typeof piRef === "string" ? piRef : (piRef as any).id
+    if (typeof piId === "string" && piId.length > 0) {
+      const pi = await stripe.paymentIntents.retrieve(piId)
+      const lc = (pi as any)?.latest_charge ?? null
+      if (typeof lc === "string") {
+        chargeId = lc
+      } else if (
+        lc &&
+        typeof lc === "object" &&
+        typeof (lc as any).id === "string"
+      ) {
+        chargeId = (lc as any).id
+      }
+    }
+  } else if (chRef) {
+    const chId = typeof chRef === "string" ? chRef : (chRef as any).id
+    if (typeof chId === "string" && chId.length > 0) chargeId = chId
   }
 
-  if (!chargeId && inv.charge && typeof inv.charge === "string") {
-    chargeId = inv.charge
+  if (!chargeId) {
+    throw new Error("No refundable charge found on latest invoice payment.")
   }
-
-  if (!chargeId) throw new Error("No charge found on latest invoice.")
 
   const amt =
     typeof amountCents === "number" && amountCents > 0

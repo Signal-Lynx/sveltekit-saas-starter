@@ -7,7 +7,7 @@ if (!envPriv.PRIVATE_STRIPE_API_KEY) {
 }
 
 const stripe = new Stripe(envPriv.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2023-08-16",
+  apiVersion: "2026-01-28.clover",
 })
 
 type ApiList<T> = Stripe.ApiList<T>
@@ -159,8 +159,19 @@ export async function getStripePulseSummary(): Promise<StripePulse> {
   for (const st of activeLike) {
     for await (const s of listSubscriptions({ status: st })) {
       activeSubs++
-      const cpe =
-        typeof s.current_period_end === "number" ? s.current_period_end : null
+      const cpe = (() => {
+        const ends = (s.items?.data ?? [])
+          .map((it) =>
+            typeof (it as any).current_period_end === "number"
+              ? (it as any).current_period_end
+              : null,
+          )
+          .filter((v): v is number => typeof v === "number")
+
+        // If multiple items exist, use the soonest end as “next renewal”.
+        return ends.length ? Math.min(...ends) : null
+      })()
+
       if (cpe && cpe <= next7) renewalsNext7++
     }
   }

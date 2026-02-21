@@ -7,7 +7,7 @@ import { env as cfg } from "$lib/server/env"
 
 // --- Stripe client -----------------------------------------------------------
 const stripe = new Stripe(cfg.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2023-08-16",
+  apiVersion: "2026-01-28.clover",
 })
 
 // --- Small utils -------------------------------------------------------------
@@ -128,7 +128,8 @@ async function handleInvoicePaidOrFailed(event: Stripe.Event, log: any) {
     userId,
     customerId,
     invoiceId: invoice.id,
-    paid: invoice.paid,
+    paid: invoice.status === "paid",
+    status: invoice.status,
     attempted: invoice.attempted,
     attempt_count: invoice.attempt_count,
   })

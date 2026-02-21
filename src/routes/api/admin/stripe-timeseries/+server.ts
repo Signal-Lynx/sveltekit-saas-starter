@@ -8,7 +8,7 @@ import Stripe from "stripe"
 // -----------------------------
 // Config / Helpers
 // -----------------------------
-const API_VERSION: Stripe.LatestApiVersion = "2023-08-16"
+const API_VERSION: Stripe.LatestApiVersion = "2026-01-28.clover"
 const CACHE_TTL_MS = 240 * 60_000 // 4 hour cache
 
 type TSResponse = {
