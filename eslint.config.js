@@ -33,7 +33,7 @@ export default [
 
   // Project-wide settings + baseline adjustments
   {
-    files: ["**/*.{js,ts,svelte}"],
+    files: ["**/*.{js,mjs,cjs,ts,svelte}"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -59,6 +59,10 @@ export default [
       ],
       "prefer-const": "warn",
       "no-undef": "off", // SvelteKit ambient types sometimes trip this up
+
+      // ESLint 10 surfaced these across existing code; keep this update effort surgical.
+      "no-useless-assignment": "off",
+      "preserve-caught-error": "off",
     },
   },
 
@@ -73,7 +77,9 @@ export default [
       },
     },
     rules: {
-      // (keep Svelte rules from preset; specific file overrides below)
+      // Keep Svelte rules from preset, but don't force a repo-wide rewrite right now.
+      "svelte/no-navigation-without-resolve": "off",
+      "svelte/require-each-key": "off",
     },
   },
 

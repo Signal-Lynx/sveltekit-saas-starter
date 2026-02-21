@@ -112,8 +112,8 @@
         <div class="space-y-4 text-lg text-base-content/80">
           <p>
             <strong class="text-secondary">Zero-Point Energy:</strong> We harness
-            the background radiation of the universe to lift your board 6 inches
-            off the ground. It's green energy, mostly because it glows green.
+            the background radiation of the universe to lift your board 6 inches off
+            the ground. It's green energy, mostly because it glows green.
           </p>
           <p>
             <strong class="text-secondary">The Pit Bull System:</strong> Our proprietary
@@ -122,8 +122,8 @@
           </p>
           <p>
             <strong class="text-secondary">Firmware Updates:</strong> Join the
-            <strong>Anti-Gravity Society</strong> to get monthly patches. We fix
-            bugs, improve stability, and occasionally add unauthorized flight capabilities.
+            <strong>Anti-Gravity Society</strong> to get monthly patches. We fix bugs,
+            improve stability, and occasionally add unauthorized flight capabilities.
           </p>
         </div>
       </div>

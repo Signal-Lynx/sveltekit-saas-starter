@@ -14,7 +14,7 @@ type AppUser = {
 type SafeSession = {
   readonly session: Session | null
   readonly user: AppUser | null
-  readonly amr: ReadonlyArray<AMREntry> | null
+  readonly amr: ReadonlyArray<AMREntry | string> | null
 }
 
 /**

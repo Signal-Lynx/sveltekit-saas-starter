@@ -531,8 +531,7 @@
 
     <p class="mt-2 text-xs text-base-content/60">
       Net = paid invoices − refunds in the same month. In <code>allowlist</code>
-      scope, an invoice contributes if any line matches an allowed product/price
-      (approximation).
+      scope, an invoice contributes if any line matches an allowed product/price (approximation).
     </p>
   {/if}
 </div>

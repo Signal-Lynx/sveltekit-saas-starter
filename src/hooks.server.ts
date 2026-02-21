@@ -4,6 +4,7 @@ import { env as publicEnv } from "$env/dynamic/public"
 import { building, dev } from "$app/environment"
 import { createServerClient } from "@supabase/ssr"
 import type { Handle, HandleServerError } from "@sveltejs/kit"
+import type { CookieSerializeOptions } from "cookie"
 import { sequence } from "@sveltejs/kit/hooks"
 import { withContext } from "$lib/server/logger"
 import type { Database } from "$lib/types/database"
@@ -379,7 +380,13 @@ const supabase: Handle = async ({ event, resolve }) => {
     {
       cookies: {
         getAll: () => event.cookies.getAll(),
-        setAll: (cookiesToSet) => {
+        setAll: (
+          cookiesToSet: Array<{
+            name: string
+            value: string
+            options: CookieSerializeOptions
+          }>,
+        ) => {
           cookiesToSet.forEach(({ name, value, options }) => {
             event.cookies.set(name, value, {
               ...options,
@@ -392,7 +399,10 @@ const supabase: Handle = async ({ event, resolve }) => {
         },
       },
       global: {
-        fetch: (input, init) => {
+        fetch: (
+          input: Parameters<typeof fetch>[0],
+          init?: Parameters<typeof fetch>[1],
+        ) => {
           const controller = new AbortController()
           const timeoutId = setTimeout(() => controller.abort(), 4000) // 4-second timeout for Supabase calls
 

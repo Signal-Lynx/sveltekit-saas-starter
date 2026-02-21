@@ -562,8 +562,8 @@ export async function sendTemplateEmail(
   const email = authData?.user?.email ?? null
   const emailVerified = Boolean(
     authData?.user?.email_confirmed_at ||
-      (authData?.user?.user_metadata as Record<string, unknown> | undefined)
-        ?.email_verified,
+    (authData?.user?.user_metadata as Record<string, unknown> | undefined)
+      ?.email_verified,
   )
   if (authErr || !email) throw new Error("Email not found.")
   if (!emailVerified) throw new Error("Email not verified.")
@@ -598,8 +598,8 @@ export async function sendPlainEmail(
   const email = authData?.user?.email ?? null
   const emailVerified = Boolean(
     authData?.user?.email_confirmed_at ||
-      (authData?.user?.user_metadata as Record<string, unknown> | undefined)
-        ?.email_verified,
+    (authData?.user?.user_metadata as Record<string, unknown> | undefined)
+      ?.email_verified,
   )
   if (authErr || !email) throw new Error("Email not found.")
   if (!emailVerified) throw new Error("Email not verified.")

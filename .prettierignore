@@ -4,5 +4,9 @@
 
 # Don't format plaintext email templates, the new lines are important
 src/lib/emails/*_text.svelte
-src/lib/emails/*_text.hbspnpm-lock.yaml
+src/lib/emails/*_text.hbs
+pnpm-lock.yaml
 package-lock.json
+
+# Email templates: Prettier is not reliably idempotent on complex HTML+Handlebars.
+src/lib/emails/welcome_email_html.hbs

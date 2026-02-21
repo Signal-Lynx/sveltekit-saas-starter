@@ -11,8 +11,8 @@
   description={`Central hub for all legal documents, policies, and terms for ${WebsiteName} products and services.`}
 >
   <p>
-    Welcome to the {WebsiteName} legal center. This page provides easy access to
-    all of our policies, terms, and legal notices.
+    Welcome to the {WebsiteName} legal center. This page provides easy access to all
+    of our policies, terms, and legal notices.
   </p>
 
   <h2 class="!mt-8 !mb-4">Policies & Documents</h2>

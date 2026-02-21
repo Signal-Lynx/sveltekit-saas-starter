@@ -21,6 +21,9 @@ updates:
 
     # Group related updates into single PRs to reduce churn
     groups:
+      aws-sdk:
+        patterns:
+          - "@aws-sdk/*"
       eslint-and-typescript:
         patterns:
           - "eslint"

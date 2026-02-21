@@ -245,11 +245,20 @@ export const actions: Actions = {
     const newPassword2 = (formData.get("newPassword2") as string) ?? ""
     const currentPassword = (formData.get("currentPassword") as string) ?? ""
 
-    const recoveryAmr = amr?.find((x) => x.method === "recovery")
+    type AmrRecoveryEntry = { method: string; timestamp: number }
+
+    const recoveryAmr = amr?.find(
+      (x): x is AmrRecoveryEntry =>
+        typeof x === "object" &&
+        x !== null &&
+        (x as any).method === "recovery" &&
+        typeof (x as any).timestamp === "number",
+    )
+
     const isRecoverySession = !!recoveryAmr && !currentPassword
 
-    if (isRecoverySession) {
-      const timeSinceLogin = Date.now() - recoveryAmr!.timestamp * 1000
+    if (isRecoverySession && recoveryAmr) {
+      const timeSinceLogin = Date.now() - recoveryAmr.timestamp * 1000
       if (timeSinceLogin > 1000 * 60 * 15) {
         return fail(400, {
           errorMessage:

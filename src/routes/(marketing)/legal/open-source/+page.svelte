@@ -5,9 +5,9 @@
 
 <ContentPage title="Open-Source Notices">
   <p>
-    {WebsiteName} is built with amazing open-source software. The following is a
-    list of some key components and their licenses. Your rights under those licenses
-    are not limited by our Terms of Service.
+    {WebsiteName} is built with amazing open-source software. The following is a list
+    of some key components and their licenses. Your rights under those licenses are
+    not limited by our Terms of Service.
   </p>
   <ul>
     <li>

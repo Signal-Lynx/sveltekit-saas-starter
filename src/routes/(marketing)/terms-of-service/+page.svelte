@@ -27,11 +27,11 @@
       (the "Company", "we", "us", or "our"). These Terms govern your access to and
       use of all properties operated by or on behalf of the Company, including (as
       applicable) websites, web apps and portals; desktop, server, or mobile software
-      and installers; setup and configuration utilities; application programming
-      interfaces (APIs) and software development kits (SDKs); back-end services;
-      content, documentation, and emails; marketing and communications across all
-      channels (including social media, webinars, trade shows, and in-person demos);
-      and contests, giveaways, or promotions (collectively, the "Properties").
+      and installers; setup and configuration utilities; application programming interfaces
+      (APIs) and software development kits (SDKs); back-end services; content, documentation,
+      and emails; marketing and communications across all channels (including social
+      media, webinars, trade shows, and in-person demos); and contests, giveaways,
+      or promotions (collectively, the "Properties").
     </p>
     <p>
       By creating an account, making a purchase, installing or using any
@@ -51,8 +51,8 @@
     </p>
     <p>
       <strong>Subscription:</strong> Time-limited access to certain Properties or
-      features that renews automatically at the end of each term unless canceled
-      in accordance with these Terms.
+      features that renews automatically at the end of each term unless canceled in
+      accordance with these Terms.
     </p>
     <p>
       <strong>Perpetual License:</strong> A license without a renewal term, though
@@ -64,8 +64,8 @@
       device, environment, or instance for licensing purposes.
     </p>
     <p>
-      <strong>User Secrets:</strong> Your private keys, credentials, tokens, API
-      keys, or other sensitive configuration data that you control.
+      <strong>User Secrets:</strong> Your private keys, credentials, tokens, API keys,
+      or other sensitive configuration data that you control.
     </p>
     <p>
       <strong>Community Channels:</strong> The Company's social media, forums, chat
@@ -164,8 +164,8 @@
       usage parameters (for example, seats, activations, or rate limits).
     </p>
     <p>
-      <strong>Restrictions.</strong> You will not (and will not permit any third
-      party to):
+      <strong>Restrictions.</strong> You will not (and will not permit any third party
+      to):
     </p>
     <ol type="a">
       <li>
@@ -409,11 +409,10 @@
 
     <h2>14A) License Services Availability &amp; Your Business Continuity</h2>
     <p>
-      <strong>No SLA for Entitlement or Activation.</strong> License activation,
-      entitlement, update, and validation endpoints (whether hosted by the Company
-      or self-hosted by you using Company-provided components) may be unavailable,
-      throttled, modified, or deprecated without notice and may be affected by third-party
-      outages or incidents.
+      <strong>No SLA for Entitlement or Activation.</strong> License activation, entitlement,
+      update, and validation endpoints (whether hosted by the Company or self-hosted
+      by you using Company-provided components) may be unavailable, throttled, modified,
+      or deprecated without notice and may be affected by third-party outages or incidents.
     </p>
     <p>
       <strong>Your Redundancy Obligations.</strong> You are solely responsible for
@@ -424,8 +423,8 @@
       guarantees, or offline keys unless expressly agreed in a separate signed writing.
     </p>
     <p>
-      <strong>No Credits or Refunds.</strong> To the maximum extent permitted by
-      law, the Company will not provide refunds, credits, extensions, or other compensation
+      <strong>No Credits or Refunds.</strong> To the maximum extent permitted by law,
+      the Company will not provide refunds, credits, extensions, or other compensation
       for downtime or unavailability of license, activation, entitlement, or update
       services.
     </p>
@@ -589,17 +588,17 @@
     <h2>23) Dispute Resolution; Arbitration; Class Waiver; Opt-Out</h2>
     <p>
       <strong>Governing Law &amp; Venue.</strong> Unless otherwise required by mandatory
-      local law, these Terms and any disputes arising out of or relating to them
-      or the Properties will be governed by the laws of the jurisdiction in which
-      the Company is organized or primarily conducts business, without regard to
-      conflict of laws principles.
+      local law, these Terms and any disputes arising out of or relating to them or
+      the Properties will be governed by the laws of the jurisdiction in which the
+      Company is organized or primarily conducts business, without regard to conflict
+      of laws principles.
     </p>
     <p>
       <strong>Arbitration.</strong> Except to the extent prohibited by applicable
       law, any dispute arising out of or relating to these Terms or the Properties
       will be resolved by binding arbitration administered by a reputable arbitration
-      provider (for example, the American Arbitration Association or JAMS) under
-      its applicable rules. Unless otherwise agreed, the seat and location of arbitration
+      provider (for example, the American Arbitration Association or JAMS) under its
+      applicable rules. Unless otherwise agreed, the seat and location of arbitration
       will be the principal place of business of the Company. Either party may seek
       individual relief in small-claims court where jurisdictionally available.
     </p>
@@ -612,10 +611,10 @@
     <p>
       <strong>Opt-Out.</strong> If the arbitration and class-waiver provisions are
       not mandatory under applicable law, you may opt out of them (but not of other
-      provisions of these Terms) by sending written notice to the Company within
-      thirty (30) days of the date you first accept these Terms. The notice must
-      identify you and clearly state your desire to opt out of arbitration. Instructions
-      for contacting the Company for this purpose may be provided on the Properties.
+      provisions of these Terms) by sending written notice to the Company within thirty
+      (30) days of the date you first accept these Terms. The notice must identify
+      you and clearly state your desire to opt out of arbitration. Instructions for
+      contacting the Company for this purpose may be provided on the Properties.
     </p>
 
     <h2>24) Notices; Electronic Communications</h2>
