@@ -32,7 +32,7 @@ const NAV: readonly AdminNavItem[] = [
  * - Sets no-store caching for sensitive data
  * - Hides the existence of the portal for non-admins via redirect
  */
-export const load = (async ({ locals, setHeaders, depends }) => {
+export const load = (async ({ locals, setHeaders, depends, url }) => {
   // Mark this data as dependent on admin session/profile so downstream
   // invalidations can re-run the loader if your hooks/session changes.
   depends?.("app:admin:profile")
@@ -46,7 +46,10 @@ export const load = (async ({ locals, setHeaders, depends }) => {
   // Prefer `locals.user` set by hooks; bail early if not authenticated.
   const u = (locals as App.Locals)?.user ?? null
   if (!u) {
-    throw redirect(303, "/login")
+    throw redirect(
+      303,
+      `/login?next=${encodeURIComponent(url.pathname + url.search)}`,
+    )
   }
 
   // Fetch only the minimal columns required for authorization + metadata.

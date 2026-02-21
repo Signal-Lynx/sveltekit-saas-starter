@@ -39,6 +39,10 @@ const getDomainConfig = () => {
 }
 
 const { MAIN_HOST, ADMIN_HOST, ROOT_DOMAIN_COOKIE } = getDomainConfig()
+
+const ROOT_DOMAIN = ROOT_DOMAIN_COOKIE.startsWith(".")
+  ? ROOT_DOMAIN_COOKIE.slice(1)
+  : ROOT_DOMAIN_COOKIE
 // --------------------------------------------------------------------
 
 // ERROR TEST FUNCTION
@@ -203,8 +207,14 @@ const adminDomainGuard: Handle = async ({ event, resolve }) => {
     throw redirect(308, url.toString())
   }
 
+  // Login/auth plumbing is permitted on the admin host.
+  // This avoids an unnecessary bounce to www during auth flows.
+  const isAuthFlowPath =
+    path.startsWith("/login") || path.startsWith("/auth/") || path === "/access"
+
   // 2. Force non-admin traffic OFF the admin subdomain
-  if (!isAdminTraffic && host === ADMIN_HOST) {
+  // Exception: auth flow paths may stay on admin host.
+  if (!isAdminTraffic && !isAuthFlowPath && host === ADMIN_HOST) {
     const url = new URL(event.url)
     url.hostname = MAIN_HOST
     url.protocol = "https:"
@@ -387,13 +397,30 @@ const supabase: Handle = async ({ event, resolve }) => {
             options: CookieSerializeOptions
           }>,
         ) => {
+          const host = event.url.hostname
+          const sharedDomain =
+            !dev &&
+            !building &&
+            !host.endsWith(".vercel.app") &&
+            (host === ROOT_DOMAIN || host.endsWith(`.${ROOT_DOMAIN}`))
+              ? ROOT_DOMAIN_COOKIE
+              : undefined
+
           cookiesToSet.forEach(({ name, value, options }) => {
+            // Hygiene: clear existing cookies to avoid duplicate-cookie ambiguity.
+            // 1) Clear host-only cookie on the current host
+            event.cookies.delete(name, { path: "/" })
+
+            // 2) Clear shared-domain cookie (if we’re using shared-domain mode)
+            if (sharedDomain) {
+              event.cookies.delete(name, { path: "/", domain: sharedDomain })
+            }
+
+            // Set cookie (shared across subdomains in prod)
             event.cookies.set(name, value, {
               ...options,
               path: "/",
-              // CRITICAL: Force cookie to root domain so it works on 'www' AND 'admin'
-              // (Keep undefined in dev so localhost works)
-              domain: dev ? undefined : ROOT_DOMAIN_COOKIE,
+              ...(sharedDomain ? { domain: sharedDomain } : {}),
             })
           })
         },
@@ -426,9 +453,24 @@ const supabase: Handle = async ({ event, resolve }) => {
       supaErr &&
       (supaErr as { code?: string }).code === "refresh_token_not_found"
     ) {
+      const host = event.url.hostname
+      const sharedDomain =
+        !dev &&
+        !building &&
+        !host.endsWith(".vercel.app") &&
+        (host === ROOT_DOMAIN || host.endsWith(`.${ROOT_DOMAIN}`))
+          ? ROOT_DOMAIN_COOKIE
+          : undefined
+
       for (const c of event.cookies.getAll()) {
         if (c.name.startsWith("sb-")) {
+          // host-only
           event.cookies.delete(c.name, { path: "/" })
+
+          // shared-domain
+          if (sharedDomain) {
+            event.cookies.delete(c.name, { path: "/", domain: sharedDomain })
+          }
         }
       }
     }
