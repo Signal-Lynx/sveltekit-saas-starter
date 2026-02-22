@@ -3,8 +3,14 @@
 //   { index: <Fuse JSON>, indexData: Array<{title, description, body, path}>, buildTime: number }
 // - Improves robustness (null-safety, minor typing, sanitized text) without changing behavior.
 
+// Build a lightweight search index from products + a few static pages.
+// - Keeps the same inputs (imports) and the same output shape:
+//   { index: <Fuse JSON>, indexData: Array<{title, description, body, path}>, buildTime: number }
+// - Improves robustness (null-safety, minor typing, sanitized text) without changing behavior.
+
 import Fuse from "fuse.js"
 import { allProducts } from "$lib/data/products"
+// Template uses articlesMeta, not nightShiftNotesMeta
 import { articlesMeta, articleHref } from "$lib/data/articles/meta"
 
 // ---- Types -----------------------------------------------------------------
@@ -22,27 +28,65 @@ type BuildResult = {
   buildTime: number
 }
 
-// ---- Static pages included in search ---------------------------------------
+// ---- Static pages included in search (PARADOX INNOVATIONS EDITION) ----------
 
 const otherPages: ReadonlyArray<SearchRecord> = [
   {
     title: "Home",
-    description: "The open source, fast, and free to host SaaS template.",
-    body: "",
+    description:
+      "Paradox Innovations: Solving tomorrow's problems by causing them today.",
+    body: "hoverboard time travel paradox timeline c",
     path: "/",
   },
   {
-    title: "Documentation",
+    title: "Products",
     description:
-      "Setup guides, READMEs, and technical documentation for Signal Lynx products.",
-    body: "",
+      "Experimental Catalog. Anti-gravity schematics and reality stabilization.",
+    body: "hoverboard antigrav timeline c licensing trading",
+    path: "/products",
+  },
+  {
+    title: "Hover Tech",
+    description: "Anti-Gravity Schematics. Gravity is optional.",
+    body: "hoverboard schematics conversion kit antigrav",
+    path: "/products/hover",
+  },
+  {
+    title: "Timeline C",
+    description:
+      "Reality Stabilization Protocol. Upgrade to a better timeline.",
+    body: "timeline c access pass reality stable",
+    path: "/products/timeline",
+  },
+  {
+    title: "Articles",
+    description: "Mission Logs. Operational briefings and anomalies.",
+    body: "blog news updates",
+    path: "/articles",
+  },
+  {
+    title: "Documentation",
+    description: "Owner's manuals and technical deep-dives.",
+    body: "docs setup guide readme install",
     path: "/docs",
   },
   {
+    title: "FAQ",
+    description: "Knowledge Base. Answers to your burning questions.",
+    body: "questions help support paradox",
+    path: "/faq",
+  },
+  {
     title: "Contact Us",
-    description: "Get in touch with us for demos, quotes, or questions.",
-    body: "",
+    description: "Open a channel to the Paradox team.",
+    body: "contact support email help",
     path: "/contact_us",
+  },
+  {
+    title: "Legal Center",
+    description: "Terms, policies, and legal notices.",
+    body: "legal terms privacy dmca billing",
+    path: "/legal",
   },
 ] as const
 
@@ -69,13 +113,18 @@ function featuresToBody(features: unknown): string {
 
 /** Map product -> SearchRecord. Path logic is intentionally preserved. */
 function productToRecord(product: any): SearchRecord {
-  const title = toCleanText(
-    product?.title ?? product?.name ?? product?.id ?? "",
-  )
+  const title = toCleanText(product?.title ?? product?.id ?? "")
+  const name = toCleanText(product?.name ?? "")
+  const id = toCleanText(product?.id ?? "")
   const description = toCleanText(product?.tagline ?? "")
-  const body = featuresToBody(product?.features)
-  const path =
-    product?.id === "license-hub" ? "/key-commander" : "/trading-automation"
+
+  // Include name/id/title in searchable body so queries like "Key Commander" / "Hoverboard" hit.
+  const body = [name, id, title, featuresToBody(product?.features)]
+    .filter(Boolean)
+    .join(" ")
+
+  // Prefer the product's actual href if present (Robust logic from Prod)
+  const path = toCleanText(product?.href) || "/products"
 
   return { title, description, body, path }
 }
@@ -90,6 +139,7 @@ export async function buildSearchIndex(): Promise<BuildResult> {
   // Preserve ordering: products first, then static pages
   const productRecords: SearchRecord[] = allProducts.map(productToRecord)
 
+  // Map Articles to search records
   const articleRecords: SearchRecord[] = articlesMeta.map((n) => ({
     title: toCleanText(n.title),
     description: toCleanText(n.description),

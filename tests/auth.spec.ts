@@ -1,31 +1,16 @@
 import { test, expect } from "@playwright/test"
 
-// Test suite for Authentication flows
 test.describe("Authentication and Onboarding", () => {
-  // Test case for the main sign-up navigation
-  test("should allow a user to navigate to the sign-up page", async ({
-    page,
-  }) => {
-    // 1. Start at the homepage
-    await page.goto("/")
+  test("should redirect gated routes to site access gate", async ({ page }) => {
+    await page.goto("/login")
 
-    // 2. Find and click the "Account" link in the main navigation bar.
-    await page.getByRole("link", { name: "Account" }).click()
+    // Your site gate redirects to /access?gate=site&next=%2Flogin
+    await expect(page).toHaveURL(/\/access\?gate=site&next=%2Flogin/)
 
-    // 3. We should now be on the /login page. Verify the "Get Started" heading is visible.
+    // Verify we are actually on the gate page (stable signals from your markup)
+    await expect(page.getByLabel(/access passphrase/i)).toBeVisible()
     await expect(
-      page.getByRole("heading", { name: "Get Started" }),
-    ).toBeVisible()
-
-    // 4. Find and click the "Sign Up" button on the login page.
-    await page.getByRole("button", { name: "Sign Up" }).click()
-
-    // 5. Verify that the URL is now the login/sign_up page.
-    await expect(page).toHaveURL("/login/sign_up")
-
-    // 6. Verify that the "Sign Up" heading is visible on the final page.
-    await expect(
-      page.getByRole("heading", { name: "Sign Up" }).first(),
+      page.getByRole("button", { name: /authenticate/i }),
     ).toBeVisible()
   })
 })

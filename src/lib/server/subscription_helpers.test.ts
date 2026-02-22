@@ -4,17 +4,19 @@ import type { User } from "@supabase/supabase-js"
 
 // ---------- Stripe mock (no TDZ) ----------
 vi.mock("stripe", () => {
-  let instance: any // lives inside the factory, so no TDZ issues
-  const Stripe = vi.fn().mockImplementation(() => {
+  let instance: any
+
+  const Stripe = vi.fn().mockImplementation(function () {
     instance = {
       customers: { create: vi.fn(), list: vi.fn() },
       subscriptions: { list: vi.fn() },
     }
     return instance
   })
+
   return {
-    default: Stripe,
     __esModule: true,
+    default: Stripe,
     _getInstance: () => instance,
   }
 })
@@ -37,11 +39,11 @@ vi.mock("$lib/server/supabaseAdmin", () => {
   return { supabaseAdmin }
 })
 
-// ---------- Product catalog mock ----------
+// ---------- Product catalog mock (Template IDs) ----------
 vi.mock("$lib/data/products", () => ({
   allProducts: [
-    { id: "signal-lynx", stripe_product_id: "prod_signal_lynx_123" },
-    { id: "license-hub", stripe_product_id: "prod_hub_123" },
+    { id: "hoverboard", stripe_product_id: "prod_hover_123" },
+    { id: "timeline_c", stripe_product_id: "prod_timeline_123" },
   ],
 }))
 
@@ -166,7 +168,7 @@ describe("Subscription Helpers", () => {
           {
             id: "sub_1",
             status: "active",
-            items: { data: [{ price: { product: "prod_signal_lynx_123" } }] },
+            items: { data: [{ price: { product: "prod_hover_123" } }] },
           },
         ],
       })
@@ -194,20 +196,20 @@ describe("Subscription Helpers", () => {
       expect(result.hasEverHadSubscription).toBe(false)
     })
 
-    it("maps active subscription for another known product (license-hub)", async () => {
+    it("maps active subscription for another known product (timeline_c)", async () => {
       const stripe = await getStripe()
       ;(stripe.subscriptions.list as any).mockResolvedValue({
         data: [
           {
             id: "sub_hub",
             status: "active",
-            items: { data: [{ price: { product: "prod_hub_123" } }] },
+            items: { data: [{ price: { product: "prod_timeline_123" } }] },
           },
         ],
       })
 
       const result = await fetchSubscription({ customerId: "cus_abc" })
-      expect(result.primarySubscription?.appSubscription.id).toBe("license-hub")
+      expect(result.primarySubscription?.appSubscription.id).toBe("timeline_c")
     })
   })
 })

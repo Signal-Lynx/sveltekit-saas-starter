@@ -27,7 +27,8 @@
       { name: "body", weight: 1 },
     ],
     ignoreLocation: true,
-    threshold: 0.3,
+    threshold: 0.4,
+    minMatchCharLength: 2,
   }
 
   // --- State --------------------------------------------------------
@@ -58,9 +59,13 @@
     abortCtrl = new AbortController()
 
     try {
-      // Try session cache first (skipped in dev to avoid stale data while iterating)
-      let payload: SearchPayload | null = null
-      if (!dev) {
+      // Prefer server-provided payload (works reliably with site-gate/cookies)
+      let payload: SearchPayload | null =
+        (($page.data as any)?.searchPayload as SearchPayload | undefined) ??
+        null
+
+      // Fall back to session cache (still skipped in dev)
+      if (!payload && !dev) {
         try {
           const cached = sessionStorage.getItem(SEARCH_CACHE_KEY)
           if (cached) payload = JSON.parse(cached) as SearchPayload
@@ -73,6 +78,7 @@
         const response = await fetch("/search/api.json", {
           signal: abortCtrl.signal,
           headers: { Accept: "application/json" },
+          credentials: "same-origin",
         })
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
@@ -118,10 +124,13 @@
       return
     }
 
+    // Read searchQuery synchronously so Svelte 5 tracks it as a reactive dependency.
+    const currentQuery = searchQuery
+
     if (searchTimer) clearTimeout(searchTimer)
     searchTimer = setTimeout(() => {
-      results = searchQuery
-        ? (fuse!.search(searchQuery) as FuseResult<SearchDoc>[])
+      results = currentQuery
+        ? (fuse!.search(currentQuery) as FuseResult<SearchDoc>[])
         : []
       focusItem = 0
     }, 75)
@@ -240,13 +249,6 @@
     >
       No Signal Found for "{searchQuery}"
     </div>
-    {#if dev}
-      <div class="text-center mt-4 font-mono text-base-content/50">
-        (Dev Mode: Missing content? Rebuild your local search index with <code
-          >npm run build</code
-        >)
-      </div>
-    {/if}
   {/if}
 
   <div class="mt-8 space-y-6">
@@ -260,9 +262,6 @@
           <h2 class="card-title text-2xl text-secondary">
             {result.item.title}
           </h2>
-          <div class="text-sm text-accent font-mono">
-            PATH: {result.item.path}
-          </div>
           <p class="text-base-content/80 mt-2">{result.item.description}</p>
         </div>
       </a>

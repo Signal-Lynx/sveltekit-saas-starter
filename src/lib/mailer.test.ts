@@ -1,5 +1,3 @@
-// FILE: src/lib/mailer.test.ts (COMPLETE REPLACEMENT)
-
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest"
 
 // ---------------------------
@@ -44,11 +42,12 @@ vi.mock("$lib/server/env", () => ({
 // 2. Mock AWS SDK
 vi.mock("@aws-sdk/client-sesv2", () => {
   // SESv2Client constructor + send()
-  const SESv2Client = vi.fn(() => ({
-    send: H.mockSesSend,
-  }))
-  // Command class only needs to carry the input through
-  const SendEmailCommand = vi.fn((input) => ({ input }))
+  const SESv2Client = vi.fn(function () {
+    return { send: H.mockSesSend }
+  })
+  const SendEmailCommand = vi.fn(function (input) {
+    return { input }
+  })
   return { SESv2Client, SendEmailCommand }
 })
 

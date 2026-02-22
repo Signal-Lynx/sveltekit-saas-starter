@@ -1,5 +1,5 @@
 // vite.config.ts
-import { defineConfig } from "vite"
+import { defineConfig } from "vitest/config"
 import { sveltekit } from "@sveltejs/kit/vite"
 import path from "node:path"
 
@@ -21,7 +21,7 @@ export default defineConfig({
             "tests/mocks/env-static-private.ts",
           ),
 
-          // --- $app stubs (keeps imports like `$app/environment` happy) ---
+          // --- $app stubs (keeps imports like $app/environment happy) ---
           "$app/environment": path.resolve("tests/mocks/app-environment.ts"),
 
           // --- $lib/* and friends used across your code/tests ---
@@ -37,13 +37,11 @@ export default defineConfig({
       : {},
   },
 
-  // @ts-expect-error - Provided by Vitest at runtime
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
     globals: true,
 
     environment: "node",
-    environmentMatchGlobs: [["**/*.dom.{test,spec}.{js,ts}", "jsdom"]],
 
     // Silence Vitest v2 deprecation by using the new optimizer include
     deps: {
