@@ -38,7 +38,7 @@ export const load = (async ({ setHeaders, depends }) => {
     // Short, friendly cache with stale-while-revalidate
     // Keeps response snappy while allowing background revalidation
     setHeaders({
-      "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+      "Cache-Control": "private, no-store, max-age=0",
     })
 
     // ⬇️ Do not change this shape

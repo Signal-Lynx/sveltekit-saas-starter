@@ -19,7 +19,7 @@ const config = {
 
   kit: {
     adapter: useVercel ? adapterVercel({}) : adapterAuto(),
-    inlineStyleThreshold: 150000,
+    inlineStyleThreshold: 0,
 
     csrf: {
       // same-origin only by default; add trusted 3p origins if needed
