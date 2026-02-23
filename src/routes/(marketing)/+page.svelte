@@ -285,7 +285,7 @@
             "{product.tagline}"
           </p>
 
-          <ul class="space-y-3 text-left flex-grow mb-8">
+          <ul class="space-y-3 text-left grow mb-8">
             {#each product.features as feature}
               <li class="flex items-start gap-3">
                 <svg
@@ -400,7 +400,7 @@
             <h3 class="text-xl font-bold text-secondary mb-2">
               {feature.title}
             </h3>
-            <p class="text-sm text-base-content/70 mb-6 min-h-[3rem]">
+            <p class="text-sm text-base-content/70 mb-6 min-h-12">
               {feature.description}
             </p>
             <ul class="space-y-3 mt-auto">

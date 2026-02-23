@@ -299,7 +299,7 @@
     <div id="form-section">
       {#if showSuccess}
         <div
-          class="card card-bordered shadow-lg bg-base-200 py-10 px-6 mx-auto max-w-lg"
+          class="card card-border shadow-lg bg-base-200 py-10 px-6 mx-auto max-w-lg"
           role="status"
           aria-live="polite"
         >
@@ -336,7 +336,7 @@
             </div>
           {/if}
 
-          <div class="card card-bordered shadow-lg bg-base-200 p-6">
+          <div class="card card-border shadow-lg bg-base-200 p-6">
             <form
               method="POST"
               action="?/submitContactUs"
@@ -346,13 +346,13 @@
               aria-busy={loading}
             >
               {#each formFields as field}
-                <div class="form-control w-full">
+                <div class="w-full">
                   <label for={field.id} class="label">
-                    <span class="label-text font-bold">{field.label}</span>
+                    <span class="font-bold">{field.label}</span>
                     {#if errors[field.id]}
                       <span
                         id={`${field.id}-error`}
-                        class="label-text-alt text-error"
+                        class="text-error"
                         aria-live="polite">{errors[field.id]}</span
                       >
                     {/if}
@@ -371,7 +371,7 @@
                         : errors[field.id]
                           ? `${field.id}-error`
                           : undefined}
-                      class="textarea textarea-bordered h-24"
+                      class="textarea h-24"
                       class:textarea-error={Boolean(errors[field.id])}
                     ></textarea>
                     {#if field.describedBy === "message-help"}
@@ -395,7 +395,7 @@
                       aria-describedby={errors[field.id]
                         ? `${field.id}-error`
                         : undefined}
-                      class="input input-bordered w-full"
+                      class="input w-full"
                       class:input-error={Boolean(errors[field.id])}
                     />
                   {/if}
@@ -413,7 +413,7 @@
               <!-- Empty container; we render into this explicitly in onMount -->
               <div class="mt-4" bind:this={widgetEl}></div>
 
-              <div class="form-control mt-6">
+              <div class="mt-6">
                 <button
                   type="submit"
                   class="btn btn-primary btn-gradient-electric"

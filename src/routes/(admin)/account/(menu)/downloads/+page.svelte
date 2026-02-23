@@ -303,13 +303,13 @@
           <div class="space-y-4">
             {#each licensesByProduct.hoverboard as license, i (stableLicenseKey(license, i))}
               <div>
-                <div class="form-control">
-                  <div class="join">
+                <div class="">
+                  <div class="join w-full">
                     <input
                       type="text"
                       readonly
                       value={license?.license_key ?? ""}
-                      class="input input-bordered join-item w-full font-mono text-sm"
+                      class="input join-item w-full font-mono text-sm"
                       autocomplete="off"
                       spellcheck="false"
                       aria-label="License key"
@@ -405,13 +405,13 @@
           <div class="space-y-4">
             {#each licensesByProduct.timeline_c as license, i (stableLicenseKey(license, i))}
               <div>
-                <div class="form-control">
-                  <div class="join">
+                <div class="">
+                  <div class="join w-full">
                     <input
                       type="text"
                       readonly
                       value={license?.license_key ?? ""}
-                      class="input input-bordered join-item w-full font-mono text-sm"
+                      class="input join-item w-full font-mono text-sm"
                       autocomplete="off"
                       spellcheck="false"
                       aria-label="License key"

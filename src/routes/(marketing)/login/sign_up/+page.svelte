@@ -151,26 +151,26 @@
     class="space-y-4"
   >
     <div>
-      <label for="email" class="label label-text">Email</label>
+      <label for="email" class="label">Email</label>
       <input
         id="email"
         name="email"
         type="email"
         autocomplete="email"
         value={form?.email ?? ""}
-        class="input input-bordered w-full"
+        class="input w-full"
         required
       />
     </div>
 
     <div class="relative">
-      <label for="password" class="label label-text">Password</label>
+      <label for="password" class="label">Password</label>
       <input
         id="password"
         name="password"
         type={showPassword ? "text" : "password"}
         autocomplete="new-password"
-        class="input input-bordered w-full pr-12"
+        class="input w-full pr-12"
         required
       />
       <!-- Show/Hide password toggle -->
@@ -186,7 +186,7 @@
     </div>
 
     <!-- === START: TERMS OF SERVICE AGREEMENT CHECKBOX (UPDATED) === -->
-    <div class="form-control mt-4">
+    <div class="mt-4">
       <label class="label cursor-pointer items-start">
         <input
           type="checkbox"
@@ -195,7 +195,7 @@
           class="checkbox checkbox-accent mr-3 mt-1"
           required
         />
-        <span class="label-text text-left">
+        <span class="text-left">
           I have read and agree to the
           <a
             href="/terms-of-service"

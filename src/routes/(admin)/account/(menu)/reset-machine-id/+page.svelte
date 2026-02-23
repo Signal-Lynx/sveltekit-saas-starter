@@ -141,16 +141,14 @@
                     <div class="mt-0.5 text-xs md:text-sm text-base-content/70">
                       License:
                       <code
-                        class="px-1 py-0.5 rounded bg-base-200/70 text-base-content/80 font-mono text-[11px] md:text-xs"
+                        class="px-1 py-0.5 rounded bg-base-200/70 text-base-content/80 font-mono text-xs"
                       >
                         {e.license_key}
                       </code>
                     </div>
 
                     {#if cooldowns[e.license_key] || e.next_allowed_reset_at}
-                      <div
-                        class="mt-1 text-[11px] md:text-xs text-base-content/60"
-                      >
+                      <div class="mt-1 text-xs text-base-content/60">
                         Next eligible:
                         {#if fmtDate(cooldowns[e.license_key] || e.next_allowed_reset_at)}
                           {fmtDate(

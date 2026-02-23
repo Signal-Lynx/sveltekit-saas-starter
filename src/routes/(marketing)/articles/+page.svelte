@@ -74,9 +74,7 @@
       </p>
 
       <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-        <label
-          class="input input-bordered flex items-center gap-2 w-full sm:w-96"
-        >
+        <label class="input flex items-center gap-2 w-full sm:w-96">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -103,7 +101,7 @@
         <select
           id="article-tag"
           name="article-tag"
-          class="select select-bordered w-full sm:w-56"
+          class="select w-full sm:w-56"
           bind:value={tag}
           aria-label="Filter articles by tag"
         >

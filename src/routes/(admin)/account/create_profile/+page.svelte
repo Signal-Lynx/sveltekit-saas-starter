@@ -96,14 +96,14 @@
         <!-- Your Name -->
         <div>
           <label for="fullName" class="label">
-            <span class="label-text">Your Name</span>
+            <span class="">Your Name</span>
           </label>
           <input
             id="fullName"
             name="fullName"
             type="text"
             placeholder="e.g. Jane 'Glitch' Doe"
-            class="input input-bordered w-full {fieldError(form, 'fullName')
+            class="input w-full {fieldError(form, 'fullName')
               ? 'input-error'
               : ''}"
             value={form?.fullName ?? fullName}
@@ -126,14 +126,14 @@
         <!-- Company / Organization -->
         <div>
           <label for="companyName" class="label">
-            <span class="label-text">Company / Organization</span>
+            <span class="">Company / Organization</span>
           </label>
           <input
             id="companyName"
             name="companyName"
             type="text"
             placeholder="e.g. Cyberdyne Systems"
-            class="input input-bordered w-full {fieldError(form, 'companyName')
+            class="input w-full {fieldError(form, 'companyName')
               ? 'input-error'
               : ''}"
             value={form?.companyName ?? companyName}
@@ -156,14 +156,14 @@
         <!-- Company Website -->
         <div>
           <label for="website" class="label">
-            <span class="label-text">Company Website</span>
+            <span class="">Company Website</span>
           </label>
           <input
             id="website"
             name="website"
             type="text"
             placeholder="e.g. https://example.com"
-            class="input input-bordered w-full {fieldError(form, 'website')
+            class="input w-full {fieldError(form, 'website')
               ? 'input-error'
               : ''}"
             value={form?.website ?? website}

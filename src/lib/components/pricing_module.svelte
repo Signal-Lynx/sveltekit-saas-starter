@@ -74,7 +74,7 @@
           {/if}
 
           <!-- Feature list -->
-          <ul class="my-6 space-y-3 text-left flex-grow">
+          <ul class="my-6 space-y-3 text-left grow">
             {#each plan.features ?? [] as feature, i (feature + i)}
               <li class="flex items-start gap-3">
                 <svg

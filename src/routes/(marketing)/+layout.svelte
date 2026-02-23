@@ -11,17 +11,39 @@
 
   const { children }: Props = $props()
   const HOME_HREF = dev ? "/" : WebsiteBaseUrl
+
+  // Svelte Click-Toggle for Desktop Dropdown
+  let productsOpen = $state(false)
+
+  function toggleProducts(e: MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    productsOpen = !productsOpen
+  }
+
+  function closeProducts() {
+    productsOpen = false
+  }
+
+  function onWindowClick() {
+    if (productsOpen) closeProducts()
+  }
+
+  function onWindowKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") closeProducts()
+  }
 </script>
 
+<svelte:window onclick={onWindowClick} onkeydown={onWindowKeydown} />
+
 <svelte:head>
-  <!-- Improved Syntax: Handles dev and prod URLs perfectly -->
   <link
     rel="canonical"
     href={(dev ? $page.url.origin : WebsiteBaseUrl) + $page.url.pathname}
   />
 </svelte:head>
 
-<div class="navbar bg-base-100 container mx-auto relative z-40">
+<div class="navbar bg-base-100 container mx-auto relative z-50">
   <div class="flex-1">
     <a class="btn btn-ghost text-xl" href={HOME_HREF} data-sveltekit-reload>
       <img
@@ -32,19 +54,59 @@
       {WebsiteName}
     </a>
   </div>
-  <!-- ... existing navigation markup remains unchanged ... -->
+
   <div class="flex-none">
-    <ul class="menu menu-horizontal px-1 hidden sm:flex font-bold text-lg">
-      <li class="dropdown dropdown-hover md:mx-2">
-        <a href="/products" role="button">Products</a>
-        <ul
-          class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+    <!-- Desktop Menu with Svelte Click Toggle -->
+    <ul
+      class="menu menu-horizontal px-1 hidden sm:flex font-bold text-lg overflow-visible"
+    >
+      <li class="md:mx-2 relative">
+        <a
+          href="/products"
+          onclick={toggleProducts}
+          role="button"
+          aria-haspopup="menu"
+          aria-expanded={productsOpen}
+          class="px-2 py-1 flex items-center gap-1"
         >
-          {#each SITE_CONFIG.footerNav.products as item}
-            <li><a href={item.href}>{item.name}</a></li>
-          {/each}
-        </ul>
+          Products <span class="text-xs" aria-hidden="true">▼</span>
+        </a>
+
+        {#if productsOpen}
+          <ul
+            class="absolute top-full left-0 mt-1 z-50 menu p-2 shadow-lg bg-base-100 rounded-box w-52"
+            role="menu"
+          >
+            <li>
+              <a
+                href="/products"
+                role="menuitem"
+                onclick={(e) => {
+                  e.stopPropagation()
+                  closeProducts()
+                }}
+              >
+                All products
+              </a>
+            </li>
+            {#each SITE_CONFIG.footerNav.products as item}
+              <li>
+                <a
+                  href={item.href}
+                  role="menuitem"
+                  onclick={(e) => {
+                    e.stopPropagation()
+                    closeProducts()
+                  }}
+                >
+                  {item.name}
+                </a>
+              </li>
+            {/each}
+          </ul>
+        {/if}
       </li>
+
       <li class="md:mx-2"><a href="/docs">Docs</a></li>
       <li class="md:mx-2"><a href="/articles">Articles</a></li>
       <li class="md:mx-2"><a href="/faq">FAQ</a></li>
@@ -66,6 +128,7 @@
       </li>
     </ul>
 
+    <!-- Mobile Dropdown (Preserved, just ensuring it works in v5) -->
     <div class="dropdown dropdown-end sm:hidden">
       <button
         id="mobile-menu-button"
@@ -120,7 +183,10 @@
 
 <div class="bg-base-100">
   <div class="border-t max-w-7xl mx-auto"></div>
-  <footer class="footer p-10 max-w-7xl mx-auto text-base-content">
+  <!-- Added footer-horizontal class for multi-column layout -->
+  <footer
+    class="footer footer-horizontal p-10 max-w-7xl mx-auto text-base-content"
+  >
     <nav>
       <span class="footer-title opacity-80">Products</span>
       {#each SITE_CONFIG.footerNav.products as item}

@@ -104,9 +104,9 @@
           <!-- Critical: pass through selected gate to the action -->
           <input type="hidden" name="gateType" value={gateType} />
 
-          <div class="form-control w-full text-left">
+          <div class="w-full text-left">
             <label for="password" class="label">
-              <span class="label-text">Access Passphrase</span>
+              <span class="">Access Passphrase</span>
             </label>
             <div class="relative">
               <input
@@ -115,7 +115,7 @@
                 type={showPassword ? "text" : "password"}
                 spellcheck="false"
                 autocomplete="current-password"
-                class="input input-bordered w-full pr-14"
+                class="input w-full pr-14"
                 placeholder="Enter passphrase..."
                 aria-invalid={Boolean(form?.error)}
                 aria-describedby={form?.error ? "password-error" : undefined}

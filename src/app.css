@@ -1,18 +1,85 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" source("./");
 
-/* -----------------------------------------------------------
-   Base tokens (outside DaisyUI theme system)
-   ----------------------------------------------------------- */
+/* Explicit scan scope */
+@source "./**/*.{html,js,svelte,ts,md,mdx}";
+
+/* Tailwind v4 replacement for JS safelist */
+@source inline(
+  "prose prose-sm prose-lg prose-invert badge-success badge-info badge-warning badge-ghost"
+);
+
+/* Custom font definition */
+@theme {
+  --font-handwriting: "Kalam", cursive;
+}
+
+@plugin "@tailwindcss/typography";
+
+/* DaisyUI v5 Configuration */
+@plugin "daisyui" {
+  logs: false;
+  root: ":root";
+}
+
+/* DaisyUI v5 Theme Definition - Matches src/app.html data-theme */
+@plugin "daisyui/theme" {
+  name: "sveltekit-saas-starter_theme";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  /* Colors from src/lib/theme.ts */
+  --color-primary: #8b5cf6;
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #10b981;
+  --color-secondary-content: #000000;
+
+  --color-accent: #f472b6;
+  --color-accent-content: #000000;
+
+  --color-neutral: #1f2937;
+  --color-neutral-content: #f3f4f6;
+
+  --color-base-100: #0f172a;
+  --color-base-200: #1e293b;
+  --color-base-300: #334155;
+  --color-base-content: #e2e8f0;
+
+  --color-info: #3b82f6;
+  --color-info-content: #ffffff;
+
+  --color-success: #22c55e;
+  --color-success-content: #000000;
+
+  --color-warning: #fbbf24;
+  --color-warning-content: #000000;
+
+  --color-error: #ef5350;
+  --color-error-content: #ffffff;
+
+  /* Radius & Size variables */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.5rem;
+  --radius-btn: 0.5rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+
+  /* Animation variables */
+  --animation-btn: 0.25s;
+  --animation-input: 0.2s;
+  --btn-focus-scale: 0.95;
+}
+
 @layer base {
   :root {
-    --radius-field: 0.5rem;
-    --border: 1px;
-    --depth: 1;
-    --noise: 0;
-
-    /* animation tunables (non-color) */
+    /* Custom animation tunables */
     --grad-scale: 100%;
     --grad-scale-hover: 150%;
     --grad-duration: 300ms;
@@ -20,7 +87,7 @@
     --dim-disabled: 65%;
   }
 
-  /* Rendering polish; does not alter palette */
+  /* Rendering polish */
   :root {
     color-scheme: light dark;
     -webkit-font-smoothing: antialiased;
@@ -33,78 +100,12 @@
   }
 }
 
-/* -----------------------------------------------------------
-   Components (DRY + accessibility + fallbacks)
-   ----------------------------------------------------------- */
 @layer components {
-  /* ---------------- Shared gradient styles (DRY) ---------------- */
-  :is(.authBtn, .btn-gradient-electric) {
-    /* Keep DaisyUI base button styling for .authBtn only */
-    /* (No harm if btn isn’t present on .btn-gradient-electric markup) */
-    @apply btn;
-
-    /* Original gradient & colors using DaisyUI OKLCH tokens */
-    background-image: linear-gradient(
-      to right,
-      oklch(var(--p)) 0%,
-      oklch(var(--s)) 100%
-    );
-    border: none;
-    background-size: var(--grad-scale) var(--grad-scale);
-    color: oklch(var(--pc));
-    transition:
-      background-size var(--grad-duration) var(--grad-ease),
-      filter var(--grad-duration) var(--grad-ease);
-  }
-
-  :is(.authBtn, .btn-gradient-electric):hover {
-    background-size: var(--grad-scale-hover) var(--grad-scale-hover);
-    filter: brightness(1.15);
-    /* Ensure DaisyUI hover bg doesn't cover gradient */
-    background-color: transparent;
-  }
-
-  :is(.authBtn, .btn-gradient-electric):focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  /* ---------------- Accessibility preferences ---------------- */
-  @media (prefers-reduced-motion: reduce) {
-    :is(.authBtn, .btn-gradient-electric) {
-      /* Keep visual polish; minimize motion */
-      transition: filter var(--grad-duration) var(--grad-ease);
-    }
-  }
-
-  /* Windows High Contrast / Forced Colors */
-  @media (forced-colors: active) {
-    :is(.authBtn, .btn-gradient-electric) {
-      background-image: none;
-      background-color: ButtonFace;
-      color: ButtonText;
-      border: 1px solid ButtonText;
-    }
-  }
-
-  /* ---------------- OKLCH fallbacks (very old browsers) ---------------- */
-  @supports not (color: oklch(0% 0 0)) {
-    :is(.authBtn, .btn-gradient-electric) {
-      background-image: linear-gradient(
-        to right,
-        var(--fallback-p, #570df8) 0%,
-        var(--fallback-s, #f000b8) 100%
-      );
-      color: var(--fallback-pc, #ffffff);
-    }
-  }
-
-  /* ---------------- Supabase auth loading hacks ---------------- */
-  /* Preserve original “Loading...” behavior and add ARIA/data support */
+  /* Supabase auth loading hacks */
   button[disabled].authBtn,
   .authBtn[aria-busy="true"],
   .authBtn[data-loading="true"] {
-    font-size: 0.001px; /* visually hide original label */
+    font-size: 0.001px;
     filter: brightness(var(--dim-disabled));
     cursor: progress;
   }
@@ -114,6 +115,48 @@
   .authBtn[data-loading="true"]::before {
     font-size: 14px;
     content: "Loading...";
-    color: oklch(var(--pc));
+    color: var(--color-primary-content);
+  }
+}
+
+/* Gradient button overrides (Unlayered to beat DaisyUI defaults) */
+.btn.btn-gradient-electric {
+  background: linear-gradient(
+    to right,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  ) !important;
+  border: none;
+  background-size: var(--grad-scale) var(--grad-scale);
+  color: var(--color-primary-content) !important;
+  transition:
+    background-size var(--grad-duration) var(--grad-ease),
+    filter var(--grad-duration) var(--grad-ease);
+}
+
+.btn.btn-gradient-electric:hover {
+  background-size: var(--grad-scale-hover) var(--grad-scale-hover);
+  filter: brightness(1.15);
+  background-color: transparent !important;
+}
+
+.btn.btn-gradient-electric:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn.btn-gradient-electric {
+    background-size: var(--grad-scale) var(--grad-scale);
+    transition: filter var(--grad-duration) var(--grad-ease);
+  }
+}
+
+@media (forced-colors: active) {
+  .btn.btn-gradient-electric {
+    background: none !important;
+    background-color: ButtonFace !important;
+    color: ButtonText !important;
+    border: 1px solid ButtonText;
   }
 }

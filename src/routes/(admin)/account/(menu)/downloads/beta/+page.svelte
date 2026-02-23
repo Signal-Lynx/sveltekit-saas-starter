@@ -77,7 +77,7 @@
       <div class="card-body">
         <div class="flex justify-between items-start gap-4">
           <div class="min-w-0">
-            <h2 class="card-title text-2xl text-secondary break-words">
+            <h2 class="card-title text-2xl text-secondary wrap-break-word">
               {product.name}
             </h2>
             <p class="text-base-content/80 mt-2">{product.description}</p>
@@ -117,15 +117,15 @@
             >
               <input type="hidden" name="productId" value={product.id} />
 
-              <div class="form-control">
+              <div class="">
                 <label for={`passphrase-${product.id}`} class="label">
-                  <span class="label-text">Beta Passphrase</span>
+                  <span class="">Beta Passphrase</span>
                 </label>
                 <input
                   id={`passphrase-${product.id}`}
                   name="passphrase"
                   type="text"
-                  class="input input-bordered"
+                  class="input"
                   placeholder="Enter passphrase..."
                   required
                   autocomplete="off"

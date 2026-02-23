@@ -176,10 +176,10 @@
         use:enhance={handleSubmit}
       >
         {#each fields as field}
-          <div class="form-control">
+          <div class="">
             {#if field.label}
               <label for={field.id} class="label">
-                <span class="label-text">{field.label}</span>
+                <span class="">{field.label}</span>
               </label>
             {/if}
 
@@ -206,10 +206,7 @@
                     type={showPasswords[field.id] ? "text" : "password"}
                     disabled={!editable || buttonState === "loading"}
                     placeholder={field.placeholder ?? field.label ?? ""}
-                    class="input input-bordered w-full pr-12 {fieldError(
-                      $page?.form,
-                      field.id,
-                    )
+                    class="input w-full pr-12 {fieldError($page?.form, field.id)
                       ? 'input-error'
                       : ''}"
                     value={$page.form
@@ -238,7 +235,7 @@
                   type={field.inputType ?? "text"}
                   disabled={!editable || buttonState === "loading"}
                   placeholder={field.placeholder ?? field.label ?? ""}
-                  class="input input-bordered w-full max-w-xs {fieldError(
+                  class="input w-full max-w-xs {fieldError(
                     $page?.form,
                     field.id,
                   )
@@ -254,7 +251,7 @@
               {/if}
             {:else}
               <div
-                class="text-base-content/90 font-semibold min-h-[3rem] flex items-center"
+                class="text-base-content/90 font-semibold min-h-12 flex items-center"
               >
                 {typeof field.initialValue === "boolean"
                   ? field.initialValue
@@ -280,7 +277,7 @@
           {#if editable}
             <button
               type="submit"
-              class="btn min-w-[145px] {dangerous
+              class="btn min-w-36 {dangerous
                 ? 'btn-error'
                 : 'btn-primary'} {saveButtonClass} {buttonState === 'success'
                 ? 'btn-success'

@@ -15,7 +15,7 @@
     of our policies, terms, and legal notices.
   </p>
 
-  <h2 class="!mt-8 !mb-4">Policies & Documents</h2>
+  <h2 class="mt-8! mb-4!">Policies & Documents</h2>
   <ul>
     {#each legalLinks as link}
       <li>
@@ -24,7 +24,7 @@
     {/each}
   </ul>
 
-  <p class="!mt-8">
+  <p class="mt-8!">
     If you have any questions about these documents, please don't hesitate to <a
       href="/contact_us">contact us</a
     >.

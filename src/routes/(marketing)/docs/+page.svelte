@@ -79,7 +79,7 @@
         {#each processedDocs as doc (doc.title)}
           <li>
             <article
-              class="card card-bordered bg-base-200 shadow-xl transition-all duration-300 border-2 border-transparent hover:border-accent"
+              class="card card-border bg-base-200 shadow-xl transition-all duration-300 border-2 border-transparent hover:border-accent"
             >
               <div class="card-body">
                 <h2 class="card-title text-2xl text-secondary">{doc.title}</h2>

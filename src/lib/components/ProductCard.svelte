@@ -46,7 +46,7 @@
       {product.title}
     </p>
 
-    <p class="text-base-content/80 flex-grow text-center italic mb-6">
+    <p class="text-base-content/80 grow text-center italic mb-6">
       "{product.tagline}"
     </p>
 

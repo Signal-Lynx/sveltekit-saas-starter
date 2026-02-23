@@ -20,7 +20,7 @@
   <p>{product?.description ?? "Download your beta files below."}</p>
 
   {#if files.length > 0}
-    <h2 class="!mt-8">Files</h2>
+    <h2 class="mt-8!">Files</h2>
     <ul class="not-prose list-none p-0 space-y-2">
       {#each files as file (file.key)}
         <li>

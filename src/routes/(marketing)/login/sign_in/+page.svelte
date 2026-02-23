@@ -39,7 +39,7 @@
   autocomplete="on"
 >
   <div>
-    <label for="email" class="label label-text">Email</label>
+    <label for="email" class="label">Email</label>
     <!-- Pre-fill with any server-returned value; do not transform the posted data -->
     <input
       id="email"
@@ -50,20 +50,20 @@
       autocapitalize="none"
       spellcheck={false}
       value={form?.email ?? ""}
-      class="input input-bordered w-full"
+      class="input w-full"
       required
       aria-invalid={form?.error ? "true" : "false"}
     />
   </div>
 
   <div class="relative">
-    <label for="password" class="label label-text">Password</label>
+    <label for="password" class="label">Password</label>
     <input
       id="password"
       name="password"
       type={showPassword ? "text" : "password"}
       autocomplete="current-password"
-      class="input input-bordered w-full pr-12"
+      class="input w-full pr-12"
       required
       aria-invalid={form?.error ? "true" : "false"}
     />

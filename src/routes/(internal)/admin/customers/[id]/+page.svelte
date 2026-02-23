@@ -236,13 +236,13 @@
       <input
         name="subject"
         placeholder="Subject"
-        class="input input-bordered w-full"
+        class="input w-full"
         aria-label="Email subject"
         required
       />
       <textarea
         name="body"
-        class="textarea textarea-bordered w-full"
+        class="textarea w-full"
         rows="6"
         aria-label="Email body"
         placeholder="Type a short message to the user…"

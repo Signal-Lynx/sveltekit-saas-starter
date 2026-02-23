@@ -216,7 +216,7 @@
     <input
       id="search-input"
       type="text"
-      class="input input-bordered w-full pl-10 text-lg"
+      class="input w-full pl-10 text-lg"
       placeholder="Search..."
       bind:value={searchQuery}
       onfocus={() => (focusItem = 0)}

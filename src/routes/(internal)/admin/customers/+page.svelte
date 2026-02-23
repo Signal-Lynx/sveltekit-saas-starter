@@ -84,7 +84,7 @@
     name="email"
     type="search"
     placeholder="Search by email"
-    class="input input-bordered w-full"
+    class="input w-full"
     autocomplete="off"
     spellcheck="false"
     bind:value={query}
@@ -117,7 +117,7 @@
   >
     {#each results as r}
       <a
-        class="btn btn-outline btn-sm w-full justify-start text-left font-normal normal-case items-start whitespace-normal break-words h-auto"
+        class="btn btn-outline btn-sm w-full justify-start text-left font-normal normal-case items-start whitespace-normal wrap-break-word h-auto"
         href={"/admin/customers/" + r.id}
         data-sveltekit-preload-data="hover"
       >

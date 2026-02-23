@@ -1,30 +1,31 @@
 // vite.config.ts
 import { defineConfig } from "vitest/config"
 import { sveltekit } from "@sveltejs/kit/vite"
+import tailwindcss from "@tailwindcss/vite"
 import path from "node:path"
 
 const isVitest = !!process.env.VITEST
 
-export default defineConfig({
-  // Avoid Svelte plugin during Vitest (prevents HMR crash)
-  plugins: isVitest ? [] : [sveltekit()],
+const NATIVE_BUILD_TOOLS = [
+  "lightningcss",
+  "@tailwindcss/oxide",
+  "@tailwindcss/vite",
+  "tailwindcss",
+]
 
-  // When the plugin is off, we must provide aliases for SvelteKit virtual ids
+export default defineConfig({
+  plugins: isVitest ? [] : [tailwindcss(), sveltekit()],
+
   resolve: {
     alias: isVitest
       ? {
-          // --- $env stubs (you already added these files) ---
           "$env/dynamic/private": path.resolve(
             "tests/mocks/env-dynamic-private.ts",
           ),
           "$env/static/private": path.resolve(
             "tests/mocks/env-static-private.ts",
           ),
-
-          // --- $app stubs (keeps imports like $app/environment happy) ---
           "$app/environment": path.resolve("tests/mocks/app-environment.ts"),
-
-          // --- $lib/* and friends used across your code/tests ---
           $lib: path.resolve("src/lib"),
           $components: path.resolve("src/lib/components"),
           $server: path.resolve("src/lib/server"),
@@ -37,13 +38,18 @@ export default defineConfig({
       : {},
   },
 
+  // 🔧 Keep native CSS toolchain out of SSR/runtime graphs
+  optimizeDeps: {
+    exclude: NATIVE_BUILD_TOOLS,
+  },
+  ssr: {
+    external: NATIVE_BUILD_TOOLS,
+  },
+
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
     globals: true,
-
     environment: "node",
-
-    // Silence Vitest v2 deprecation by using the new optimizer include
     deps: {
       optimizer: {
         ssr: {
@@ -51,7 +57,6 @@ export default defineConfig({
         },
       },
     },
-
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],
@@ -66,13 +71,11 @@ export default defineConfig({
         "**/*.spec.*",
       ],
     },
-
     // 🔇 Hide expected noisy logs during tests
-    onConsoleLog(
-      log: string,
-      type: "stdout" | "stderr" | "log" | "warn" | "error" | "debug",
-    ) {
-      if (type === "stderr" || type === "warn") {
+    onConsoleLog(log, type) {
+      // Vitest only passes "stdout" | "stderr" here.
+      // Warnings/errors end up on stderr, so filtering stderr covers both.
+      if (type === "stderr") {
         const mute = [
           /Email not configured/i,
           /Error updating subscription status/i,

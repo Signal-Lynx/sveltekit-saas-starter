@@ -50,15 +50,13 @@
     }}
   >
     <div>
-      <label for="email" class="label label-text"
-        >Enter your account email</label
-      >
+      <label for="email" class="label">Enter your account email</label>
       <input
         id="email"
         name="email"
         type="email"
         value={initialEmail}
-        class="input input-bordered w-full"
+        class="input w-full"
         required
         autocomplete="email"
         inputmode="email"

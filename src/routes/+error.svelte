@@ -57,7 +57,7 @@
           role="alert"
           aria-live="polite"
         >
-          <code class="text-accent block whitespace-pre-wrap break-words">
+          <code class="text-accent block whitespace-pre-wrap wrap-break-word">
             ERROR: {extractMessage($page.error)}
           </code>
         </div>

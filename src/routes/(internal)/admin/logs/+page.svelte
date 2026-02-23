@@ -65,7 +65,7 @@
 >
   <input
     name="q"
-    class="input input-bordered w-full"
+    class="input w-full"
     placeholder="Search by user ID, email, or action"
     value={data.q}
     autocomplete="off"
@@ -104,7 +104,7 @@
       </thead>
       <tbody>
         {#each data.entries as e (e.id)}
-          <tr class="hover">
+          <tr class="hover:bg-base-300">
             <td class="py-2 pr-4 whitespace-nowrap">
               <time
                 datetime={e.created_at}
@@ -117,8 +117,9 @@
             <td class="py-2 pr-4">
               {#if e.actor}
                 <div class="flex items-center gap-2">
-                  <a class="font-mono break-words link" href={qLink(e.actor)}
-                    >{e.actor}</a
+                  <a
+                    class="font-mono wrap-break-word link"
+                    href={qLink(e.actor)}>{e.actor}</a
                   >
                   <button
                     type="button"
@@ -135,7 +136,7 @@
               {#if e.actor_email}
                 <div class="mt-0.5 flex items-center gap-2">
                   <a
-                    class="text-base-content/80 link break-words"
+                    class="text-base-content/80 link wrap-break-word"
                     href={qLink(e.actor_email)}>{e.actor_email}</a
                   >
                   <button
@@ -157,8 +158,9 @@
             <td class="py-2 pr-4">
               {#if e.target}
                 <div class="flex items-center gap-2">
-                  <a class="font-mono break-words link" href={qLink(e.target)}
-                    >{e.target}</a
+                  <a
+                    class="font-mono wrap-break-word link"
+                    href={qLink(e.target)}>{e.target}</a
                   >
                   <button
                     type="button"
@@ -175,7 +177,7 @@
               {#if e.target_email}
                 <div class="mt-0.5 flex items-center gap-2">
                   <a
-                    class="text-base-content/80 link break-words"
+                    class="text-base-content/80 link wrap-break-word"
                     href={qLink(e.target_email)}>{e.target_email}</a
                   >
                   <button
@@ -200,7 +202,7 @@
                     {metaSummary(e.meta)}
                   </summary>
                   <pre
-                    class="text-xs bg-base-200 rounded p-2 whitespace-pre-wrap break-words">
+                    class="text-xs bg-base-200 rounded p-2 whitespace-pre-wrap wrap-break-word">
 {JSON.stringify(e.meta, null, 2)}
                   </pre>
                 </details>
