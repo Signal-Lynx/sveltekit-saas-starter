@@ -14,7 +14,6 @@ updates:
       - "TheGrandGear99"
     labels:
       - "dependencies"
-      - "automated"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -75,6 +74,10 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "jsdom"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "@sveltejs/adapter-auto"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@sveltejs/adapter-vercel"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
@@ -88,9 +91,7 @@ updates:
     reviewers:
       - "TheGrandGear99"
     labels:
-      - "ci"
       - "dependencies"
-      - "automated"
     commit-message:
       prefix: "chore"
       include: "scope"
