@@ -8,7 +8,7 @@ import type { PageServerLoad } from "./$types"
 import { lmFetch } from "$lib/server/subscription"
 
 // Keep the same Stripe API version used elsewhere in the project
-const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2026-01-28.clover"
+const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2026-02-25.clover"
 
 // Bundle mapping for the template (buy Society, get Hoverboard free):
 // Matches src/lib/data/products.ts in the template

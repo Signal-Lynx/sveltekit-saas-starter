@@ -5,7 +5,7 @@ import Stripe from "stripe"
 import { allProducts } from "$lib/data/products"
 
 const stripe = new Stripe(env.PRIVATE_STRIPE_API_KEY!, {
-  apiVersion: "2026-01-28.clover",
+  apiVersion: "2026-02-25.clover",
 })
 
 // Minimal user shape used throughout the app (matches locals.user)

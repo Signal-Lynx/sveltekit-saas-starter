@@ -12,7 +12,7 @@ function getStripe(): Stripe {
   const key = env.PRIVATE_STRIPE_API_KEY
   if (!key) throw new Error("Missing PRIVATE_STRIPE_API_KEY")
   if (stripeClient) return stripeClient
-  stripeClient = new Stripe(key, { apiVersion: "2026-01-28.clover" })
+  stripeClient = new Stripe(key, { apiVersion: "2026-02-25.clover" })
   return stripeClient
 }
 
