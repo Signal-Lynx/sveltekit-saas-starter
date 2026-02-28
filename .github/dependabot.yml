@@ -97,5 +97,5 @@ updates:
     groups:
       actions-minor-and-patch:
         update-types:
-          - "version-update:semver-minor"
-          - "version-update:semver-patch"
+          - "minor"
+          - "patch"
