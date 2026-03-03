@@ -29,6 +29,7 @@ updates:
           - "@eslint/*"
           - "typescript"
           - "typescript-eslint"
+          - "@typescript-eslint/*"
           - "@types/*"
           - "eslint-*"
           - "svelte-eslint-parser"
@@ -77,6 +78,8 @@ updates:
       - dependency-name: "@sveltejs/adapter-auto"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/adapter-vercel"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
 
   # GitHub Actions
