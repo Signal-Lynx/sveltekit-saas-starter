@@ -139,7 +139,7 @@ Custom, fire after Block Bots - Rule 1
 
 Expression
 
-(http.host in {"signallynx.com" "www.signallynx.com" "admin.signallynx.com"})
+(http.host in {"yourdomain.com" "www.yourdomain.com" "admin.yourdomain.com"})
 and not cf.client.bot
 and not starts_with(lower(http.request.uri.path), "/.well-known/acme-challenge/")
 and not starts_with(lower(http.request.uri.path), "/.well-known/vercel/")

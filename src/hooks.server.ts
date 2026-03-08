@@ -4,7 +4,7 @@ import { env as publicEnv } from "$env/dynamic/public"
 import { building, dev } from "$app/environment"
 import { createServerClient } from "@supabase/ssr"
 import type { Handle, HandleServerError } from "@sveltejs/kit"
-import type { CookieSerializeOptions } from "cookie"
+import type { SerializeOptions } from "cookie"
 import { sequence } from "@sveltejs/kit/hooks"
 import { withContext } from "$lib/server/logger"
 import type { Database } from "$lib/types/database"
@@ -394,7 +394,7 @@ const supabase: Handle = async ({ event, resolve }) => {
           cookiesToSet: Array<{
             name: string
             value: string
-            options: CookieSerializeOptions
+            options: SerializeOptions
           }>,
         ) => {
           const host = event.url.hostname
