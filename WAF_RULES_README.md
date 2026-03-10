@@ -11,7 +11,7 @@ Scope
 This template automatically redirects admin traffic to `admin.yourdomain.com`.
 You should apply the strict **Rate Limiting** and **Block High Threat** rules specifically to the `admin` subdomain in Cloudflare, while keeping the general bot noise rules on your main domain. This domain split will also allow you to apply additional security challenges on your admin domain, while keeping your primary website domains under Vercel (or other), and not getting into a Cloudflare vs Vercel Edge Argument (Vercel wants to be edge, and will complain if your primary website domains are proxied under cloudflare)
 
-If you follow this domain split, then Cloudflare WAF rules only protect hostnames that are proxied (orange cloud). In the recommended split, that’s typically admin.yourdomain.com only.
+If you follow this domain split, then Cloudflare WAF rules only protect hostnames that are proxied (orange cloud). In the recommended split, that's typically admin.yourdomain.com only.
 
 Domain: yourdomain.com and sub domains www.yourdomain.com and admin.yourdomain.com
 Rules type: Security rules (Custom rules) plus Rate limiting rules  
@@ -25,7 +25,7 @@ Remember - Security is an ongoing battle; Monitor the safety of your site and up
 
 ## Rule order we use
 
-These numbers match the order shown in Cloudflare’s dashboard sections. Cloudflare evaluates Custom rules in order within the Custom rules list, and Rate limiting rules in order within the Rate limiting list.
+These numbers match the order shown in Cloudflare's dashboard sections. Cloudflare evaluates Custom rules in order within the Custom rules list, and Rate limiting rules in order within the Rate limiting list.
 
 1. Block Bots - Rule 1 (custom rule, Block)
 2. Block Bots - Rule 2 (custom rule, Block, evaluated after Rule 1)
@@ -312,9 +312,9 @@ That keeps the template useful for the community while still letting you ship a 
 
 ## Edge ownership warning (Cloudflare vs Vercel)
 
-Cloudflare and Vercel can both act as “the edge” (proxy/WAF/challenges). If you let **both** try to be the edge for the **same hostname**, you can get:
+Cloudflare and Vercel can both act as "the edge" (proxy/WAF/challenges). If you let **both** try to be the edge for the **same hostname**, you can get:
 
-- Vercel “domain misconfigured” errors (common when Cloudflare proxy is enabled in front of Vercel)
+- Vercel "domain misconfigured" errors (common when Cloudflare proxy is enabled in front of Vercel)
 - Double challenges / broken sessions
 - Bot protection blocking legit server-to-server API calls
 
@@ -347,7 +347,7 @@ Add an Access bypass for:
 
 - Vercel Firewall protects `yourdomain.com` + `www.yourdomain.com`
 - `admin.yourdomain.com` is protected by Cloudflare Access
-- In Vercel, you can add a simple `Bypass - Admin Host` rule so Vercel doesn’t try to challenge admin traffic again
+- In Vercel, you can add a simple `Bypass - Admin Host` rule so Vercel doesn't try to challenge admin traffic again
 
 ---
 
@@ -356,6 +356,7 @@ Add an Access bypass for:
 **Vercel → Project → Firewall → Bot Management**
 
 - **Bot Protection:** `Challenge requests from non-browser sources, excluding verified bots`
+- **AI Bots:** `Log` (see note on AI crawler bypass rules below)
 
 ---
 
@@ -365,11 +366,17 @@ Place rules in this order (top → bottom):
 
 1. Bypass – Admin Host
 2. Bypass – License Server API (IP + /api/)
-3. Bypass – Functional Paths (host-scoped)
-4. Deny – Enforce Production Domains (block `*.vercel.app`)
-5. Deny – Block Junk & Scanners (regex)
-6. Rate Limit – Critical endpoints
-7. Rate Limit – Auth endpoints
+3. Bypass – AI Crawlers 01A (ClaudeBot)
+4. Bypass – AI Crawlers 01B (Anthropic)
+5. Bypass – AI Crawlers 01C (GPTBot)
+6. Bypass – AI Crawlers 01D (ChatGPT-User)
+7. Bypass – Functional Paths (host-scoped)
+8. Bypass – Functional Part 2 (sitemap.xml)
+9. Bypass – Functional Part 3 (search/api.json)
+10. Deny – Enforce Production Domains (block `*.vercel.app`)
+11. Deny – Block Junk & Scanners (regex)
+12. Rate Limit – Critical endpoints
+13. Rate Limit – Auth endpoints
 
 ---
 
@@ -403,10 +410,71 @@ If you protect `admin.yourdomain.com` with Cloudflare Access / Zero Trust, let t
 
 **Example IP CIDR:** `123.45.678.901/32`
 
-- `/32` means “exactly one IPv4 address”.
+- `/32` means "exactly one IPv4 address".
 
 **Why:**  
 Bot protection and managed rules can break automation. This bypass keeps your trusted backend working while still challenging everyone else.
+
+---
+
+### Rules 01A–01D — Bypass AI Crawlers (Public Read-Only)
+
+> **Important caveat on effectiveness:** These rules operate at the Vercel custom rules layer, which executes _after_ Vercel's system-level mitigations (DDoS protection, system rate limiting). If an AI crawler is caught by the system layer first — due to request cadence, missing browser headers, or not being on Vercel's internal verified bot list — these bypass rules will not help. This is a best-effort configuration. There is no per-UA configuration available at the system mitigation layer without a Vercel Enterprise plan. These rules improve AI crawler access at the custom rules layer but cannot guarantee it end-to-end.
+
+**Action:** `Bypass` (all four rules)
+
+**Scope for all four rules:**
+
+- Method `is any of` `GET`, `HEAD`
+- Hostname `is any of` `yourdomain.com`, `www.yourdomain.com`
+- Request Path `does not start with` `/account`, `/admin`, `/login`, `/api/v1/validate`, `/api/report-error`
+
+---
+
+#### Rule 01A — ClaudeBot
+
+**Name:** `Bypass - AI Crawlers 01A (ClaudeBot)`
+
+**IF (AND):**
+
+- **User Agent** `contains` `ClaudeBot`
+- AND method, hostname, path constraints above
+
+---
+
+#### Rule 01B — Anthropic
+
+**Name:** `Bypass - AI Crawlers 01B (Anthropic)`
+
+**IF (AND):**
+
+- **User Agent** `contains` `Anthropic`
+- AND method, hostname, path constraints above
+
+---
+
+#### Rule 01C — GPTBot
+
+**Name:** `Bypass - AI Crawlers 01C (GPTBot)`
+
+**IF (AND):**
+
+- **User Agent** `contains` `GPTBot`
+- AND method, hostname, path constraints above
+
+---
+
+#### Rule 01D — ChatGPT-User
+
+**Name:** `Bypass - AI Crawlers 01D (ChatGPT-User)`
+
+**IF (AND):**
+
+- **User Agent** `contains` `ChatGPT-User`
+- AND method, hostname, path constraints above
+
+**Why (01A–01D):**  
+User-agent-scoped bypasses on GET/HEAD only, restricted to public hostnames and explicitly excluding all auth, admin, and sensitive API paths. Allows known AI crawlers to index public marketing content without opening a broad non-browser hole. User-agent values are easy to spoof, so the path exclusions are the actual security boundary here — not the UA match itself.
 
 ---
 
@@ -415,7 +483,7 @@ Bot protection and managed rules can break automation. This bypass keeps your tr
 **Name:** `Bypass - Functional`  
 **Action:** `Bypass`
 
-> Vercel’s rule UI often forces you to repeat hostnames per OR-branch. Configure this as OR branches like below:
+> Vercel's rule UI often forces you to repeat hostnames per OR-branch. Configure this as OR branches like below:
 
 **Branch A**
 
@@ -441,7 +509,41 @@ Bot protection and managed rules can break automation. This bypass keeps your tr
 - AND Hostname `is any of` (same 3)
 
 **Why:**  
-These “plumbing” routes should not be challenged. The hostname scope prevents bypassing on random `*.vercel.app` hosts.
+These "plumbing" routes should not be challenged. The hostname scope prevents bypassing on random `*.vercel.app` hosts.
+
+---
+
+### Rule 02B — Bypass Functional Part 2 (sitemap.xml)
+
+**Name:** `Bypass Functional Part 2`  
+**Action:** `Bypass`
+
+**IF (AND):**
+
+- **Request Path** `equals` `/sitemap.xml`
+- **Hostname** `is any of`:
+  - `yourdomain.com`
+  - `www.yourdomain.com`
+
+**Why:**  
+The original Bypass - Functional rule did not cover `sitemap.xml`. Crawlers use this as a primary discovery endpoint and it should not be challenged.
+
+---
+
+### Rule 02C — Bypass Functional Part 3 (search/api.json)
+
+**Name:** `Bypass Functional Part 3`  
+**Action:** `Bypass`
+
+**IF (AND):**
+
+- **Request Path** `equals` `/search/api.json`
+- **Hostname** `is any of`:
+  - `yourdomain.com`
+  - `www.yourdomain.com`
+
+**Why:**  
+Secondary crawl-discovery endpoint. Same rationale as sitemap.xml — should be readable without challenge on public hosts.
 
 ---
 
@@ -459,7 +561,7 @@ These “plumbing” routes should not be challenged. The hostname scope prevent
 - AND **Environment** `equals` `Production`
 
 **Why:**  
-This blocks direct access via Vercel’s default deployment domains (and any other unexpected hosts).
+This blocks direct access via Vercel's default deployment domains (and any other unexpected hosts).
 
 ---
 
@@ -482,7 +584,7 @@ Drops common exploit/scanner paths at the edge:
 - WordPress probes, phpMyAdmin, xmlrpc, ignition, laravel, etc.
 - dotfiles/secrets (`.env`, `.git`, `.vscode`, keys)
 - infra probes (`server-status`, `_all_dbs`, `v2/_catalog`, `ecp/`)
-- encoded “URL in the path” probes (`https%3A...`)
+- encoded "URL in the path" probes (`https%3A...`)
 - blocks `.php` payloads under `/.well-known/` **without** blocking legit `/.well-known/security.txt`.
 
 ---
@@ -535,4 +637,5 @@ Suggested: `6 per 60s`
 - Seeing `/.well-known` (directory) return 404 is normal. What matters is specific files like:
   - `/.well-known/security.txt`
   - `/.well-known/acme-challenge/<token>` (only during cert issuance)
-- Don’t use **System Bypass Rules** unless you _know_ you want to bypass Vercel’s system mitigations (and accept billing implications). Use **Custom Rules → Bypass** instead.
+- Don't use **System Bypass Rules** unless you _know_ you want to bypass Vercel's system mitigations (and accept billing implications). Use **Custom Rules → Bypass** instead.
+- The AI crawler bypass rules (01A–01D) are best-effort. Vercel's system mitigation layer runs before custom rules and is not configurable per user-agent on non-Enterprise plans. Crawlers blocked at the system layer will not be helped by these rules. Monitor Security Events to see which layer is actually firing on blocked AI requests.

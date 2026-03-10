@@ -38,6 +38,23 @@ export default defineConfig({
       : {},
   },
 
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (
+            id.includes("/node_modules/svelte/") ||
+            id.includes("\\node_modules\\svelte\\") ||
+            id.includes("/node_modules/@sveltejs/") ||
+            id.includes("\\node_modules\\@sveltejs\\")
+          ) {
+            return "svelte-vendor"
+          }
+        },
+      },
+    },
+  },
+
   // 🔧 Keep native CSS toolchain out of SSR/runtime graphs
   optimizeDeps: {
     exclude: NATIVE_BUILD_TOOLS,
