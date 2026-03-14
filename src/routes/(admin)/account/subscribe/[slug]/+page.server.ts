@@ -6,6 +6,7 @@ import Stripe from "stripe"
 import { getOrCreateCustomerId } from "$lib/server/subscription_helpers"
 import type { PageServerLoad } from "./$types"
 import { lmFetch } from "$lib/server/subscription"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 // Keep the same Stripe API version used elsewhere in the project
 const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2026-02-25.clover"
@@ -43,9 +44,14 @@ export const load: PageServerLoad = async ({
   if (lmBase && lmKey) {
     try {
       const healthUrl = `${lmBase.replace(/\/+$/, "")}/api/v1/internal/user-entitlements/${user.id}`
+      const healthHeaders: Record<string, string> = {
+        "X-Internal-API-Key": lmKey,
+      }
+      appendCfAccessHeaders(healthHeaders)
+
       const res = await lmFetch(healthUrl, {
         method: "GET",
-        headers: { "X-Internal-API-Key": lmKey },
+        headers: healthHeaders,
         firstTimeoutMs: 1500,
         retryTimeoutMs: 2000,
       })

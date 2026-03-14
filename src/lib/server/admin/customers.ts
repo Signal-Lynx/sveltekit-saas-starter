@@ -13,6 +13,7 @@ import {
   entitlementsToActiveProducts,
   type ActiveProductRow,
 } from "$lib/server/subscription"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 // ---------- Types ----------
 
@@ -536,14 +537,17 @@ export async function resetAllMachineIdsForUser(userId: string): Promise<void> {
       process.env.PRIVATE_LM_INTERNAL_API_KEY.trim()) ||
     requireEnv("PRIVATE_LICENSE_MANAGER_API_KEY")
 
+  const allResetHeaders: Record<string, string> = {
+    "Content-Type": "application/json",
+    "X-Internal-API-Key": apiKey,
+    // optional; harmless if you aren’t on ngrok:
+    // "ngrok-skip-browser-warning": "true",
+  }
+  appendCfAccessHeaders(allResetHeaders)
+
   const resp = await fetchWithTimeout(endpoint, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Internal-API-Key": apiKey,
-      // optional; harmless if you aren’t on ngrok:
-      // "ngrok-skip-browser-warning": "true",
-    },
+    headers: allResetHeaders,
     body: JSON.stringify({ supabase_user_id: uid }),
     timeoutMs: 20000,
   })

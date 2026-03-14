@@ -7,6 +7,7 @@ import { lmFetch } from "$lib/server/subscription"
 import { allProducts, type Product } from "$lib/data/products"
 import type { LMEntitlement } from "$lib/types"
 import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 // --- Surface entitlements + resolved product names for display ---
 const normalize = (s?: string | null) => (s ?? "").trim().toLowerCase()
@@ -203,16 +204,19 @@ async function doReset({ request, locals, getClientAddress }: ActionEvent) {
   const endpoint = `${baseUrl.replace(/\/+$/, "")}/api/v1/internal/users/public/reset-activations`
 
   try {
+    const resetHeaders: Record<string, string> = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Internal-API-Key": String(apiKey),
+      "X-Forwarded-For": ip,
+      "X-Request-ID": (locals as any).requestId ?? "",
+      "ngrok-skip-browser-warning": "true",
+    }
+    appendCfAccessHeaders(resetHeaders)
+
     const res = await lmFetch(endpoint, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "X-Internal-API-Key": String(apiKey),
-        "X-Forwarded-For": ip,
-        "X-Request-ID": (locals as any).requestId ?? "",
-        "ngrok-skip-browser-warning": "true",
-      },
+      headers: resetHeaders,
       body: JSON.stringify({ license_key: licenseKey, email }),
       firstTimeoutMs: 2000,
       retryTimeoutMs: 3000,
@@ -337,15 +341,18 @@ export const actions: Actions = {
           const ctrl = new AbortController()
           const to = setTimeout(() => ctrl.abort(), 8000)
 
+          const refreshHeaders: Record<string, string> = {
+            "Content-Type": "application/json",
+            "X-Internal-API-Key": lmKey,
+            "X-Forwarded-For": ip,
+            "X-Request-ID": (locals as any)?.requestId ?? "",
+            "ngrok-skip-browser-warning": "true",
+          }
+          appendCfAccessHeaders(refreshHeaders)
+
           fetch(`${lmBase}/api/v1/internal/licenses/claim-by-email`, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Internal-API-Key": lmKey,
-              "X-Forwarded-For": ip,
-              "X-Request-ID": (locals as any)?.requestId ?? "",
-              "ngrok-skip-browser-warning": "true",
-            },
+            headers: refreshHeaders,
             body: JSON.stringify({
               supabase_user_id: user.id,
               email: user.email,

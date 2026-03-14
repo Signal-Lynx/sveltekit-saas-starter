@@ -181,8 +181,7 @@ const adminDomainGuard: Handle = async ({ event, resolve }) => {
   // Skip logic if:
   // 1. Dev mode
   // 2. Building
-  // 3. Vercel Preview URLs (ends with .vercel.app)
-  if (dev || building || event.url.hostname.endsWith(".vercel.app")) {
+  if (dev || building) {
     return resolve(event)
   }
 
@@ -198,6 +197,15 @@ const adminDomainGuard: Handle = async ({ event, resolve }) => {
   // Treat BOTH the admin UI AND admin API routes as "admin traffic"
   const isAdminTraffic =
     path.startsWith("/admin") || path.startsWith("/api/admin")
+
+  // NEW: Block admin surfaces on Vercel deployment hostnames.
+  // This prevents bypassing Cloudflare Access by hitting *.vercel.app directly.
+  if (
+    isAdminTraffic &&
+    (host.endsWith(".vercel.app") || host.endsWith(".now.sh"))
+  ) {
+    return new Response("Not Found", { status: 404 })
+  }
 
   // 1. Force admin traffic onto the protected admin subdomain
   if (isAdminTraffic && host !== ADMIN_HOST) {

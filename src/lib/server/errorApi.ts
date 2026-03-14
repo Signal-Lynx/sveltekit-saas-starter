@@ -1,6 +1,7 @@
 // src/lib/server/errorApi.ts
 import { env as validated } from "$lib/server/env"
 import { lmFetch } from "$lib/server/subscription"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 interface WebsiteErrorPayload {
   product_id: string
@@ -86,13 +87,16 @@ export async function reportWebsiteError(
   const legacyUrl = `${lmBase}/api/v1/internal/errors/report-website-error`
 
   try {
+    const reportHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+      "X-Internal-API-Key": String(lmKey),
+      "ngrok-skip-browser-warning": "true",
+    }
+    appendCfAccessHeaders(reportHeaders)
+
     let res = await lmFetch(primaryUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Internal-API-Key": String(lmKey),
-        "ngrok-skip-browser-warning": "true",
-      },
+      headers: reportHeaders,
       body: JSON.stringify(payload),
       firstTimeoutMs: 2000,
       retryTimeoutMs: 3000,
@@ -102,11 +106,7 @@ export async function reportWebsiteError(
     if (res.status === 404) {
       res = await lmFetch(legacyUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Internal-API-Key": String(lmKey),
-          "ngrok-skip-browser-warning": "true",
-        },
+        headers: reportHeaders,
         body: JSON.stringify(payload),
         firstTimeoutMs: 2000,
         retryTimeoutMs: 3000,

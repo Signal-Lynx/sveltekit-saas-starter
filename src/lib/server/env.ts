@@ -63,9 +63,13 @@ const EnvSchema = z.object({
   PRIVATE_ADMIN_EMAIL: emptyToUndefined(z.string().email()),
   PRIVATE_FROM_ADMIN_EMAIL: emptyToUndefined(z.string().email()),
 
-  // --- NEW: License Manager configuration ---
+  // --- License Manager configuration ---
   PRIVATE_LICENSE_MANAGER_URL: z.string().url().min(1),
   PRIVATE_LICENSE_MANAGER_API_KEY: z.string().min(32),
+
+  // --- Cloudflare Access Service Token (optional) ---
+  PRIVATE_CF_ACCESS_CLIENT_ID: emptyToUndefined(z.string().min(1)),
+  PRIVATE_CF_ACCESS_CLIENT_SECRET: emptyToUndefined(z.string().min(1)),
 })
 
 // Capture raw values from either source (static first, dynamic fallback)
@@ -85,9 +89,12 @@ const RAW_ENV = {
   PRIVATE_ADMIN_EMAIL: get("PRIVATE_ADMIN_EMAIL"),
   PRIVATE_FROM_ADMIN_EMAIL: get("PRIVATE_FROM_ADMIN_EMAIL"),
 
-  // --- NEW: License Manager configuration ---
+  // --- License Manager configuration ---
   PRIVATE_LICENSE_MANAGER_URL: get("PRIVATE_LICENSE_MANAGER_URL"),
   PRIVATE_LICENSE_MANAGER_API_KEY: get("PRIVATE_LICENSE_MANAGER_API_KEY"),
+
+  PRIVATE_CF_ACCESS_CLIENT_ID: get("PRIVATE_CF_ACCESS_CLIENT_ID"),
+  PRIVATE_CF_ACCESS_CLIENT_SECRET: get("PRIVATE_CF_ACCESS_CLIENT_SECRET"),
 } as const
 
 // Validate with dev-friendly coercions for optional fields
@@ -107,9 +114,12 @@ const parsed = EnvSchema.safeParse({
   PRIVATE_ADMIN_EMAIL: RAW_ENV.PRIVATE_ADMIN_EMAIL,
   PRIVATE_FROM_ADMIN_EMAIL: RAW_ENV.PRIVATE_FROM_ADMIN_EMAIL,
 
-  // NEW
+  // License Manager
   PRIVATE_LICENSE_MANAGER_URL: RAW_ENV.PRIVATE_LICENSE_MANAGER_URL,
   PRIVATE_LICENSE_MANAGER_API_KEY: RAW_ENV.PRIVATE_LICENSE_MANAGER_API_KEY,
+
+  PRIVATE_CF_ACCESS_CLIENT_ID: RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_ID,
+  PRIVATE_CF_ACCESS_CLIENT_SECRET: RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_SECRET,
 })
 
 if (!parsed.success) {
@@ -139,7 +149,7 @@ if (!parsed.success) {
       PRIVATE_ADMIN_EMAIL: mask(RAW_ENV.PRIVATE_ADMIN_EMAIL),
       PRIVATE_FROM_ADMIN_EMAIL: mask(RAW_ENV.PRIVATE_FROM_ADMIN_EMAIL),
 
-      // NEW (include both original and alias masks for clarity)
+      // (include both original and alias masks for clarity)
       PRIVATE_LICENSE_MANAGER_URL: mask(RAW_ENV.PRIVATE_LICENSE_MANAGER_URL),
       PRIVATE_LICENSE_MANAGER_API_KEY: mask(
         RAW_ENV.PRIVATE_LICENSE_MANAGER_API_KEY,
@@ -147,6 +157,11 @@ if (!parsed.success) {
       PRIVATE_LM_API_URL: mask(RAW_ENV.PRIVATE_LICENSE_MANAGER_URL),
       PRIVATE_WEBSITE_ERROR_API_KEY: mask(
         RAW_ENV.PRIVATE_LICENSE_MANAGER_API_KEY,
+      ),
+
+      PRIVATE_CF_ACCESS_CLIENT_ID: mask(RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_ID),
+      PRIVATE_CF_ACCESS_CLIENT_SECRET: mask(
+        RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_SECRET,
       ),
     }
     console.warn("[env] Invalid configuration (dev only warning):", details)
@@ -184,4 +199,7 @@ export const env = {
   // Also export aliases requested in patch notes:
   PRIVATE_LM_API_URL: RAW_ENV.PRIVATE_LICENSE_MANAGER_URL!,
   PRIVATE_WEBSITE_ERROR_API_KEY: RAW_ENV.PRIVATE_LICENSE_MANAGER_API_KEY!,
+
+  PRIVATE_CF_ACCESS_CLIENT_ID: RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_ID,
+  PRIVATE_CF_ACCESS_CLIENT_SECRET: RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_SECRET,
 }

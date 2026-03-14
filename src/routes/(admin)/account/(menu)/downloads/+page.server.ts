@@ -9,6 +9,7 @@ import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
 import { DOWNLOAD_PREFIXES, SECURE_DOWNLOADS_BASE } from "../../../../../config"
 import { listFiles, type R2File } from "$lib/server/r2"
 import { README_PREFIXES, PUBLIC_ASSETS_BASE } from "../../../../../config"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 // -------------------------------
 // Helpers & Constants
@@ -230,13 +231,17 @@ export const actions: Actions = {
         `${lmBase}/api/v1/internal/licenses/claim-by-email`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Internal-API-Key": lmKey,
-            "X-Forwarded-For": ip,
-            "X-Request-ID": rid,
-            "ngrok-skip-browser-warning": "true",
-          },
+          headers: (() => {
+            const h: Record<string, string> = {
+              "Content-Type": "application/json",
+              "X-Internal-API-Key": lmKey,
+              "X-Forwarded-For": ip,
+              "X-Request-ID": rid,
+              "ngrok-skip-browser-warning": "true",
+            }
+            appendCfAccessHeaders(h)
+            return h
+          })(),
           body: JSON.stringify({
             supabase_user_id: user.id,
             email: user.email,
@@ -261,13 +266,17 @@ export const actions: Actions = {
           `${lmBase}/api/v1/internal/licenses/claim-by-email`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Internal-API-Key": lmKey,
-              "X-Forwarded-For": ip,
-              "X-Request-ID": rid,
-              "ngrok-skip-browser-warning": "true",
-            },
+            headers: (() => {
+              const h: Record<string, string> = {
+                "Content-Type": "application/json",
+                "X-Internal-API-Key": lmKey,
+                "X-Forwarded-For": ip,
+                "X-Request-ID": rid,
+                "ngrok-skip-browser-warning": "true",
+              }
+              appendCfAccessHeaders(h)
+              return h
+            })(),
             body: JSON.stringify({
               supabase_user_id: user.id,
               email: user.email,

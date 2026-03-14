@@ -4,6 +4,7 @@ import { redirect } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 import { lmFetch } from "$lib/server/subscription"
 import type { LayoutServerLoad } from "./$types"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 /**
  * This layout is the primary guard for all /account pages.
@@ -51,14 +52,17 @@ export const load: LayoutServerLoad = async ({ locals, url, cookies }) => {
       if (lmBase && lmKey) {
         // Fire the claim request. We await it so the page loads with correct data.
         // Short timeout (1.5s) ensures we don't hang the page load if LM is slow.
+        const claimHeaders: Record<string, string> = {
+          "Content-Type": "application/json",
+          "X-Internal-API-Key": lmKey,
+          "X-Request-ID": locals.requestId,
+          // "ngrok-skip-browser-warning": "true", // Uncomment if testing with Ngrok free tier
+        }
+        appendCfAccessHeaders(claimHeaders)
+
         await lmFetch(`${lmBase}/api/v1/internal/licenses/claim-by-email`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Internal-API-Key": lmKey,
-            "X-Request-ID": locals.requestId,
-            // "ngrok-skip-browser-warning": "true", // Uncomment if testing with Ngrok free tier
-          },
+          headers: claimHeaders,
           body: JSON.stringify({
             supabase_user_id: user.id,
             email: user.email,

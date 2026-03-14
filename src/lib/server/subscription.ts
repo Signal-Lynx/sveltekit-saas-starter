@@ -4,6 +4,7 @@ import { env } from "$env/dynamic/private"
 import { type LMEntitlement, type EntitlementStatus } from "$lib/types"
 import * as https from "node:https"
 import { URL } from "node:url"
+import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 /** Minimal user shape used across the app (same as event.locals.user). */
 type MinimalUser = { id: string; email?: string | null }
@@ -523,6 +524,7 @@ export async function getUserSubscriptionState(
         }
         if (ctx?.clientIp) headers["X-Forwarded-For"] = ctx.clientIp
         if (ctx?.requestId) headers["X-Request-ID"] = ctx.requestId
+        appendCfAccessHeaders(headers)
 
         const host = new URL(url).hostname
         if (shouldUseFastPath(host)) {
