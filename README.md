@@ -97,6 +97,10 @@ If you want license keys and license-based entitlements in the user dashboard us
 ```env
 PRIVATE_LICENSE_MANAGER_URL="YOUR_LICENSE_MANAGER_URL"
 PRIVATE_LICENSE_MANAGER_API_KEY="YOUR_LICENSE_MANAGER_API_KEY"
+
+# Optional: If your Key Commander backend is protected by Cloudflare Access
+PRIVATE_CF_ACCESS_CLIENT_ID="your-cf-access-client-id"
+PRIVATE_CF_ACCESS_CLIENT_SECRET="your-cf-access-client-secret"
 ```
 
 Then ensure your product IDs in `src/lib/data/products.ts` match the product IDs configured for your Key Commander Alias, and your custom/shipable software.

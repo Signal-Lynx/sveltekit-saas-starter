@@ -245,6 +245,13 @@ Set in `.env`:
 
 - `PRIVATE_LICENSE_MANAGER_URL`
 - `PRIVATE_LICENSE_MANAGER_API_KEY`
+- `PRIVATE_CF_ACCESS_CLIENT_ID` (Optional, if Key Commander uses CF Access)
+- `PRIVATE_CF_ACCESS_CLIENT_SECRET` (Optional, if Key Commander uses CF Access)
+
+Important:
+
+- Product IDs must match between Key Commander and your product definitions in `src/lib/data/products.ts`.
+- **Admin Routing Security:** The `/admin` routes explicitly block `*.vercel.app` hostnames in production to prevent bypassing your Cloudflare Zero Trust / Access gates. Ensure you test admin features on your configured custom domain.
 
 Important:
 

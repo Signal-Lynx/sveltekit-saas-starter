@@ -333,11 +333,19 @@ For each hostname, pick **one** edge provider that owns the request lifecycle.
 ### Why `admin.yourdomain.com` is special
 
 Admin is high-value. Putting it behind **Cloudflare Access** gives you MFA (email PIN, etc.) without forcing Cloudflare proxy on the entire site (which can trigger Vercel domain validation issues).
+_Note: The SvelteKit `hooks.server.ts` explicitly drops traffic to `/admin` if the hostname ends in `.vercel.app`. This prevents attackers from bypassing your Cloudflare Access gate by hitting the Vercel deployment URL directly._
+
+### Key Commander Backend Protection (Service Tokens)
+
+If you host Key Commander behind Cloudflare Access, this template natively supports **Cloudflare Service Tokens**.
+
+1. Generate a Service Token in Cloudflare Zero Trust.
+2. Create an Access Policy on your Key Commander internal API (`/api/v1/internal/*`) allowing `Service Auth` with that token.
+3. Add the `PRIVATE_CF_ACCESS_CLIENT_ID` and `PRIVATE_CF_ACCESS_CLIENT_SECRET` to your `.env`. The template will automatically append them to all server-to-server internal API calls.
 
 ### Important: ACME / Certificates on `admin.*` behind Access
 
 If `admin.yourdomain.com` is proxied + protected by Cloudflare Access, ensure **ACME validation is not blocked**.
-Add an Access bypass for:
 
 - `/.well-known/acme-challenge/*`
 
