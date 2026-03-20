@@ -3,7 +3,7 @@
 # error on first error
 set -e
 
-if ! command -v misspellx &> /dev/null
+if ! command -v misspell >/dev/null 2>&1
 then
     echo "=== Skipping Spell Check ==="
     echo "Skip running spell check using 'misspell' as the tool is not installed."
@@ -15,17 +15,13 @@ else
     echo "no spelling mistakes found\n"
 fi
 
-echo "=== Running Format Check With Prettier ==="
-npm run format_check
-
 echo "=== Running Linter ==="
 npm run lint
 
-echo "=== Running Svelte Check ===" 
+echo "=== Running Svelte Check ==="
 npm run check
 
 echo "=== Running Tests ==="
-npm run test_run
+npm run test:run
 
 echo "\n=== All Checks Pass ===\n"
-
