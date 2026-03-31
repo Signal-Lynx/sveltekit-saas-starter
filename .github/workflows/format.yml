@@ -30,7 +30,7 @@ jobs:
 
       # Prettier "check" (no writes in CI)
       - name: Check code format
-        run: npm run format -- --check
+        run: npm run format:check
 
       # Misspell: comment on PRs and fail on errors
       - name: Find misspelled words

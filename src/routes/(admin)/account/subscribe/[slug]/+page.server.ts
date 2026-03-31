@@ -9,7 +9,7 @@ import { lmFetch } from "$lib/server/subscription"
 import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 // Keep the same Stripe API version used elsewhere in the project
-const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2026-02-25.clover"
+const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2026-03-25.dahlia"
 
 // Bundle mapping for the template (buy Society, get Hoverboard free):
 // Matches src/lib/data/products.ts in the template
