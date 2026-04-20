@@ -9,7 +9,7 @@ import { lmFetch } from "$lib/server/subscription"
 import { appendCfAccessHeaders } from "$lib/server/license-api"
 
 // Keep the same Stripe API version used elsewhere in the project
-const STRIPE_API_VERSION: Stripe.LatestApiVersion = "2026-03-25.dahlia"
+const STRIPE_API_VERSION = "2026-03-25.dahlia" as const
 
 // Bundle mapping for the template (buy Society, get Hoverboard free):
 // Matches src/lib/data/products.ts in the template
@@ -118,9 +118,7 @@ export const load: PageServerLoad = async ({
   }
 
   // Build line items (Template specific bundling logic)
-  const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-    { price: priceId, quantity: 1 },
-  ]
+  const line_items = [{ price: priceId, quantity: 1 }]
   // If user buys "Society" (antigrav), add free "Hoverboard" (schematics)
   if (priceId === SOCIETY_PRICE_ID) {
     line_items.push({ price: HOVERBOARD_FREE_PRICE_ID, quantity: 1 })

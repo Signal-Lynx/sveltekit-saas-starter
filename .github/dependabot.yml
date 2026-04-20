@@ -9,6 +9,9 @@ updates:
       time: "09:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 4
+    cooldown:
+      semver-minor-days: 21
+      semver-patch-days: 14
     rebase-strategy: "disabled"
     reviewers:
       - "TheGrandGear99"
@@ -88,6 +91,8 @@ updates:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
       - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "stripe"
         update-types: ["version-update:semver-major"]
 
   # GitHub Actions

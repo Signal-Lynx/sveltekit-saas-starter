@@ -8,7 +8,7 @@ import Stripe from "stripe"
 // -----------------------------
 // Config / Helpers
 // -----------------------------
-const API_VERSION: Stripe.LatestApiVersion = "2026-03-25.dahlia"
+const API_VERSION = "2026-03-25.dahlia" as const
 const CACHE_TTL_MS = 240 * 60_000 // 4 hour cache
 
 type TSResponse = {
