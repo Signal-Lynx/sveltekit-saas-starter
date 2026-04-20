@@ -25,7 +25,7 @@
     "@aws-sdk/client-sesv2": "^3.1029.0",
     "@aws-sdk/s3-request-presigner": "^3.1029.0",
     "@supabase/ssr": "^0.10.2",
-    "@supabase/supabase-js": "^2.103.0",
+    "@supabase/supabase-js": "^2.104.0",
     "fuse.js": "^7.1.0",
     "handlebars": "^4.7.9",
     "stripe": "^21.0.1",
