@@ -42,7 +42,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^22.19.17",
     "daisyui": "^5.5.19",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "eslint-plugin-svelte": "^3.17.0",
     "globals": "^17.4.0",
     "postcss": "^8.5.8",
