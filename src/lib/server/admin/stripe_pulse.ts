@@ -7,7 +7,7 @@ if (!envPriv.PRIVATE_STRIPE_API_KEY) {
 }
 
 const stripe = new Stripe(envPriv.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2026-03-25.dahlia",
+  apiVersion: "2026-04-22.dahlia",
 })
 
 type ApiList<T> = Stripe.ApiList<T>

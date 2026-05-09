@@ -50,7 +50,7 @@ let stripeClient: Stripe | null = null
 function getStripe(): Stripe {
   const key = requireEnv("PRIVATE_STRIPE_API_KEY")
   if (stripeClient) return stripeClient
-  stripeClient = new Stripe(key, { apiVersion: "2026-03-25.dahlia" })
+  stripeClient = new Stripe(key, { apiVersion: "2026-04-22.dahlia" })
   return stripeClient
 }
 
