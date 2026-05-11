@@ -249,9 +249,23 @@ begin
 end;
 $fn$;
 
--- Lock down execution to the service role (server-side only)
-revoke all on function public.prune_stripe_webhook_events(integer) from public;
-grant execute on function public.prune_stripe_webhook_events(integer) to service_role;
+-- Lock down all four public functions to service_role only.
+-- All are trigger-only helpers; no external caller (anon, authenticated, or
+-- public) has a legitimate reason to invoke them via /rest/v1/rpc/.
+--
+-- IMPORTANT: Postgres grants EXECUTE to the PUBLIC pseudo-role by default
+-- when a function is created. anon and authenticated inherit from PUBLIC,
+-- so PUBLIC must be revoked explicitly -- revoking from anon/authenticated
+-- alone is insufficient (effective privilege resolves via inheritance).
+REVOKE ALL ON FUNCTION public.set_updated_at()                      FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.prune_stripe_webhook_events(integer)  FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.handle_new_user()                     FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.sync_profile_email()                  FROM PUBLIC, anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION public.set_updated_at()                     TO service_role;
+GRANT EXECUTE ON FUNCTION public.prune_stripe_webhook_events(integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.handle_new_user()                    TO service_role;
+GRANT EXECUTE ON FUNCTION public.sync_profile_email()                 TO service_role;
 
 -- =========================
 -- Triggers (public.*)
@@ -427,38 +441,32 @@ $outer$;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
 
--- 2) Table-level base privileges so RLS can run (principle of least privilege).
--- Profiles: clients can ONLY read their own row (subject to RLS).
--- Updates are handled exclusively via server-side actions (supabaseAdmin).
-GRANT SELECT ON TABLE public.profiles TO authenticated;
-
--- Stripe customers: clients read their own mapping (no writes).
-GRANT SELECT ON TABLE public.stripe_customers TO authenticated;
+-- 2) Table-level base privileges.
+-- profiles and stripe_customers: NO direct client grants.
+-- The app reads these exclusively via service_role (supabaseAdmin).
+-- Granting SELECT to `authenticated` here would expose both tables
+-- in the GraphQL schema to every signed-in user (Supabase linter 0027).
+-- RLS policies above provide defense-in-depth if a grant is ever added back.
 
 -- Contact form: server-side only (service_role). No direct client inserts.
 REVOKE INSERT ON TABLE public.contact_requests FROM anon, authenticated;
 
--- (Intentionally NO grant on admin tables, product_overrides, webhook audit to anon/authenticated)
+-- (Intentionally NO grant on profiles, stripe_customers, admin tables,
+--  product_overrides, or webhook audit to anon/authenticated)
 
 -- The user_profiles_view is also intentionally not granted to client-side roles.
 -- This application fetches profile data on the server using the service_role key
 -- and passes it to the client, which is a more secure pattern.
--- If you were to query this view from the client, you would add:
--- GRANT SELECT ON TABLE public.user_profiles_view TO authenticated;
 
 -- Service role (server): full access to operate.
 GRANT ALL ON ALL TABLES    IN SCHEMA public TO service_role;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO service_role;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO service_role;
 
--- 3) Defaults for FUTURE objects created by this migration role (usually 'postgres').
--- Keep client defaults conservative; service_role gets everything.
-ALTER DEFAULT PRIVILEGES IN SCHEMA public
-  GRANT SELECT ON TABLES TO authenticated;
-
-ALTER DEFAULT PRIVILEGES IN SCHEMA public
-  GRANT USAGE, SELECT ON SEQUENCES TO authenticated;
-
+-- 3) Defaults for FUTURE objects.
+-- Do NOT grant SELECT to authenticated by default — that would re-trigger
+-- the GraphQL exposure warning (linter 0027) for every new table.
+-- service_role gets everything; authenticated/anon get nothing by default.
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
   GRANT ALL ON TABLES    TO service_role;
 
