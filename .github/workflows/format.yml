@@ -26,7 +26,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       # Prettier "check" (no writes in CI)
       - name: Check code format
