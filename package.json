@@ -21,14 +21,16 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1047.0",
-    "@aws-sdk/client-sesv2": "^3.1047.0",
-    "@aws-sdk/s3-request-presigner": "^3.1047.0",
+    "@aws-sdk/client-s3": "^3.1063.0",
+    "@aws-sdk/client-sesv2": "^3.1063.0",
+    "@aws-sdk/s3-request-presigner": "^3.1063.0",
+    "@opentelemetry/api": "^1.9.1",
     "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.105.4",
-    "fuse.js": "^7.3.0",
+    "@supabase/supabase-js": "^2.107.0",
+    "cookie": "^1.1.1",
+    "fuse.js": "^7.4.2",
     "handlebars": "^4.7.9",
-    "stripe": "^22.1.1",
+    "stripe": "^22.2.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -36,26 +38,26 @@
     "@playwright/test": "^1.60.0",
     "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/adapter-vercel": "^6.3.3",
-    "@sveltejs/kit": "^2.60.1",
+    "@sveltejs/kit": "^2.63.0",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.3.0",
-    "@types/node": "^22.19.19",
-    "daisyui": "^5.5.19",
-    "eslint": "^10.3.0",
-    "eslint-plugin-svelte": "^3.17.1",
+    "@types/node": "^22.19.20",
+    "daisyui": "^5.5.23",
+    "eslint": "^10.4.1",
+    "eslint-plugin-svelte": "^3.19.0",
     "globals": "^17.6.0",
-    "postcss": "^8.5.14",
+    "postcss": "^8.5.15",
     "prettier": "^3.8.3",
-    "prettier-plugin-svelte": "^3.5.2",
-    "svelte": "^5.55.7",
-    "svelte-check": "^4.4.8",
-    "svelte-eslint-parser": "^1.6.1",
+    "prettier-plugin-svelte": "^4.1.0",
+    "svelte": "^5.56.3",
+    "svelte-check": "^4.6.0",
+    "svelte-eslint-parser": "^1.8.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.59.3",
-    "vite": "^8.0.13",
-    "vitest": "^4.1.6"
+    "typescript-eslint": "^8.60.1",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "overrides": {
     "cookie": "^1.1.1",
@@ -66,5 +68,8 @@
     "flatted": "3.4.2",
     "qs": "^6.15.1",
     "minimatch": "^10.2.5"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
   }
 }
