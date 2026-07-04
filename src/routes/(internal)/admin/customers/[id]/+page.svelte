@@ -247,8 +247,7 @@
         aria-label="Email body"
         placeholder="Type a short message to the user…"
         required
-        maxlength="4000"
-      ></textarea>
+        maxlength="4000"></textarea>
       <button type="submit" class="btn btn-outline">Send</button>
     </form>
   </div>

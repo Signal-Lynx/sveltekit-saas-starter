@@ -7,7 +7,7 @@ import { env as cfg } from "$lib/server/env"
 
 // --- Stripe client -----------------------------------------------------------
 const stripe = new Stripe(cfg.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2026-05-27.dahlia",
+  apiVersion: "2026-06-24.dahlia",
 })
 
 // --- Small utils -------------------------------------------------------------
