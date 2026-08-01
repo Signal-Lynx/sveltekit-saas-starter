@@ -101,8 +101,7 @@ export function getBetaProductById(
   id: string,
 ): Readonly<BetaProduct> | undefined {
   return (isBetaProductId(id) ? _byId[id] : undefined) as
-    | Readonly<BetaProduct>
-    | undefined
+    Readonly<BetaProduct> | undefined
 }
 
 /** Get a beta product by its License Manager Product Identifier */

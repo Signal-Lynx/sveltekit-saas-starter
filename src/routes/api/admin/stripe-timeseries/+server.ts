@@ -8,7 +8,7 @@ import Stripe from "stripe"
 // -----------------------------
 // Config / Helpers
 // -----------------------------
-const API_VERSION = "2026-06-24.dahlia" as const
+const API_VERSION = "2026-07-29.dahlia" as const
 const CACHE_TTL_MS = 240 * 60_000 // 4 hour cache
 
 type TSResponse = {
@@ -57,8 +57,7 @@ type TSResponse = {
 const cache = new Map<string, { at: number; data: TSResponse }>()
 
 function pickStripeSecret():
-  | { key: string; name: string }
-  | { key: ""; name: "" } {
+  { key: string; name: string } | { key: ""; name: "" } {
   const candidates = [
     "PRIVATE_STRIPE_API_KEY", // primary
     "PRIVATE_STRIPE_SECRET_KEY",

@@ -53,8 +53,7 @@ vi.mock("$lib/server/supabaseAdmin", () => ({
 // Small helpers for clarity
 // ----------------------------
 type UpdateChainResult =
-  | { data: unknown; error: null }
-  | { data: null; error: Error }
+  { data: unknown; error: null } | { data: null; error: Error }
 
 // Builds a fresh chain object for the UPDATE step: .eq().select().single()
 function makeUpdateChain(result: UpdateChainResult) {

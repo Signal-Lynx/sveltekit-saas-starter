@@ -8,8 +8,7 @@ export const prerender = false
 export const ssr = true
 
 type AuthData =
-  | { signedIn: false }
-  | { signedIn: true; userId: string; email: string | null }
+  { signedIn: false } | { signedIn: true; userId: string; email: string | null }
 
 function isNonEmptyEnv(value: string | undefined): boolean {
   return typeof value === "string" && value.trim().length > 0

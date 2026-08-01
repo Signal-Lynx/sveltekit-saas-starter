@@ -5,11 +5,7 @@
  * Keep this list in sync with the LM server.
  */
 export type EntitlementStatus =
-  | "active"
-  | "trial"
-  | "developer"
-  | "inactive"
-  | "blocked"
+  "active" | "trial" | "developer" | "inactive" | "blocked"
 
 /**
  * Readonly tuple of all statuses, useful for runtime checks or UI iteration.

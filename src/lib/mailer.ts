@@ -154,8 +154,7 @@ export const sendUserEmail = async ({
     serviceUserData?.user?.email_confirmed_at ||
     (
       serviceUserData?.user?.user_metadata as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
     )?.["email_verified"]
 
   if (!emailVerified) {
@@ -241,8 +240,7 @@ export const sendUserPlainEmail = async ({
     serviceUserData?.user?.email_confirmed_at ||
     (
       serviceUserData?.user?.user_metadata as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
     )?.["email_verified"]
 
   if (!emailVerified) {
@@ -289,13 +287,11 @@ export const sendUserPlainEmail = async ({
   }
 
   // SES config present?
-  if (
-    !(
-      env.PRIVATE_AWS_ACCESS_KEY_ID &&
-      env.PRIVATE_AWS_SECRET_ACCESS_KEY &&
-      env.PRIVATE_AWS_REGION
-    )
-  ) {
+  if (!(
+    env.PRIVATE_AWS_ACCESS_KEY_ID &&
+    env.PRIVATE_AWS_SECRET_ACCESS_KEY &&
+    env.PRIVATE_AWS_REGION
+  )) {
     console.warn("[mailer.sendUserPlainEmail] SOFT_ABORT:ses_not_configured", {
       userId: user.id,
       email,
