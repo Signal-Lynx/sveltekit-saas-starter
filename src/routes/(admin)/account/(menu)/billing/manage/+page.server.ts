@@ -16,7 +16,7 @@ function getStripe(): Stripe {
     throw new Error("Missing PRIVATE_STRIPE_API_KEY")
   }
 
-  _stripe = new Stripe(key, { apiVersion: "2026-07-29.dahlia" })
+  _stripe = new Stripe(key, { apiVersion: "2026-08-26.dahlia" })
   return _stripe
 }
 
