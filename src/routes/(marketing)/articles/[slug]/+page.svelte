@@ -4,7 +4,7 @@
   import { WebsiteBaseUrl, WebsiteName } from "../../../../config"
   import ContentPage from "$lib/components/layout/ContentPage.svelte"
 
-  const { data } = $props<{ data: PageData }>()
+  const { data }: { data: PageData } = $props()
 
   const meta = $derived(data.meta)
   const post = $derived(data.post)

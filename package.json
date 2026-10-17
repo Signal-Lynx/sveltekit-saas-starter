@@ -21,44 +21,44 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1141.0",
-    "@aws-sdk/client-sesv2": "^3.1141.0",
-    "@aws-sdk/s3-request-presigner": "^3.1141.0",
+    "@aws-sdk/client-s3": "^3.1152.0",
+    "@aws-sdk/client-sesv2": "^3.1152.0",
+    "@aws-sdk/s3-request-presigner": "^3.1152.0",
     "@opentelemetry/api": "^1.9.1",
     "@supabase/ssr": "^0.12.7",
-    "@supabase/supabase-js": "^2.117.2",
+    "@supabase/supabase-js": "^2.118.0",
     "cookie": "^1.1.1",
     "fuse.js": "^7.5.0",
-    "handlebars": "^4.7.9",
+    "handlebars": "^4.7.10",
     "stripe": "^22.6.2",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.64.1",
     "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/adapter-vercel": "^6.3.4",
     "@sveltejs/kit": "^2.70.3",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^22.20.4",
-    "daisyui": "^5.7.46",
+    "@types/node": "^22.20.5",
+    "daisyui": "^5.7.50",
     "esbuild": "^0.28.2",
-    "eslint": "^10.11.0",
-    "eslint-plugin-svelte": "^3.23.0",
-    "globals": "^17.12.0",
-    "postcss": "^8.5.28",
-    "prettier": "3.9.9",
+    "eslint": "^10.13.0",
+    "eslint-plugin-svelte": "^3.23.1",
+    "globals": "^17.13.0",
+    "postcss": "^8.5.30",
+    "prettier": "3.9.10",
     "prettier-plugin-svelte": "^4.1.1",
-    "svelte": "^5.57.1",
-    "svelte-check": "^4.7.6",
-    "svelte-eslint-parser": "^1.8.1",
+    "svelte": "^5.57.2",
+    "svelte-check": "^4.7.7",
+    "svelte-eslint-parser": "^1.9.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.1",
-    "vite": "^8.3.1",
-    "vitest": "^4.1.11"
+    "typescript-eslint": "^8.71.2",
+    "vite": "^8.3.4",
+    "vitest": "^4.1.12"
   },
   "overrides": {
     "cookie": "^1.1.1",
@@ -72,6 +72,9 @@
     "nanoid": "3.3.19",
     "@sveltejs/adapter-vercel": {
       "esbuild": "0.28.2"
+    },
+    "@tailwindcss/typography": {
+      "postcss-selector-parser": "7.1.6"
     }
   },
   "allowScripts": {

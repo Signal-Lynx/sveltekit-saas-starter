@@ -12,7 +12,9 @@
   adminSection.set("downloads")
 
   // ---- Props (Svelte 5 runes)
-  const { data } = $props<{
+  const {
+    data,
+  }: {
     data: {
       entitlements: {
         hoverboard: boolean
@@ -38,7 +40,7 @@
         timeline_c: string | null
       }
     }
-  }>()
+  } = $props()
 
   // Narrow + safe defaults (Reactive)
   const entitlements = $derived(

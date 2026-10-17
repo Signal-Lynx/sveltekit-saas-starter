@@ -5,7 +5,7 @@
   import type { DocumentMeta } from "$lib/data/docsData"
 
   // Data comes from the server loader via $props
-  const { data } = $props<{ data: PageData }>()
+  const { data }: { data: PageData } = $props()
 
   // 1. Define the desired display order (Maintains SaaS template context)
   const displayOrder = ["Hoverboard Schematics", "Timeline C Manual"]

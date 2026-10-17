@@ -3,7 +3,7 @@
   import type { PageData } from "./$types"
 
   // Data now comes directly from the server loader we created.
-  const { data } = $props<{ data: PageData }>()
+  const { data }: { data: PageData } = $props()
   const product = $derived(data.product)
   const files = $derived(data.files)
 </script>
