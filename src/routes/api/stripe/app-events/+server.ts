@@ -1,6 +1,7 @@
 // src/routes/(marketing)/stripe/webhook/+server.ts
 import { error, json, type RequestHandler } from "@sveltejs/kit"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import { building } from "$app/env"
 import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import { withContext } from "#lib/server/logger.ts"
@@ -10,7 +11,7 @@ import { env as cfg } from "#lib/server/env.ts"
 const stripe = building
   ? (null as unknown as Stripe)
   : new Stripe(cfg.PRIVATE_STRIPE_API_KEY, {
-      apiVersion: "2026-08-26.dahlia",
+      apiVersion: STRIPE_API_VERSION,
     })
 
 // --- Small utils -------------------------------------------------------------

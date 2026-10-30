@@ -1,6 +1,7 @@
 // src/lib/server/admin/customers.ts
 import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import * as env from "$app/env/private"
 import {
   sendTemplatedEmail,
@@ -50,7 +51,7 @@ let stripeClient: Stripe | null = null
 function getStripe(): Stripe {
   const key = requireEnv("PRIVATE_STRIPE_API_KEY")
   if (stripeClient) return stripeClient
-  stripeClient = new Stripe(key, { apiVersion: "2026-08-26.dahlia" })
+  stripeClient = new Stripe(key, { apiVersion: STRIPE_API_VERSION })
   return stripeClient
 }
 

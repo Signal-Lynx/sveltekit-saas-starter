@@ -2,6 +2,7 @@
 import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import * as env from "$app/env/private"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import { building } from "$app/env"
 import { allProducts } from "#lib/data/products.ts"
 
@@ -9,7 +10,7 @@ import { allProducts } from "#lib/data/products.ts"
 const stripe = building
   ? (null as unknown as Stripe)
   : new Stripe(env.PRIVATE_STRIPE_API_KEY!, {
-      apiVersion: "2026-08-26.dahlia",
+      apiVersion: STRIPE_API_VERSION,
     })
 
 // Minimal user shape used throughout the app (matches locals.user)

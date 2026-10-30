@@ -1,5 +1,6 @@
 // src/lib/server/admin/stripe_pulse.ts
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import * as envPriv from "$app/env/private"
 
 // Do not require live Stripe credentials while importing routes or building the
@@ -14,7 +15,7 @@ function getStripe(): Stripe {
       "[stripe_pulse] Missing PRIVATE_STRIPE_API_KEY. Configure Stripe before requesting the Stripe pulse.",
     )
   }
-  stripeClient = new Stripe(apiKey, { apiVersion: "2026-08-26.dahlia" })
+  stripeClient = new Stripe(apiKey, { apiVersion: STRIPE_API_VERSION })
   return stripeClient
 }
 

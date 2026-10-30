@@ -2,6 +2,7 @@
 import * as env from "$app/env/private"
 import { error, redirect } from "@sveltejs/kit"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import { getOrCreateCustomerId } from "#lib/server/subscription_helpers.ts"
 import type { PageServerLoad } from "./$types"
 import { reportWebsiteError } from "#lib/server/errorApi.ts"
@@ -16,7 +17,7 @@ function getStripe(): Stripe {
     throw new Error("Missing PRIVATE_STRIPE_API_KEY")
   }
 
-  _stripe = new Stripe(key, { apiVersion: "2026-08-26.dahlia" })
+  _stripe = new Stripe(key, { apiVersion: STRIPE_API_VERSION })
   return _stripe
 }
 

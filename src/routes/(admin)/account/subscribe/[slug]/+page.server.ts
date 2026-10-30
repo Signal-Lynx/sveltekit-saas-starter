@@ -3,13 +3,14 @@ import { allProducts } from "#lib/data/products.ts"
 import * as env from "$app/env/private"
 import { error, redirect } from "@sveltejs/kit"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import { getOrCreateCustomerId } from "#lib/server/subscription_helpers.ts"
 import type { PageServerLoad } from "./$types"
 import { lmFetch } from "#lib/server/subscription.ts"
 import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 // Keep the same Stripe API version used elsewhere in the project
-const STRIPE_API_VERSION = "2026-08-26.dahlia" as const
+// Stripe API version is shared with all other server-side Stripe clients.
 
 // Bundle mapping for the template (buy Society, get Hoverboard free):
 // Matches src/lib/data/products.ts in the template

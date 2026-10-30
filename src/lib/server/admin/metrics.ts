@@ -1,5 +1,6 @@
 // src/lib/server/admin/metrics.ts
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import * as envPriv from "$app/env/private"
 import * as envPub from "$app/env/public"
@@ -16,7 +17,7 @@ function getStripe(): Stripe {
       "[admin/metrics] Missing PRIVATE_STRIPE_API_KEY. Configure Stripe before requesting admin metrics.",
     )
   }
-  stripeClient = new Stripe(apiKey, { apiVersion: "2026-08-26.dahlia" })
+  stripeClient = new Stripe(apiKey, { apiVersion: STRIPE_API_VERSION })
   return stripeClient
 }
 

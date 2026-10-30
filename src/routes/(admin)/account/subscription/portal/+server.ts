@@ -4,6 +4,7 @@ import type { RequestHandler } from "./$types"
 import * as env from "$app/env/private"
 import { WebsiteBaseUrl } from "../../../../../config"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 import { getOrCreateCustomerId } from "#lib/server/subscription_helpers.ts"
 
 // ---------- Stripe singleton (avoids HMR re-inits) ----------
@@ -12,7 +13,7 @@ function getStripe(): Stripe {
   const key = env.PRIVATE_STRIPE_API_KEY
   if (!key) throw new Error("Missing PRIVATE_STRIPE_API_KEY")
   if (stripeClient) return stripeClient
-  stripeClient = new Stripe(key, { apiVersion: "2026-08-26.dahlia" })
+  stripeClient = new Stripe(key, { apiVersion: STRIPE_API_VERSION })
   return stripeClient
 }
 

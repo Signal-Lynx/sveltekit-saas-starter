@@ -4,11 +4,12 @@ import { error } from "@sveltejs/kit"
 import * as env from "$app/env/private"
 import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import Stripe from "stripe"
+import { STRIPE_API_VERSION } from "#lib/server/stripe-version.ts"
 
 // -----------------------------
 // Config / Helpers
 // -----------------------------
-const API_VERSION = "2026-08-26.dahlia" as const
+const API_VERSION = STRIPE_API_VERSION
 const CACHE_TTL_MS = 240 * 60_000 // 4 hour cache
 
 type TSResponse = {
