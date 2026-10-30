@@ -1,6 +1,6 @@
 // FILE: src/lib/data/products.ts
 
-import { dev } from "$app/environment"
+import { dev } from "$app/env"
 
 // ====================================================================================
 // HOW TO CUSTOMIZE PRODUCTS FOR YOUR TEMPLATE

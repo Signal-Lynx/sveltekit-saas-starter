@@ -1,7 +1,7 @@
 // src/routes/(admin)/account/create_profile/+page.ts
 import { redirect } from "@sveltejs/kit"
 import type { PageLoad } from "./$types"
-import type { Database } from "$lib/types/database"
+import type { Database } from "#lib/types/database.ts"
 
 // Narrow row type for clarity
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"]

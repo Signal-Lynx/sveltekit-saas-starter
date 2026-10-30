@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { displayProducts as allProducts } from "$lib/data/products"
+  import { displayProducts as allProducts } from "#lib/data/products.ts"
 
   // Extend to accept current product fields used on homepage
   type Plan = {

@@ -1,10 +1,19 @@
 // vite.config.ts
 import { defineConfig } from "vitest/config"
 import { sveltekit } from "@sveltejs/kit/vite"
+import adapterAuto from "@sveltejs/adapter-auto"
+import adapterVercel from "@sveltejs/adapter-vercel"
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte"
 import tailwindcss from "@tailwindcss/vite"
 import path from "node:path"
 
 const isVitest = !!process.env.VITEST
+
+// Preserve the existing opt-in adapter selection for production/CI.
+const useVercel =
+  process.env.VERCEL === "1" ||
+  process.env.BUILD_TARGET === "vercel" ||
+  process.env.ADAPTER === "vercel"
 
 const NATIVE_BUILD_TOOLS = [
   "lightningcss",
@@ -14,46 +23,35 @@ const NATIVE_BUILD_TOOLS = [
 ]
 
 export default defineConfig({
-  plugins: isVitest ? [] : [tailwindcss(), sveltekit()],
+  plugins: isVitest
+    ? []
+    : [
+        tailwindcss(),
+        sveltekit({
+          preprocess: vitePreprocess(),
+          onwarn(warning, handler) {
+            handler(warning)
+          },
+          adapter: useVercel ? adapterVercel({}) : adapterAuto(),
+          inlineStyleThreshold: 0,
+          csrf: {
+            trustedOrigins: [],
+          },
+        }),
+      ],
 
   resolve: {
     alias: isVitest
       ? {
-          "$env/dynamic/private": path.resolve(
-            "tests/mocks/env-dynamic-private.ts",
-          ),
-          "$env/static/private": path.resolve(
-            "tests/mocks/env-static-private.ts",
-          ),
-          "$app/environment": path.resolve("tests/mocks/app-environment.ts"),
-          $lib: path.resolve("src/lib"),
-          $components: path.resolve("src/lib/components"),
-          $server: path.resolve("src/lib/server"),
-          $routes: path.resolve("src/routes"),
-          $types: path.resolve("src/lib/types"),
-          $data: path.resolve("src/lib/data"),
-          $utils: path.resolve("src/lib/utils"),
-          $ui: path.resolve("src/lib/ui"),
+          "$app/env/private": path.resolve("tests/mocks/app-env-private.ts"),
+          "$app/env/public": path.resolve("tests/mocks/app-env-public.ts"),
+          "$app/env": path.resolve("tests/mocks/app-environment.ts"),
         }
       : {},
   },
 
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (
-            id.includes("/node_modules/svelte/") ||
-            id.includes("\\node_modules\\svelte\\") ||
-            id.includes("/node_modules/@sveltejs/") ||
-            id.includes("\\node_modules\\@sveltejs\\")
-          ) {
-            return "svelte-vendor"
-          }
-        },
-      },
-    },
-  },
+  // Vite 8 and SvelteKit manage code splitting. The former manualChunks
+  // override is ignored and emits a build warning, so do not set it here.
 
   // 🔧 Keep native CSS toolchain out of SSR/runtime graphs
   optimizeDeps: {
@@ -66,6 +64,8 @@ export default defineConfig({
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
     globals: true,
+    // Preserve Vitest 4 mock lifecycle behavior during the isolated upgrade.
+    clearMocks: false,
     environment: "node",
     deps: {
       optimizer: {

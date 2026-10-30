@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { page } from "$app/stores"
-  import { dev } from "$app/environment"
+  import { page } from "$app/state"
+  import { dev } from "$app/env"
   import { WebsiteName } from "../config"
+
+  const status = $derived(page.status ?? 500)
+  const currentError = $derived(page.error)
 
   function extractMessage(err: unknown): string | null {
     if (err == null) return null
@@ -30,7 +33,7 @@
 </script>
 
 <svelte:head>
-  <title>Error {$page.status ?? 500} - {WebsiteName}</title>
+  <title>Error {status} - {WebsiteName}</title>
   <meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -38,7 +41,7 @@
   <div class="hero-content text-center">
     <div class="max-w-md">
       <h1 id="error-title" class="text-8xl font-bold text-secondary">
-        {$page.status ?? 500}
+        {status}
       </h1>
 
       <p class="py-4 text-3xl font-bold text-primary">
@@ -51,26 +54,26 @@
         diagnostic:
       </p>
 
-      {#if extractMessage($page.error)}
+      {#if extractMessage(currentError)}
         <div
           class="my-6 p-4 bg-base-200 rounded-lg text-left"
           role="alert"
           aria-live="polite"
         >
           <code class="text-accent block whitespace-pre-wrap wrap-break-word">
-            ERROR: {extractMessage($page.error)}
+            ERROR: {extractMessage(currentError)}
           </code>
         </div>
       {/if}
 
-      {#if extractStack($page.error)}
+      {#if extractStack(currentError)}
         <details class="my-4 text-left">
           <summary class="cursor-pointer select-none">
             Developer stack trace
           </summary>
           <pre
             class="mt-2 max-h-64 overflow-auto text-sm bg-base-200 p-3 rounded">
-{extractStack($page.error)}</pre>
+{extractStack(currentError)}</pre>
         </details>
       {/if}
 

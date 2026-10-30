@@ -1,10 +1,10 @@
 // src/routes/(admin)/account/(menu)/billing/manage/+page.server.ts
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import { error, redirect } from "@sveltejs/kit"
 import Stripe from "stripe"
-import { getOrCreateCustomerId } from "$lib/server/subscription_helpers"
+import { getOrCreateCustomerId } from "#lib/server/subscription_helpers.ts"
 import type { PageServerLoad } from "./$types"
-import { reportWebsiteError } from "$lib/server/errorApi"
+import { reportWebsiteError } from "#lib/server/errorApi.ts"
 
 let _stripe: Stripe | null = null
 

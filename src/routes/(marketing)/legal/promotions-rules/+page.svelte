@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
 </script>
 
 <svelte:head>

@@ -3,9 +3,9 @@
   import { getContext } from "svelte"
   import type { Writable } from "svelte/store"
   import type { PageData } from "./$types"
-  import type { ActiveProductRow } from "$lib/server/subscription"
-  import { badgeClassForStatus } from "$lib/ui/badge"
-  import { browser } from "$app/environment"
+  import type { ActiveProductRow } from "#lib/server/subscription.ts"
+  import { badgeClassForStatus } from "#lib/ui/badge.ts"
+  import { browser } from "$app/env"
 
   // ---- Admin section context (robust to missing context) ----
   const adminSection = getContext<Writable<string> | undefined>("adminSection")

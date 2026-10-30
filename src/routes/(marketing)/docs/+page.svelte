@@ -2,7 +2,7 @@
 <script lang="ts">
   import { WebsiteName, WebsiteBaseUrl } from "../../../config"
   import type { PageData } from "./$types"
-  import type { DocumentMeta } from "$lib/data/docsData"
+  import type { DocumentMeta } from "#lib/data/docsData.ts"
 
   // Data comes from the server loader via $props
   const { data }: { data: PageData } = $props()

@@ -1,5 +1,5 @@
 import type { PageServerLoad } from "./$types"
-import { dev } from "$app/environment"
+import { dev } from "$app/env"
 
 const COOKIE_NAME = "lm_claim_check" as const
 

@@ -1,8 +1,8 @@
 // src/routes/(marketing)/sitemap.xml/+server.ts
 import type { RequestHandler } from "@sveltejs/kit"
 import { WebsiteBaseUrl } from "../../../config"
-import { dev } from "$app/environment"
-import { articlesMeta } from "$lib/data/articles/meta"
+import { dev } from "$app/env"
+import { articlesMeta } from "#lib/data/articles/meta.ts"
 
 export const prerender = false
 

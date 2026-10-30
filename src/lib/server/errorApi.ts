@@ -1,7 +1,7 @@
 // src/lib/server/errorApi.ts
-import { env as validated } from "$lib/server/env"
-import { lmFetch } from "$lib/server/subscription"
-import { appendCfAccessHeaders } from "$lib/server/license-api"
+import { env as validated } from "#lib/server/env.ts"
+import { lmFetch } from "#lib/server/subscription.ts"
+import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 interface WebsiteErrorPayload {
   product_id: string

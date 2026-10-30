@@ -2,10 +2,10 @@
 <script lang="ts">
   import { getContext } from "svelte"
   import type { Writable } from "svelte/store"
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
   import { enhance } from "$app/forms"
-  import type { LMEntitlement } from "$lib/types"
-  import type { R2File } from "$lib/server/r2"
+  import type { LMEntitlement } from "#lib/types.ts"
+  import type { R2File } from "#lib/server/r2.ts"
 
   // ---- Context / section marker
   const adminSection: Writable<string> = getContext("adminSection")
@@ -211,7 +211,7 @@
   </form>
 </div>
 
-{#if $page.url.searchParams.has("refreshed")}
+{#if page.url.searchParams.has("refreshed")}
   <div role="alert" class="alert alert-success mt-4">
     <svg
       xmlns="http://www.w3.org/2000/svg"

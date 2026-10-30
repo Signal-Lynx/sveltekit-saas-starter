@@ -1,6 +1,14 @@
 {
-  // Inherit SvelteKit's generated config, which wires up `svelte` and `vite/client` types
-  "extends": "./.svelte-kit/tsconfig.json",
+  // SvelteKit 3 generates this stable config package during sync.
+  "extends": "$app/tsconfig",
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "vite.config.ts",
+    "playwright.config.ts",
+    ".svelte-kit/ambient.d.ts"
+  ],
+  "exclude": ["node_modules", "src/service-worker"],
 
   "compilerOptions": {
     // --- keep your existing flags ---

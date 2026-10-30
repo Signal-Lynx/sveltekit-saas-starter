@@ -1,7 +1,7 @@
 // src/routes/(admin)/account/(menu)/billing/+page.server.ts
 import type { PageServerLoad } from "./$types"
-import { entitlementsToActiveProductsWithDates } from "$lib/server/subscription"
-import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
+import { entitlementsToActiveProductsWithDates } from "#lib/server/subscription.ts"
+import { loadSubscriptionState } from "#lib/server/subscriptionLoader.ts"
 
 /**
  * Prewritten banner copy. Kept as readonly tuples for literal types,

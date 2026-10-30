@@ -3,7 +3,7 @@ import {
   ListObjectsV2Command,
   type _Object,
 } from "@aws-sdk/client-s3"
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 
 // Initialize the S3 client for R2
 const s3 = new S3Client({

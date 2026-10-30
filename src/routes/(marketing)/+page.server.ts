@@ -1,7 +1,7 @@
 // src/routes/(marketing)/+page.server.ts
 import type { PageServerLoad } from "./$types"
 import { error } from "@sveltejs/kit"
-import { getDisplayProductsWithOverrides } from "$lib/server/product_overrides"
+import { getDisplayProductsWithOverrides } from "#lib/server/product_overrides.ts"
 
 /**
  * Server load for the marketing landing page.

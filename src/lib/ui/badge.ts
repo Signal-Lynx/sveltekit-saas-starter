@@ -1,5 +1,5 @@
 // src/lib/ui/badge.ts
-import type { EntitlementStatus } from "$lib/types"
+import type { EntitlementStatus } from "#lib/types.ts"
 
 /**
  * DaisyUI badge color class by entitlement status.

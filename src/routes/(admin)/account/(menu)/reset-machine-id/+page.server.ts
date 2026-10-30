@@ -1,13 +1,13 @@
 // src/routes/(admin)/account/(menu)/reset-machine-id/+page.server.ts
 import { fail, redirect } from "@sveltejs/kit"
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import type { Actions, PageServerLoad } from "./$types"
-import { sendAdminEmail } from "$lib/mailer"
-import { lmFetch } from "$lib/server/subscription"
-import { allProducts, type Product } from "$lib/data/products"
-import type { LMEntitlement } from "$lib/types"
-import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
-import { appendCfAccessHeaders } from "$lib/server/license-api"
+import { sendAdminEmail } from "#lib/mailer.ts"
+import { lmFetch } from "#lib/server/subscription.ts"
+import { allProducts, type Product } from "#lib/data/products.ts"
+import type { LMEntitlement } from "#lib/types.ts"
+import { loadSubscriptionState } from "#lib/server/subscriptionLoader.ts"
+import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 // --- Surface entitlements + resolved product names for display ---
 const normalize = (s?: string | null) => (s ?? "").trim().toLowerCase()

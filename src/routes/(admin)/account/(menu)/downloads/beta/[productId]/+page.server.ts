@@ -1,7 +1,7 @@
 import { error } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
-import { getBetaProductById } from "$lib/data/beta_products"
-import { listFiles } from "$lib/server/r2"
+import { getBetaProductById } from "#lib/data/beta_products.ts"
+import { listFiles } from "#lib/server/r2.ts"
 import { SECURE_DOWNLOADS_BASE } from "../../../../../../../config"
 
 export const load: PageServerLoad = async ({ params, parent }) => {

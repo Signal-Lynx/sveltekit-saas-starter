@@ -15,10 +15,10 @@
 
 <script lang="ts">
   import "../app.css"
-  import { navigating, page } from "$app/stores"
+  import { navigating, page } from "$app/state"
   import { expoOut } from "svelte/easing"
   import { slide } from "svelte/transition"
-  import { browser, dev } from "$app/environment"
+  import { browser, dev } from "$app/env"
   import type { Snippet } from "svelte"
   import { onMount } from "svelte"
 
@@ -143,7 +143,7 @@
   // Send page_view on each path change after GA bootstraps (send_page_view: false initially).
   $effect(() => {
     if (!ENABLE_GA || !browser) return
-    const pathname = $page.url.pathname
+    const pathname = page.url.pathname
     window.gtag?.("config", GA_MEASUREMENT_ID, { page_path: pathname })
   })
 
@@ -177,7 +177,7 @@
   {/if}
 </svelte:head>
 
-{#if $navigating}
+{#if navigating.to}
   <div
     aria-hidden="true"
     class="fixed w-full top-0 right-0 left-0 h-1 z-50 bg-primary"

@@ -33,7 +33,7 @@ const H = vi.hoisted(() => {
 // ---------------------------
 
 // 1. Mock the validated env module so we don't trigger Zod validation
-vi.mock("$lib/server/env", () => ({
+vi.mock("#lib/server/env.ts", () => ({
   get env() {
     return H.envBag
   },
@@ -52,7 +52,7 @@ vi.mock("@aws-sdk/client-sesv2", () => {
 })
 
 // 3. Mock Supabase Admin
-vi.mock("$lib/server/supabaseAdmin", () => ({
+vi.mock("#lib/server/supabaseAdmin.ts", () => ({
   supabaseAdmin: H.supabaseAdmin,
 }))
 

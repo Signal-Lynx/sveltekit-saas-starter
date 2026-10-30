@@ -1,6 +1,6 @@
 // src/routes/api/report-error/+server.ts
 import { json } from "@sveltejs/kit"
-import { reportWebsiteError } from "$lib/server/errorApi"
+import { reportWebsiteError } from "#lib/server/errorApi.ts"
 import type { RequestHandler } from "./$types"
 
 // This endpoint receives unauthenticated errors from the client-side (browser)

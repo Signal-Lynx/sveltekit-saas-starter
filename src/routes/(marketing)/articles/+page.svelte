@@ -1,7 +1,7 @@
 <!-- FILE: src/routes/(marketing)/articles/+page.svelte -->
 <script lang="ts">
   import { WebsiteName, WebsiteBaseUrl } from "../../../config"
-  import { articlesMeta, articleHref } from "$lib/data/articles/meta"
+  import { articlesMeta, articleHref } from "#lib/data/articles/meta.ts"
 
   // Sort newest first
   const ARTICLES = [...articlesMeta].sort(

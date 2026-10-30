@@ -1,6 +1,6 @@
 // src/lib/server/product_matcher.ts
-import { allProducts } from "$lib/data/products"
-import type { Product } from "$lib/data/products"
+import { allProducts } from "#lib/data/products.ts"
+import type { Product } from "#lib/data/products.ts"
 
 const normalize = (s?: string | null): string => (s ?? "").trim().toLowerCase()
 

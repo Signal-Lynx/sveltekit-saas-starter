@@ -15,7 +15,7 @@ import {
   revokeLicense,
   resyncLicenses,
 } from "../../../../../lib/server/admin/customers"
-import { audit } from "$lib/server/admin/audit"
+import { audit } from "#lib/server/admin/audit.ts"
 import { redirect } from "@sveltejs/kit"
 
 /**

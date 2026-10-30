@@ -1,5 +1,5 @@
 import type { PageServerLoad } from "./$types"
-import { buildSearchIndex } from "$lib/build_index"
+import { buildSearchIndex } from "#lib/build_index.ts"
 
 export const prerender = false
 

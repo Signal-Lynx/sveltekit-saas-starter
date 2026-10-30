@@ -4,8 +4,8 @@ import { redirect, error } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import { env } from "$env/dynamic/private"
-import { getUserSubscriptionState } from "$lib/server/subscription"
+import * as env from "$app/env/private"
+import { getUserSubscriptionState } from "#lib/server/subscription.ts"
 
 const s3 = new S3Client({
   region: env.PRIVATE_R2_REGION!,

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { enhance } from "$app/forms"
-  import type { SubmitFunction } from "@sveltejs/kit"
+  import type { SubmitFunction } from "$app/forms"
   import { onMount } from "svelte"
-  import { PUBLIC_TURNSTILE_SITE_KEY } from "$env/static/public"
+  import * as publicEnv from "$app/env/public"
 
   type FormState = {
     email?: string
@@ -23,7 +23,7 @@
       return
     }
 
-    if (!PUBLIC_TURNSTILE_SITE_KEY) {
+    if (!publicEnv.PUBLIC_TURNSTILE_SITE_KEY) {
       console.warn(
         "Turnstile (sign-up): PUBLIC_TURNSTILE_SITE_KEY not set; CAPTCHA widget will not render.",
       )
@@ -48,7 +48,7 @@
 
       try {
         ts.render(widgetContainer, {
-          sitekey: PUBLIC_TURNSTILE_SITE_KEY,
+          sitekey: publicEnv.PUBLIC_TURNSTILE_SITE_KEY,
           theme: "dark",
           callback(token: string) {
             captchaToken = token

@@ -1,6 +1,6 @@
 <!-- src/routes/(internal)/admin/+page.svelte -->
 <script lang="ts">
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
   import { onMount } from "svelte"
 
   // ---------- Types ----------
@@ -34,20 +34,24 @@
 
   const SHOW_SUPABASE_MRR = false
 
-  export let data: {
-    daily: DailyMRR[]
-    monthly: MonthlyMRR[]
-    summary: Summary
-    stripe_mode: "test" | "live"
-    scope: "mapped" | "allowlist" | "all"
-    allowlistCount: number
-    // stripePulse is now fetched client-side
-    // stripePulse?: StripePulse  // (optional if you kept the type from earlier)
-  }
+  const {
+    data,
+  }: {
+    data: {
+      daily: DailyMRR[]
+      monthly: MonthlyMRR[]
+      summary: Summary
+      stripe_mode: "test" | "live"
+      scope: "mapped" | "allowlist" | "all"
+      allowlistCount: number
+      // stripePulse is now fetched client-side
+      // stripePulse?: StripePulse  // (optional if you kept the type from earlier)
+    }
+  } = $props()
 
-  let pulse: StripePulse | null = null
-  let pulseLoading = true
-  let pulseError: string | null = null
+  let pulse = $state<StripePulse | null>(null)
+  let pulseLoading = $state(true)
+  let pulseError = $state<string | null>(null)
 
   // Stripe time-series (last N months)
   type StripeTimeseries = {
@@ -59,12 +63,12 @@
     active_subs: number[]
     cancellations: number[]
   }
-  let ts: StripeTimeseries | null = null
-  let tsLoading = true
-  let tsError: string | null = null
+  let ts = $state<StripeTimeseries | null>(null)
+  let tsLoading = $state(true)
+  let tsError = $state<string | null>(null)
 
-  $: pseudoMRRCents = pulse?.net_paid_30d_cents ?? 0
-  $: pseudoARRCents = pseudoMRRCents * 12
+  const pseudoMRRCents = $derived(pulse?.net_paid_30d_cents ?? 0)
+  const pseudoARRCents = $derived(pseudoMRRCents * 12)
 
   onMount(async () => {
     try {
@@ -226,60 +230,75 @@
   }
 
   // ---------- Data -> series ----------
-  const dailySeries = data.daily.map((d) => ({
-    label: (d.day || "").slice(5),
-    value: Number(d.mrr_cents) || 0,
-  }))
-  const monthlySeries = data.monthly.map((d) => ({
-    label: d.month,
-    value: Number(d.mrr_cents) || 0,
-  }))
+  const dailySeries = $derived(
+    data.daily.map((d) => ({
+      label: (d.day || "").slice(5),
+      value: Number(d.mrr_cents) || 0,
+    })),
+  )
+  const monthlySeries = $derived(
+    data.monthly.map((d) => ({
+      label: d.month,
+      value: Number(d.mrr_cents) || 0,
+    })),
+  )
 
-  const dailyChart = makeChart(dailySeries)
-  const monthlyChart = makeChart(monthlySeries)
+  const dailyChart = $derived(makeChart(dailySeries))
+  const monthlyChart = $derived(makeChart(monthlySeries))
 
   // Sparser x-labels for long series, but never 0
-  const monthlyLabelStep = Math.max(
-    1,
-    Math.ceil((monthlySeries.length || 1) / 6),
+  const monthlyLabelStep = $derived(
+    Math.max(1, Math.ceil((monthlySeries.length || 1) / 6)),
   )
-  const dailyLabelStep = Math.max(1, Math.ceil((dailySeries.length || 1) / 6))
+  const dailyLabelStep = $derived(
+    Math.max(1, Math.ceil((dailySeries.length || 1) / 6)),
+  )
 
   // ---------- Stripe timeseries -> series (reactive) ----------
-  $: tsNetSeries = (ts?.months ?? []).map((m, i) => ({
-    label: m,
-    value: Number(ts?.net_paid_cents?.[i] ?? 0),
-  }))
-  $: tsNewCustSeries = (ts?.months ?? []).map((m, i) => ({
-    label: m,
-    value: Number(ts?.new_customers?.[i] ?? 0),
-  }))
+  const tsNetSeries = $derived(
+    (ts?.months ?? []).map((m, i) => ({
+      label: m,
+      value: Number(ts?.net_paid_cents?.[i] ?? 0),
+    })),
+  )
+  const tsNewCustSeries = $derived(
+    (ts?.months ?? []).map((m, i) => ({
+      label: m,
+      value: Number(ts?.new_customers?.[i] ?? 0),
+    })),
+  )
   // NEW series
-  $: tsActiveSeries = (ts?.months ?? []).map((m, i) => ({
-    label: m,
-    value: Number(ts?.active_subs?.[i] ?? 0),
-  }))
-  $: tsCancelSeries = (ts?.months ?? []).map((m, i) => ({
-    label: m,
-    value: Number(ts?.cancellations?.[i] ?? 0),
-  }))
+  const tsActiveSeries = $derived(
+    (ts?.months ?? []).map((m, i) => ({
+      label: m,
+      value: Number(ts?.active_subs?.[i] ?? 0),
+    })),
+  )
+  const tsCancelSeries = $derived(
+    (ts?.months ?? []).map((m, i) => ({
+      label: m,
+      value: Number(ts?.cancellations?.[i] ?? 0),
+    })),
+  )
 
-  $: tsNetChart = makeChart(tsNetSeries)
-  $: tsNewCustChart = makeChart(tsNewCustSeries)
+  const tsNetChart = $derived(makeChart(tsNetSeries))
+  const tsNewCustChart = $derived(makeChart(tsNewCustSeries))
   // NEW charts
-  $: tsActiveChart = makeChart(tsActiveSeries)
-  $: tsCancelChart = makeChart(tsCancelSeries)
+  const tsActiveChart = $derived(makeChart(tsActiveSeries))
+  const tsCancelChart = $derived(makeChart(tsCancelSeries))
 
-  $: tsLabelStep = Math.max(1, Math.ceil((tsNetSeries.length || 1) / 6))
+  const tsLabelStep = $derived(
+    Math.max(1, Math.ceil((tsNetSeries.length || 1) / 6)),
+  )
 </script>
 
-{#if $page.url.searchParams.get("ok")}
+{#if page.url.searchParams.get("ok")}
   <div
     class="mb-4 rounded border alert alert-success px-3 py-2 text-sm"
     role="status"
     aria-live="polite"
   >
-    {$page.url.searchParams.get("ok")}
+    {page.url.searchParams.get("ok")}
   </div>
 {/if}
 

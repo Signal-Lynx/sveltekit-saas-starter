@@ -6,9 +6,9 @@ import {
   getMRRMonthlies,
   recomputeTodayMRR,
   getSummary,
-} from "$lib/server/admin/metrics"
-import { env as privateEnv } from "$env/dynamic/private"
-import { env as publicEnv } from "$env/dynamic/public"
+} from "#lib/server/admin/metrics.ts"
+import * as privateEnv from "$app/env/private"
+import * as publicEnv from "$app/env/public"
 
 /** Internal helpers kept local to this module for clarity and testability */
 type Scope = "mapped" | "allowlist" | "all"

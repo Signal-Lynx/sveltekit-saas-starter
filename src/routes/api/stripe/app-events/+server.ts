@@ -1,14 +1,17 @@
 // src/routes/(marketing)/stripe/webhook/+server.ts
 import { error, json, type RequestHandler } from "@sveltejs/kit"
 import Stripe from "stripe"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
-import { withContext } from "$lib/server/logger"
-import { env as cfg } from "$lib/server/env"
+import { building } from "$app/env"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
+import { withContext } from "#lib/server/logger.ts"
+import { env as cfg } from "#lib/server/env.ts"
 
 // --- Stripe client -----------------------------------------------------------
-const stripe = new Stripe(cfg.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2026-08-26.dahlia",
-})
+const stripe = building
+  ? (null as unknown as Stripe)
+  : new Stripe(cfg.PRIVATE_STRIPE_API_KEY, {
+      apiVersion: "2026-08-26.dahlia",
+    })
 
 // --- Small utils -------------------------------------------------------------
 const nowIso = () => new Date().toISOString()

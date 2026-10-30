@@ -1,7 +1,7 @@
 // src/routes/(marketing)/login/sign_in/+page.server.ts
 import { fail, redirect } from "@sveltejs/kit"
-import { dev } from "$app/environment"
-import { env } from "$env/dynamic/private"
+import { dev } from "$app/env"
+import * as env from "$app/env/private"
 import type { Actions } from "./$types"
 
 // --- START: Validation Schema (kept minimal to avoid behavior changes) ---

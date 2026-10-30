@@ -1,6 +1,6 @@
 <!-- src/routes/(internal)/admin/customers/[id]/+page.svelte -->
 <script lang="ts">
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
 
   /** Data contracts (same shape as before, now explicit) */
   type Profile = {
@@ -33,21 +33,18 @@
     activeProducts?: ProductRow[] // NEW (optional)
   }
 
-  export let data: { summary: Summary }
+  const { data }: { data: { summary: Summary } } = $props()
 
   // Safe local refs (do not change values shown; just convenience)
-  const p = data.summary.profile
-  const sub = data.summary.subscription
-  const licenses = data.summary.licenses
-  const products = data.summary.activeProducts ?? [] // NEW
+  const p = $derived(data.summary.profile)
+  const sub = $derived(data.summary.subscription)
+  const licenses = $derived(data.summary.licenses)
+  const products = $derived(data.summary.activeProducts ?? []) // NEW
 
   // Derive URL param messages once for cleaner markup
-  let urlError = ""
-  let urlOk = ""
-  let urlSent = ""
-  $: urlError = $page.url.searchParams.get("error") ?? ""
-  $: urlOk = $page.url.searchParams.get("ok") ?? ""
-  $: urlSent = $page.url.searchParams.get("sent") ?? ""
+  const urlError = $derived(page.url.searchParams.get("error") ?? "")
+  const urlOk = $derived(page.url.searchParams.get("ok") ?? "")
+  const urlSent = $derived(page.url.searchParams.get("sent") ?? "")
 </script>
 
 <svelte:head>

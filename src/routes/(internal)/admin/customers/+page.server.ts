@@ -1,6 +1,6 @@
 // src/routes/(internal)/admin/customers/+page.server.ts
 import type { Actions, PageServerLoad } from "./$types"
-import { searchCustomersByEmail } from "$lib/server/admin/customers"
+import { searchCustomersByEmail } from "#lib/server/admin/customers.ts"
 
 /**
  * Keep queries sane without changing semantics:

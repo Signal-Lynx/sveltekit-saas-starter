@@ -1,8 +1,8 @@
 // FILE: src/routes/api/admin/stripe-timeseries/+server.ts
 import type { RequestHandler } from "./$types"
 import { error } from "@sveltejs/kit"
-import { env } from "$env/dynamic/private"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import * as env from "$app/env/private"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import Stripe from "stripe"
 
 // -----------------------------
@@ -69,7 +69,7 @@ function pickStripeSecret():
   ] as const
 
   for (const name of candidates) {
-    const v = env[name]
+    const v = (env as unknown as Record<string, string | undefined>)[name]
     if (v && v.trim()) return { key: v, name }
   }
   return { key: "", name: "" }

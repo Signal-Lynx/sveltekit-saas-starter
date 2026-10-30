@@ -1,6 +1,6 @@
 <!-- src/routes/(admin)/account/select_plan/+page.svelte -->
 <script lang="ts">
-  import PricingModule from "$lib/components/pricing_module.svelte"
+  import PricingModule from "#lib/components/pricing_module.svelte"
   import { WebsiteName as RawWebsiteName } from "../../../../../config"
 
   // Defensive fallback so the title never renders "undefined"

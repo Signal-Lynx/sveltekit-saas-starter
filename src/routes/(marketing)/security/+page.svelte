@@ -1,6 +1,6 @@
 <!-- FILE: src/routes/(marketing)/security/+page.svelte   -->
 <script lang="ts">
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG, WebsiteName, WebsiteBaseUrl } from "../../../config"
 
   const mailtoHref = `mailto:${SITE_CONFIG.securityEmail}`

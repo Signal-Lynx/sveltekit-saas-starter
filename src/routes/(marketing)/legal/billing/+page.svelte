@@ -1,6 +1,6 @@
 <!-- FILE: src/routes/(marketing)/legal/billing/+page.svelte   -->
 <script lang="ts">
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
   import { WebsiteName } from "../../../../config"
 </script>
 

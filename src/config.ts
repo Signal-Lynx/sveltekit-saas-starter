@@ -1,7 +1,7 @@
 // FILE: src/config.ts
 
-import { env } from "$env/dynamic/public"
-import { dev } from "$app/environment"
+import * as env from "$app/env/public"
+import { dev } from "$app/env"
 
 // --- Brand & Contact env overrides (with safe defaults) ---
 export const CompanyLegalName = fromEnv(
@@ -55,7 +55,7 @@ function parseBool(value: unknown, fallback = false): boolean {
 
 /** Read a public env var with a string fallback. */
 function fromEnv(key: string, fallback: string): string {
-  const v = (env as Record<string, string | undefined>)[key]
+  const v = (env as unknown as Record<string, string | undefined>)[key]
   return typeof v === "string" && v.length > 0 ? v : fallback
 }
 
@@ -101,7 +101,8 @@ export const WebsiteDescription: string = fromEnv(
  * Defaults to false to preserve existing behavior when unset.
  */
 export const CreateProfileStep: boolean = parseBool(
-  (env as Record<string, string | undefined>).PUBLIC_CREATE_PROFILE_STEP,
+  (env as unknown as Record<string, string | undefined>)
+    .PUBLIC_CREATE_PROFILE_STEP,
   false,
 )
 

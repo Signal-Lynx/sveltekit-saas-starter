@@ -1,6 +1,6 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms"
-  import type { SubmitFunction } from "@sveltejs/kit"
+  import type { SubmitFunction } from "$app/forms"
   import { WebsiteName } from "../../../../config"
 
   // --- Types (kept local so we don't import anything new) ---

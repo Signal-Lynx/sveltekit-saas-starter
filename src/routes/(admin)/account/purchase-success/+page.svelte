@@ -28,7 +28,7 @@
     try {
       // invalidateAll tells SvelteKit to refetch all data, ensuring the
       // user's new entitlements are loaded fresh from the server.
-      await goto("/account", { invalidateAll: true })
+      await goto("/account", { refreshAll: true })
     } catch {
       // If navigation fails for some reason, allow another attempt.
       hasRedirected = false

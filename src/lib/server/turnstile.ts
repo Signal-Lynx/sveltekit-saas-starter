@@ -1,6 +1,6 @@
 // src/lib/server/turnstile.ts
 
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 
 /**
  * Gets the client's IP address from the request headers.

@@ -7,8 +7,8 @@
     WebsiteBaseUrl,
     WebsiteDescription,
   } from "./../../config"
-  import type { Product } from "$lib/data/products"
-  import { featureShowcase } from "$lib/data/homepageFeatures"
+  import type { Product } from "#lib/data/products.ts"
+  import { featureShowcase } from "#lib/data/homepageFeatures.ts"
 
   // Data comes from +page.server.ts
   const { data } = $props() as { data: { products: Product[] } }

@@ -1,6 +1,6 @@
 <!-- FILE: src/routes/(marketing)/legal/privacy/+page.svelte (COMPLETE REPLACEMENT) -->
 <script lang="ts">
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG, WebsiteName } from "../../../../config"
 
   let showContact = $state(false)

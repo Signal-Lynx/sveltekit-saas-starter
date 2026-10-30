@@ -1,15 +1,15 @@
 // src/routes/(admin)/account/(menu)/downloads/+page.server.ts
 import { redirect } from "@sveltejs/kit"
 import type { PageServerLoad, Actions } from "./$types"
-import { allProducts, type Product } from "$lib/data/products"
-import type { LMEntitlement } from "$lib/types"
-import { env } from "$env/dynamic/private"
-import { lmFetch } from "$lib/server/subscription"
-import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
+import { allProducts, type Product } from "#lib/data/products.ts"
+import type { LMEntitlement } from "#lib/types.ts"
+import * as env from "$app/env/private"
+import { lmFetch } from "#lib/server/subscription.ts"
+import { loadSubscriptionState } from "#lib/server/subscriptionLoader.ts"
 import { DOWNLOAD_PREFIXES, SECURE_DOWNLOADS_BASE } from "../../../../../config"
-import { listFiles, type R2File } from "$lib/server/r2"
+import { listFiles, type R2File } from "#lib/server/r2.ts"
 import { README_PREFIXES, PUBLIC_ASSETS_BASE } from "../../../../../config"
-import { appendCfAccessHeaders } from "$lib/server/license-api"
+import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 // -------------------------------
 // Helpers & Constants

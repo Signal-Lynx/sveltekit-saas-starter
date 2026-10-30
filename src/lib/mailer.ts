@@ -1,11 +1,11 @@
 // FILE: src/lib/mailer.ts (COMPLETE AND FINAL REPLACEMENT v2)
 
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2"
-import { env } from "$lib/server/env"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { env } from "#lib/server/env.ts"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import handlebars from "handlebars"
 import { WebsiteName, WebsiteDescription } from "../config"
-import { saasstartertheme } from "$lib/theme"
+import { saasstartertheme } from "#lib/theme.ts"
 
 // ---------- Internal helpers (no behavior changes to public API) ----------
 

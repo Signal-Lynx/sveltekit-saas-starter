@@ -1,11 +1,11 @@
 <!-- FILE: src/routes/(marketing)/contact_us/+page.svelte -->
 <script lang="ts">
   import { enhance } from "$app/forms"
-  import type { SubmitFunction } from "@sveltejs/kit"
+  import type { SubmitFunction } from "$app/forms"
   import { tick, onMount } from "svelte"
   import type { FullAutoFill } from "svelte/elements"
   import { WebsiteName, SITE_CONFIG } from "../../../config"
-  import { PUBLIC_TURNSTILE_SITE_KEY } from "$env/static/public"
+  import * as publicEnv from "$app/env/public"
 
   // ---- State (Svelte Runes) -------------------------------------------------
   let errors: Record<string, string> = $state({})
@@ -21,7 +21,7 @@
       return
     }
 
-    if (!PUBLIC_TURNSTILE_SITE_KEY) {
+    if (!publicEnv.PUBLIC_TURNSTILE_SITE_KEY) {
       console.warn(
         "Turnstile: PUBLIC_TURNSTILE_SITE_KEY not set; CAPTCHA widget will not render.",
       )
@@ -44,7 +44,7 @@
 
       try {
         ts.render(widgetContainer, {
-          sitekey: PUBLIC_TURNSTILE_SITE_KEY,
+          sitekey: publicEnv.PUBLIC_TURNSTILE_SITE_KEY,
           theme: "dark",
           callback(token: string) {
             captchaToken = token

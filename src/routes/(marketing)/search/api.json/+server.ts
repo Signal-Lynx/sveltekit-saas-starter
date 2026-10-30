@@ -1,6 +1,6 @@
 // src/routes/(marketing)/search/api.json/+server.ts
 import { json, type RequestHandler } from "@sveltejs/kit"
-import { buildSearchIndex } from "$lib/build_index"
+import { buildSearchIndex } from "#lib/build_index.ts"
 
 export const prerender = false
 

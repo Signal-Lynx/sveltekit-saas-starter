@@ -1,10 +1,10 @@
 // src/routes/(admin)/account/+layout.server.ts
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import { redirect } from "@sveltejs/kit"
-import { env } from "$env/dynamic/private"
-import { lmFetch } from "$lib/server/subscription"
+import * as env from "$app/env/private"
+import { lmFetch } from "#lib/server/subscription.ts"
 import type { LayoutServerLoad } from "./$types"
-import { appendCfAccessHeaders } from "$lib/server/license-api"
+import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 /**
  * This layout is the primary guard for all /account pages.

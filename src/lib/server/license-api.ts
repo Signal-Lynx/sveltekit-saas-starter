@@ -1,5 +1,5 @@
 // src/lib/server/license-api.ts
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 
 /**
  * Attach Cloudflare Access service token headers if env vars are present.

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { timelineProduct } from "$lib/data/products"
+  import { timelineProduct } from "#lib/data/products.ts"
   import { fly } from "svelte/transition"
   import { WebsiteName, WebsiteBaseUrl } from "../../../../config"
-  import ProductCard from "$lib/components/ProductCard.svelte"
+  import ProductCard from "#lib/components/ProductCard.svelte"
 
   const ldJson = {
     "@context": "https://schema.org",

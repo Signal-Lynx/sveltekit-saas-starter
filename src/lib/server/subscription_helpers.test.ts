@@ -22,12 +22,13 @@ vi.mock("stripe", () => {
 })
 
 // ---------- SvelteKit env mock ----------
-vi.mock("$env/dynamic/private", () => ({
-  env: { PRIVATE_STRIPE_API_KEY: "sk_test_ci_dummy" },
+vi.mock("$app/env/private", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("$app/env/private")>()),
+  PRIVATE_STRIPE_API_KEY: "sk_test_ci_dummy",
 }))
 
 // ---------- Supabase admin mock (no TDZ) ----------
-vi.mock("$lib/server/supabaseAdmin", () => {
+vi.mock("#lib/server/supabaseAdmin.ts", () => {
   const q = {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
@@ -40,7 +41,7 @@ vi.mock("$lib/server/supabaseAdmin", () => {
 })
 
 // ---------- Product catalog mock (Template IDs) ----------
-vi.mock("$lib/data/products", () => ({
+vi.mock("#lib/data/products.ts", () => ({
   allProducts: [
     { id: "hoverboard", stripe_product_id: "prod_hover_123" },
     { id: "timeline_c", stripe_product_id: "prod_timeline_123" },
@@ -51,8 +52,8 @@ vi.mock("$lib/data/products", () => ({
 import {
   getOrCreateCustomerId,
   fetchSubscription,
-} from "$lib/server/subscription_helpers"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+} from "#lib/server/subscription_helpers.ts"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 const getStripe = async () => ((await import("stripe")) as any)._getInstance()
 
 // ---------- Helpers ----------

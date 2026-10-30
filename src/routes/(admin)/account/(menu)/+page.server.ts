@@ -1,7 +1,7 @@
 // src/routes/(admin)/account/(menu)/+page.server.ts
 import type { PageServerLoad } from "./$types"
-import { entitlementsToActiveProducts } from "$lib/server/subscription"
-import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
+import { entitlementsToActiveProducts } from "#lib/server/subscription.ts"
+import { loadSubscriptionState } from "#lib/server/subscriptionLoader.ts"
 
 export const load: PageServerLoad = async (event) => {
   const { subscriptionState } = await loadSubscriptionState(event)

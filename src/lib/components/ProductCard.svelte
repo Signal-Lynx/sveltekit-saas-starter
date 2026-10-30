@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Product } from "$lib/data/products"
+  import type { Product } from "#lib/data/products.ts"
 
   // Props
   const { product }: { product: Product } = $props()

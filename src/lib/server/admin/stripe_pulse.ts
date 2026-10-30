@@ -1,14 +1,22 @@
 // src/lib/server/admin/stripe_pulse.ts
 import Stripe from "stripe"
-import { env as envPriv } from "$env/dynamic/private"
+import * as envPriv from "$app/env/private"
 
-if (!envPriv.PRIVATE_STRIPE_API_KEY) {
-  throw new Error("[stripe_pulse] Missing PRIVATE_STRIPE_API_KEY.")
+// Do not require live Stripe credentials while importing routes or building the
+// public template. Validate the key when a Stripe-backed operation is requested.
+let stripeClient: Stripe | undefined
+
+function getStripe(): Stripe {
+  if (stripeClient) return stripeClient
+  const apiKey = envPriv.PRIVATE_STRIPE_API_KEY
+  if (!apiKey) {
+    throw new Error(
+      "[stripe_pulse] Missing PRIVATE_STRIPE_API_KEY. Configure Stripe before requesting the Stripe pulse.",
+    )
+  }
+  stripeClient = new Stripe(apiKey, { apiVersion: "2026-08-26.dahlia" })
+  return stripeClient
 }
-
-const stripe = new Stripe(envPriv.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2026-08-26.dahlia",
-})
 
 type ApiList<T> = Stripe.ApiList<T>
 
@@ -22,7 +30,7 @@ function tsDaysFromNow(days: number): number {
 async function* listInvoices(params: Stripe.InvoiceListParams) {
   let starting_after: string | undefined
   do {
-    const page: ApiList<Stripe.Invoice> = await stripe.invoices.list({
+    const page: ApiList<Stripe.Invoice> = await getStripe().invoices.list({
       limit: 100,
       starting_after,
       ...params,
@@ -35,7 +43,7 @@ async function* listInvoices(params: Stripe.InvoiceListParams) {
 async function* listCustomers(params: Stripe.CustomerListParams) {
   let starting_after: string | undefined
   do {
-    const page: ApiList<Stripe.Customer> = await stripe.customers.list({
+    const page: ApiList<Stripe.Customer> = await getStripe().customers.list({
       limit: 100,
       starting_after,
       ...params,
@@ -48,11 +56,12 @@ async function* listCustomers(params: Stripe.CustomerListParams) {
 async function* listSubscriptions(params: Stripe.SubscriptionListParams) {
   let starting_after: string | undefined
   do {
-    const page: ApiList<Stripe.Subscription> = await stripe.subscriptions.list({
-      limit: 100,
-      starting_after,
-      ...params,
-    })
+    const page: ApiList<Stripe.Subscription> =
+      await getStripe().subscriptions.list({
+        limit: 100,
+        starting_after,
+        ...params,
+      })
     for (const s of page.data) yield s
     starting_after = page.has_more ? page.data.at(-1)?.id : undefined
   } while (starting_after)
@@ -61,7 +70,7 @@ async function* listSubscriptions(params: Stripe.SubscriptionListParams) {
 async function* listEvents(params: Stripe.EventListParams) {
   let starting_after: string | undefined
   do {
-    const page: ApiList<Stripe.Event> = await stripe.events.list({
+    const page: ApiList<Stripe.Event> = await getStripe().events.list({
       limit: 100,
       starting_after,
       ...params,
@@ -74,7 +83,7 @@ async function* listEvents(params: Stripe.EventListParams) {
 async function* listRefunds(params: Stripe.RefundListParams) {
   let starting_after: string | undefined
   do {
-    const page: ApiList<Stripe.Refund> = await stripe.refunds.list({
+    const page: ApiList<Stripe.Refund> = await getStripe().refunds.list({
       limit: 100,
       starting_after,
       ...params,

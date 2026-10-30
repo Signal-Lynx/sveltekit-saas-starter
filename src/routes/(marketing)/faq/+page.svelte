@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { generalFaqs, hoverFaqs, timelineFaqs } from "$lib/data/faqData"
+  import { generalFaqs, hoverFaqs, timelineFaqs } from "#lib/data/faqData.ts"
   import { WebsiteName } from "../../../config"
 </script>
 

@@ -1,14 +1,14 @@
 // FILE: src/hooks.server.ts (Template File - COMPLETE REPLACEMENT)
-import { env } from "$env/dynamic/private"
-import { env as publicEnv } from "$env/dynamic/public"
-import { building, dev } from "$app/environment"
+import * as env from "$app/env/private"
+import * as publicEnv from "$app/env/public"
+import { building, dev } from "$app/env"
 import { createServerClient } from "@supabase/ssr"
-import type { Handle, HandleServerError } from "@sveltejs/kit"
+import type { Handle, HandleServerError } from "@sveltejs/kit/hooks"
 import type { SerializeOptions } from "cookie"
 import { sequence } from "@sveltejs/kit/hooks"
-import { withContext } from "$lib/server/logger"
-import type { Database } from "$lib/types/database"
-import { reportWebsiteError } from "$lib/server/errorApi"
+import { withContext } from "#lib/server/logger.ts"
+import type { Database } from "#lib/types/database.ts"
+import { reportWebsiteError } from "#lib/server/errorApi.ts"
 import { redirect, error } from "@sveltejs/kit"
 
 // --- DYNAMIC DOMAIN CONFIGURATION -----------------------------------

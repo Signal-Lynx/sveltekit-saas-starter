@@ -1,5 +1,5 @@
 // src/routes/+layout.server.ts
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import type { LayoutServerLoad } from "./$types"
 
 // Ensure no pages are prerendered; hooks always run.

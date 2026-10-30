@@ -1,8 +1,8 @@
 // src/routes/api/admin/stripe-pulse/+server.ts
 import { json, error } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types"
-import { getStripePulseSummaryCached } from "$lib/server/admin/stripe_pulse"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { getStripePulseSummaryCached } from "#lib/server/admin/stripe_pulse.ts"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 
 export const GET: RequestHandler = async ({ locals }) => {
   // 1. Ensure user is logged in

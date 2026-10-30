@@ -45,7 +45,7 @@ vi.mock("@sveltejs/kit", async () => {
 // ----------------------------
 // Mock the admin client used by the action
 // ----------------------------
-vi.mock("$lib/server/supabaseAdmin", () => ({
+vi.mock("#lib/server/supabaseAdmin.ts", () => ({
   supabaseAdmin: H.admin,
 }))
 

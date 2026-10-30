@@ -1,22 +1,27 @@
 // src/lib/server/admin/metrics.ts
 import Stripe from "stripe"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
-import { env as envPriv } from "$env/dynamic/private"
-import { env as envPub } from "$env/dynamic/public"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
+import * as envPriv from "$app/env/private"
+import * as envPub from "$app/env/public"
 
-// --- Stripe client (fail fast with a clear error) ---
-if (!envPriv.PRIVATE_STRIPE_API_KEY) {
-  throw new Error(
-    "[admin/metrics] Missing PRIVATE_STRIPE_API_KEY. Set it in your private env.",
-  )
+// Delay Stripe initialization until metrics are requested. A public template must
+// build and load routes without requiring an API key.
+let stripeClient: Stripe | undefined
+
+function getStripe(): Stripe {
+  if (stripeClient) return stripeClient
+  const apiKey = envPriv.PRIVATE_STRIPE_API_KEY
+  if (!apiKey) {
+    throw new Error(
+      "[admin/metrics] Missing PRIVATE_STRIPE_API_KEY. Configure Stripe before requesting admin metrics.",
+    )
+  }
+  stripeClient = new Stripe(apiKey, { apiVersion: "2026-08-26.dahlia" })
+  return stripeClient
 }
 
-const stripe = new Stripe(envPriv.PRIVATE_STRIPE_API_KEY, {
-  apiVersion: "2026-08-26.dahlia",
-})
-
 // ---------- Types ----------
-type StripeSubList = Awaited<ReturnType<typeof stripe.subscriptions.list>>
+type StripeSubList = Stripe.ApiList<Stripe.Subscription>
 
 export type DailyRow = {
   day: string
@@ -87,7 +92,7 @@ async function* listAllSubs(): AsyncGenerator<
 > {
   let starting_after: string | undefined = undefined
   do {
-    const resp: StripeSubList = await stripe.subscriptions.list({
+    const resp: StripeSubList = await getStripe().subscriptions.list({
       status: "all",
       limit: 100,
       starting_after,
@@ -105,7 +110,7 @@ async function* listSubsForCustomer(
 ): AsyncGenerator<Stripe.Subscription, void, unknown> {
   let starting_after: string | undefined = undefined
   do {
-    const resp: StripeSubList = await stripe.subscriptions.list({
+    const resp: StripeSubList = await getStripe().subscriptions.list({
       status: "all",
       limit: 100,
       starting_after,

@@ -1,7 +1,7 @@
 <!-- src/routes/(internal)/admin/customers/+page.svelte -->
 <script lang="ts">
   import { enhance } from "$app/forms"
-  import type { ActionResult } from "@sveltejs/kit"
+  import type { ActionResult } from "$app/forms"
 
   // Incoming props from SvelteKit
   export let data: { results: Array<{ id: string; email: string }> }

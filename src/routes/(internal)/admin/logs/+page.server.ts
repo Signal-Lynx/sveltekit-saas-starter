@@ -1,6 +1,6 @@
 // src/routes/(internal)/admin/logs/+page.server.ts
 import type { PageServerLoad } from "./$types"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 
 /**
  * Shape of a single audit log entry.

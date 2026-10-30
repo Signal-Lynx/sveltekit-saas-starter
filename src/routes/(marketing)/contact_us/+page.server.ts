@@ -1,10 +1,10 @@
 // src/routes/(marketing)/contact_us/+page.server.ts
 import { fail } from "@sveltejs/kit"
 import type { Actions } from "./$types"
-import { sendAdminEmail } from "$lib/mailer"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
-import { env } from "$env/dynamic/private"
-import { verifyTurnstile } from "$lib/server/turnstile"
+import { sendAdminEmail } from "#lib/mailer.ts"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
+import * as env from "$app/env/private"
+import { verifyTurnstile } from "#lib/server/turnstile.ts"
 
 // ------------------------------
 // Types & constants

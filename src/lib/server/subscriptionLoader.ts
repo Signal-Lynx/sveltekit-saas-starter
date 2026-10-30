@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit"
-import { getUserSubscriptionState } from "$lib/server/subscription"
+import { getUserSubscriptionState } from "#lib/server/subscription.ts"
 import type { ServerLoadEvent } from "@sveltejs/kit"
 
 /**

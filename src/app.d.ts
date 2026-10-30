@@ -2,7 +2,7 @@
 
 // Use type-only imports to avoid any unintended runtime side effects in a .d.ts file.
 import type { Session, AMREntry } from "@supabase/supabase-js"
-import type { Database } from "$lib/types/database"
+import type { Database } from "#lib/types/database.ts"
 
 /** Minimal, stable shape for authenticated users exposed to the app. */
 type AppUser = {

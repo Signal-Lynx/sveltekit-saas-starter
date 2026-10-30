@@ -1,10 +1,10 @@
 // src/routes/test-email/+server.ts
 import { json } from "@sveltejs/kit"
-import { dev } from "$app/environment"
+import { dev } from "$app/env"
 import type { RequestHandler } from "./$types"
-import { sendTemplatedEmail } from "$lib/mailer"
+import { sendTemplatedEmail } from "#lib/mailer.ts"
 import { WebsiteBaseUrl, WebsiteName } from "../../config" // keep the corrected import
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 
 // --- helpers ---------------------------------------------------------------
 

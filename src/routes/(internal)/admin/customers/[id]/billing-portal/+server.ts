@@ -1,8 +1,8 @@
 // src/routes/(internal)/admin/customers/[id]/billing-portal/+server.ts
 import type { RequestHandler } from "./$types"
 import { redirect } from "@sveltejs/kit"
-import { openBillingPortalForUser } from "$lib/server/admin/customers"
-import { audit } from "$lib/server/admin/audit"
+import { openBillingPortalForUser } from "#lib/server/admin/customers.ts"
+import { audit } from "#lib/server/admin/audit.ts"
 
 function requireActorId(locals: App.Locals): string {
   const id = locals?.user?.id

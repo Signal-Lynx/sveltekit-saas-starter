@@ -1,19 +1,19 @@
 // src/lib/server/admin/customers.ts
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 import Stripe from "stripe"
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import {
   sendTemplatedEmail,
   sendUserPlainEmail as sendPlainEmailDirect,
-} from "$lib/mailer"
+} from "#lib/mailer.ts"
 import { SITE_CONFIG, WebsiteBaseUrl } from "../../../config"
-import { getOrCreateCustomerId } from "$lib/server/subscription_helpers"
+import { getOrCreateCustomerId } from "#lib/server/subscription_helpers.ts"
 import {
   getUserSubscriptionState,
   entitlementsToActiveProducts,
   type ActiveProductRow,
-} from "$lib/server/subscription"
-import { appendCfAccessHeaders } from "$lib/server/license-api"
+} from "#lib/server/subscription.ts"
+import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 // ---------- Types ----------
 

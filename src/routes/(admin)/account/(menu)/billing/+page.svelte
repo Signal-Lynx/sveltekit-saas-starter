@@ -2,11 +2,11 @@
 <script lang="ts">
   import { getContext } from "svelte"
   import type { Writable } from "svelte/store"
-  import { browser } from "$app/environment"
-  import { page } from "$app/stores"
-  import PricingModule from "$lib/components/pricing_module.svelte"
-  import type { ActiveProductRowWithDates } from "$lib/server/subscription"
-  import { badgeClassForStatus } from "$lib/ui/badge"
+  import { browser } from "$app/env"
+  import { page } from "$app/state"
+  import PricingModule from "#lib/components/pricing_module.svelte"
+  import type { ActiveProductRowWithDates } from "#lib/server/subscription.ts"
+  import { badgeClassForStatus } from "#lib/ui/badge.ts"
 
   // Context is optional in practice; guard to avoid SSR/runtime errors
   const adminSection = getContext<Writable<string> | undefined>("adminSection")
@@ -43,7 +43,7 @@
 
   // --- NEW: Read checkout error from URL ---
   const checkoutError = $derived(
-    $page.url.searchParams.get("error") === "checkout_unavailable",
+    page.url.searchParams.get("error") === "checkout_unavailable",
   )
   const checkoutErrorMessage =
     "Checkout is temporarily unavailable because our licensing server is offline. Please try again in a few minutes."

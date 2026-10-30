@@ -1,9 +1,9 @@
 <!-- src/routes/(marketing)/access/+page.svelte -->
 <script lang="ts">
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
   import { SITE_CONFIG } from "../../config"
   import { enhance } from "$app/forms"
-  import type { SubmitFunction } from "@sveltejs/kit"
+  import type { SubmitFunction } from "$app/forms"
 
   // ----- Types -----
   type GateKind = "site" | "purchase"
@@ -20,7 +20,7 @@
     return raw?.toLowerCase() === "purchase" ? "purchase" : "site"
   }
 
-  const gateType = $derived(asGateKind($page.url.searchParams.get("gate")))
+  const gateType = $derived(asGateKind(page.url.searchParams.get("gate")))
 
   const gateInfo: Record<GateKind, { title: string; prompt: string }> = {
     site: {

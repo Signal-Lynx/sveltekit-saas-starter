@@ -1,10 +1,10 @@
 // src/lib/server/subscription.ts
-import { allProducts, type Product } from "$lib/data/products"
-import { env } from "$env/dynamic/private"
-import { type LMEntitlement, type EntitlementStatus } from "$lib/types"
+import { allProducts, type Product } from "#lib/data/products.ts"
+import * as env from "$app/env/private"
+import { type LMEntitlement, type EntitlementStatus } from "#lib/types.ts"
 import * as https from "node:https"
 import { URL } from "node:url"
-import { appendCfAccessHeaders } from "$lib/server/license-api"
+import { appendCfAccessHeaders } from "#lib/server/license-api.ts"
 
 /** Minimal user shape used across the app (same as event.locals.user). */
 type MinimalUser = { id: string; email?: string | null }

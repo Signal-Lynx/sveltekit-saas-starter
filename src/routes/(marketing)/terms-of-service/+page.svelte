@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG } from "../../../config"
 
   const _lastUpdated = "November 26, 2025"

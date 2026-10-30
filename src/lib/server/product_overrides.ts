@@ -1,6 +1,6 @@
 // src/lib/server/product_overrides.ts
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
-import { allProducts, type Product } from "$lib/data/products"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
+import { allProducts, type Product } from "#lib/data/products.ts"
 
 /** Row shape from public.product_overrides */
 type OverrideRow = {

@@ -1,7 +1,7 @@
 // src/routes/(internal)/admin/+layout.server.ts
 import type { LayoutServerLoad } from "./$types"
 import { redirect } from "@sveltejs/kit"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 
 /**
  * Narrow types for clarity and future extensibility without changing I/O.

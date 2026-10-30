@@ -1,8 +1,8 @@
 <!-- src/routes/(admin)/account/(menu)/settings/settings_module.svelte -->
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms"
-  import { page } from "$app/stores"
-  import type { SubmitFunction } from "@sveltejs/kit"
+  import { page } from "$app/state"
+  import type { SubmitFunction } from "$app/forms"
   import { goto } from "$app/navigation"
   import { tick } from "svelte"
 
@@ -67,7 +67,7 @@
     return async ({ result, update }) => {
       // 1) Follow server-side redirects from actions (e.g., updatePassword throws redirect)
       if (result.type === "redirect") {
-        await goto(result.location, { replaceState: true, invalidateAll: true })
+        await goto(result.location, { replace: true, refreshAll: true })
         buttonState = "idle"
         return
       }
@@ -100,7 +100,7 @@
         // For "normal" settings forms, keep existing redirect behavior
         if (!formTarget?.includes("toggleEmailSubscription")) {
           buttonState = "success"
-          await goto("/account/settings?pw=updated", { invalidateAll: true })
+          await goto("/account/settings?pw=updated", { refreshAll: true })
           buttonState = "idle"
           return
         }
@@ -111,7 +111,7 @@
         buttonState = "loading"
         await tick()
         // location.replace avoids adding another entry to history
-        location.replace($page.url.href)
+        location.replace(page.url.href)
         return
       }
 
@@ -122,7 +122,7 @@
 
   // Small helpers
   const inputAriaInvalid = (id: string) =>
-    fieldError($page?.form, id) ? "true" : "false"
+    fieldError(page?.form, id) ? "true" : "false"
   const inputAutocomplete = (id: string, inputType?: string) => {
     if (inputType === "password" || /password/i.test(id)) return "new-password"
     if (/email/i.test(id)) return "email"
@@ -190,11 +190,11 @@
                   name={field.id}
                   type="checkbox"
                   disabled={!editable || buttonState === "loading"}
-                  class="checkbox {fieldError($page?.form, field.id)
+                  class="checkbox {fieldError(page?.form, field.id)
                     ? 'checkbox-error'
                     : ''}"
-                  checked={($page.form
-                    ? ($page.form[field.id] as unknown as boolean)
+                  checked={(page.form
+                    ? (page.form[field.id] as unknown as boolean)
                     : (field.initialValue as boolean)) ?? false}
                   aria-invalid={inputAriaInvalid(field.id)}
                 />
@@ -206,11 +206,11 @@
                     type={showPasswords[field.id] ? "text" : "password"}
                     disabled={!editable || buttonState === "loading"}
                     placeholder={field.placeholder ?? field.label ?? ""}
-                    class="input w-full pr-12 {fieldError($page?.form, field.id)
+                    class="input w-full pr-12 {fieldError(page?.form, field.id)
                       ? 'input-error'
                       : ''}"
-                    value={$page.form
-                      ? ($page.form[field.id] as string)
+                    value={page.form
+                      ? (page.form[field.id] as string)
                       : field.initialValue}
                     maxlength={field.maxlength ?? undefined}
                     aria-invalid={inputAriaInvalid(field.id)}
@@ -235,14 +235,11 @@
                   type={field.inputType ?? "text"}
                   disabled={!editable || buttonState === "loading"}
                   placeholder={field.placeholder ?? field.label ?? ""}
-                  class="input w-full max-w-xs {fieldError(
-                    $page?.form,
-                    field.id,
-                  )
+                  class="input w-full max-w-xs {fieldError(page?.form, field.id)
                     ? 'input-error'
                     : ''}"
-                  value={$page.form
-                    ? ($page.form[field.id] as string | boolean)
+                  value={page.form
+                    ? (page.form[field.id] as string | boolean)
                     : field.initialValue}
                   maxlength={field.maxlength ?? undefined}
                   aria-invalid={inputAriaInvalid(field.id)}
@@ -263,13 +260,13 @@
           </div>
         {/each}
 
-        {#if $page?.form?.errorMessage}
+        {#if page?.form?.errorMessage}
           <p
             class="text-error text-sm font-bold mt-1"
             role="alert"
             aria-live="assertive"
           >
-            {$page.form.errorMessage}
+            {page.form.errorMessage}
           </p>
         {/if}
 

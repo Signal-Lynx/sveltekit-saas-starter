@@ -9,9 +9,9 @@
 // - Improves robustness (null-safety, minor typing, sanitized text) without changing behavior.
 
 import Fuse from "fuse.js"
-import { allProducts } from "$lib/data/products"
+import { allProducts } from "#lib/data/products.ts"
 // Template uses articlesMeta, not nightShiftNotesMeta
-import { articlesMeta, articleHref } from "$lib/data/articles/meta"
+import { articlesMeta, articleHref } from "#lib/data/articles/meta.ts"
 
 // ---- Types -----------------------------------------------------------------
 

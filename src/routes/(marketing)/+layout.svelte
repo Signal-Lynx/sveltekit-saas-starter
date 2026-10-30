@@ -1,7 +1,7 @@
 <!-- FILE: src/routes/(marketing)/+layout.svelte -->
 <script lang="ts">
-  import { dev } from "$app/environment"
-  import { page } from "$app/stores"
+  import { dev } from "$app/env"
+  import { page } from "$app/state"
   import { WebsiteName, SITE_CONFIG, WebsiteBaseUrl } from "./../../config"
   import "../../app.css"
 
@@ -39,7 +39,7 @@
 <svelte:head>
   <link
     rel="canonical"
-    href={(dev ? $page.url.origin : WebsiteBaseUrl) + $page.url.pathname}
+    href={(dev ? page.url.origin : WebsiteBaseUrl) + page.url.pathname}
   />
 </svelte:head>
 

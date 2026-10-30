@@ -1,12 +1,12 @@
 <!-- src/routes/(admin)/account/(menu)/+layout.svelte -->
 <script lang="ts">
-  import { dev } from "$app/environment"
+  import { dev } from "$app/env"
   import { setContext, onMount } from "svelte"
   import { goto, invalidate } from "$app/navigation"
   import { writable, type Writable } from "svelte/store"
   import { WebsiteName, WebsiteBaseUrl } from "../../../../config"
   import type { Snippet } from "svelte"
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
 
   // Use canonical base URL in prod, but keep "/" in dev/preview/local
   const HOME_HREF = dev ? "/" : WebsiteBaseUrl
@@ -63,9 +63,8 @@
 
     // replace the URL silently, keep focus, avoid scroll jank
     await goto(href.toString(), {
-      replaceState: true,
-      keepFocus: true,
-      noScroll: true,
+      replace: true,
+      reset: false,
     })
     await invalidate("lm:entitlements")
   }
@@ -75,7 +74,7 @@
     // If the server already told us there's an error, don't start polling.
     const hasInitialError =
       !!data?.subscriptionState?.lmError ||
-      !!$page.data.subscriptionState?.lmError
+      !!page.data.subscriptionState?.lmError
     if (hasInitialError) {
       return // Abort onMount early
     }

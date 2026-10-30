@@ -1,5 +1,5 @@
 // src/routes/test/purchase-success/+server.ts
-import { dev } from "$app/environment"
+import { dev } from "$app/env"
 import { redirect, error } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types"
 

@@ -1,7 +1,7 @@
 // src/routes/(admin)/account/api/+page.server.ts
 import { fail, redirect } from "@sveltejs/kit"
 import type { Actions } from "./$types"
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 
 /**
  * Utility regexes kept simple and readable.

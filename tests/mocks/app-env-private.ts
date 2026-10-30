@@ -1,0 +1,78 @@
+// Unit-test replacement for $app/env/private; no live services needed.
+export const LM_DEBUG = process.env.LM_DEBUG
+export const LM_DOH_TTL_MS = process.env.LM_DOH_TTL_MS
+export const LM_FAST_PATH = process.env.LM_FAST_PATH
+export const LM_HTTP_RETRY_TIMEOUT_MS = process.env.LM_HTTP_RETRY_TIMEOUT_MS
+export const LM_HTTP_TIMEOUT_MS = process.env.LM_HTTP_TIMEOUT_MS
+export const NODE_ENV = process.env.NODE_ENV
+export const PRIVATE_ADMIN_EMAIL = process.env.PRIVATE_ADMIN_EMAIL
+export const PRIVATE_AWS_ACCESS_KEY_ID = process.env.PRIVATE_AWS_ACCESS_KEY_ID
+export const PRIVATE_AWS_REGION = process.env.PRIVATE_AWS_REGION
+export const PRIVATE_AWS_SECRET_ACCESS_KEY =
+  process.env.PRIVATE_AWS_SECRET_ACCESS_KEY
+export const PRIVATE_BETA_PASSPHRASE_KeyCommander_Beta =
+  process.env.PRIVATE_BETA_PASSPHRASE_KeyCommander_Beta
+export const PRIVATE_BETA_PASSPHRASE_LynxRelay_Beta =
+  process.env.PRIVATE_BETA_PASSPHRASE_LynxRelay_Beta
+export const PRIVATE_BETA_PASSPHRASE_SignalShield_Beta =
+  process.env.PRIVATE_BETA_PASSPHRASE_SignalShield_Beta
+export const PRIVATE_BETA_PURCHASE_PASSWORD =
+  process.env.PRIVATE_BETA_PURCHASE_PASSWORD
+export const PRIVATE_CF_ACCESS_CLIENT_ID =
+  process.env.PRIVATE_CF_ACCESS_CLIENT_ID
+export const PRIVATE_CF_ACCESS_CLIENT_SECRET =
+  process.env.PRIVATE_CF_ACCESS_CLIENT_SECRET
+export const PRIVATE_CONTACT_FORM_EMAIL = process.env.PRIVATE_CONTACT_FORM_EMAIL
+export const PRIVATE_DEBUG_AUTH = process.env.PRIVATE_DEBUG_AUTH
+export const PRIVATE_DEBUG_CSP = process.env.PRIVATE_DEBUG_CSP
+export const PRIVATE_DEBUG_SITE = process.env.PRIVATE_DEBUG_SITE
+export const PRIVATE_DEFAULT_FROM_EMAIL = process.env.PRIVATE_DEFAULT_FROM_EMAIL
+export const PRIVATE_FROM_ADMIN_EMAIL = process.env.PRIVATE_FROM_ADMIN_EMAIL
+export const PRIVATE_LICENSE_MANAGER_API_KEY =
+  process.env.PRIVATE_LICENSE_MANAGER_API_KEY
+export const PRIVATE_LICENSE_MANAGER_URL =
+  process.env.PRIVATE_LICENSE_MANAGER_URL
+export const PRIVATE_LM_INTERNAL_API_KEY =
+  process.env.PRIVATE_LM_INTERNAL_API_KEY
+export const PRIVATE_MACHINE_RESET_EMAIL =
+  process.env.PRIVATE_MACHINE_RESET_EMAIL
+export const PRIVATE_R2_ACCESS_KEY_ID = process.env.PRIVATE_R2_ACCESS_KEY_ID
+export const PRIVATE_R2_BUCKET_NAME = process.env.PRIVATE_R2_BUCKET_NAME
+export const PRIVATE_R2_ENDPOINT = process.env.PRIVATE_R2_ENDPOINT
+export const PRIVATE_R2_PUBLIC_BUCKET_NAME =
+  process.env.PRIVATE_R2_PUBLIC_BUCKET_NAME
+export const PRIVATE_R2_REGION = process.env.PRIVATE_R2_REGION
+export const PRIVATE_R2_SECRET_ACCESS_KEY =
+  process.env.PRIVATE_R2_SECRET_ACCESS_KEY
+export const PRIVATE_RECAPTCHA_MIN_SCORE =
+  process.env.PRIVATE_RECAPTCHA_MIN_SCORE
+export const PRIVATE_RECAPTCHA_SECRET = process.env.PRIVATE_RECAPTCHA_SECRET
+export const PRIVATE_REQ_SAMPLE_N = process.env.PRIVATE_REQ_SAMPLE_N
+export const PRIVATE_SES_CONFIGURATION_SET =
+  process.env.PRIVATE_SES_CONFIGURATION_SET
+export const PRIVATE_SITE_ACCESS_PASSWORD =
+  process.env.PRIVATE_SITE_ACCESS_PASSWORD
+export const PRIVATE_SLOW_REQ_MS = process.env.PRIVATE_SLOW_REQ_MS
+export const PRIVATE_STRIPE_API_KEY = process.env.PRIVATE_STRIPE_API_KEY
+export const PRIVATE_STRIPE_PRICE_IDS = process.env.PRIVATE_STRIPE_PRICE_IDS
+export const PRIVATE_STRIPE_PRODUCT_IDS = process.env.PRIVATE_STRIPE_PRODUCT_IDS
+export const PRIVATE_STRIPE_WEBHOOK_SECRET =
+  process.env.PRIVATE_STRIPE_WEBHOOK_SECRET
+export const PRIVATE_SUPABASE_ANON_KEY = process.env.PRIVATE_SUPABASE_ANON_KEY
+export const PRIVATE_SUPABASE_SERVICE_ROLE =
+  process.env.PRIVATE_SUPABASE_SERVICE_ROLE
+export const PRIVATE_SUPABASE_URL = process.env.PRIVATE_SUPABASE_URL
+export const PRIVATE_TEST_EMAIL_RECIPIENT =
+  process.env.PRIVATE_TEST_EMAIL_RECIPIENT
+export const PRIVATE_TURNSTILE_SECRET_KEY =
+  process.env.PRIVATE_TURNSTILE_SECRET_KEY
+export const PRIVATE_BETA_PASSPHRASE_Hoverboard_Beta =
+  process.env.PRIVATE_BETA_PASSPHRASE_Hoverboard_Beta
+export const PRIVATE_BETA_PASSPHRASE_TimelineC_Beta =
+  process.env.PRIVATE_BETA_PASSPHRASE_TimelineC_Beta
+export const PRIVATE_STRIPE_SECRET_KEY = process.env.PRIVATE_STRIPE_SECRET_KEY
+export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
+export const STRIPE_API_KEY = process.env.STRIPE_API_KEY
+export const STRIPE_SECRET = process.env.STRIPE_SECRET
+export const STRIPE_KEY = process.env.STRIPE_KEY
+export const PRIVATE_STRIPE_KEY = process.env.PRIVATE_STRIPE_KEY

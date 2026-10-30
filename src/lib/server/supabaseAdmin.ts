@@ -1,5 +1,5 @@
 // src/lib/server/supabaseAdmin.ts
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 /**
@@ -10,7 +10,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
  * - Does NOT change inputs/outputs: still exports `supabaseAdmin` as a Supabase client.
  *
  * If you have generated database types, you can optionally add:
- *   import type { Database } from "$lib/types/supabase"
+ *   import type { Database } from "#lib/types/database.ts"
  * and change the SupabaseClient generic below to SupabaseClient<Database>.
  */
 
@@ -27,22 +27,18 @@ function requireEnv(name: string, value: string | undefined): string {
   return value
 }
 
-const SUPABASE_URL = requireEnv(
-  "PRIVATE_SUPABASE_URL",
-  env.PRIVATE_SUPABASE_URL,
-)
-const SUPABASE_SERVICE_ROLE = requireEnv(
-  "PRIVATE_SUPABASE_SERVICE_ROLE",
-  env.PRIVATE_SUPABASE_SERVICE_ROLE,
-)
-
 // ---- HMR-safe singleton (dev) ---------------------------------------------
 declare global {
   var __supabaseAdmin__: SupabaseClient | undefined
 }
 
 function makeClient(): SupabaseClient {
-  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
+  const url = requireEnv("PRIVATE_SUPABASE_URL", env.PRIVATE_SUPABASE_URL)
+  const role = requireEnv(
+    "PRIVATE_SUPABASE_SERVICE_ROLE",
+    env.PRIVATE_SUPABASE_SERVICE_ROLE,
+  )
+  return createClient(url, role, {
     auth: {
       // Service role keys should never maintain a browser-like session.
       persistSession: false,
@@ -62,8 +58,17 @@ function makeClient(): SupabaseClient {
   })
 }
 
-export const supabaseAdmin: SupabaseClient =
-  globalThis.__supabaseAdmin__ ?? makeClient()
+function getClient(): SupabaseClient {
+  // Cache the real instance on globalThis to avoid repeated clients in dev HMR.
+  return (globalThis.__supabaseAdmin__ ??= makeClient())
+}
 
-// Cache the instance on globalThis to avoid multiple clients in dev HMR.
-globalThis.__supabaseAdmin__ = supabaseAdmin
+// Importing this module must not require credentials while SvelteKit analyses
+// routes. A real DB operation still validates credentials and fails clearly.
+export const supabaseAdmin: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, property) {
+    const client = getClient()
+    const value = Reflect.get(client, property, client)
+    return typeof value === "function" ? value.bind(client) : value
+  },
+})

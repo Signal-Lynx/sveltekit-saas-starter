@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
 
   // 1. We added 'children' here to satisfy the Svelte 5 requirement
   interface Props {
@@ -54,8 +54,8 @@
         {#if item}
           <a
             href={item.href}
-            class={`${linkBase} ${isActive(item.href, $page.url.pathname) ? linkActive : linkIdle}`}
-            aria-current={isActive(item.href, $page.url.pathname)
+            class={`${linkBase} ${isActive(item.href, page.url.pathname) ? linkActive : linkIdle}`}
+            aria-current={isActive(item.href, page.url.pathname)
               ? "page"
               : undefined}
             title={item.label}

@@ -2,11 +2,11 @@
 <script lang="ts">
   import { getContext } from "svelte"
   import { enhance } from "$app/forms"
-  import type { SubmitFunction } from "@sveltejs/kit"
+  import type { SubmitFunction } from "$app/forms"
   import type { Writable } from "svelte/store"
-  import { badgeClassForStatus } from "$lib/ui/badge"
-  import type { LMEntitlement } from "$lib/types"
-  import { browser } from "$app/environment"
+  import { badgeClassForStatus } from "#lib/ui/badge.ts"
+  import type { LMEntitlement } from "#lib/types.ts"
+  import { browser } from "$app/env"
   import { SITE_CONFIG, WebsiteName } from "../../../../../config"
 
   const adminSection: Writable<string> = getContext("adminSection")

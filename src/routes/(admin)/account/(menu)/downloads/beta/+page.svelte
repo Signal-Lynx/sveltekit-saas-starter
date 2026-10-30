@@ -3,7 +3,7 @@
   import { enhance } from "$app/forms"
   import { slide } from "svelte/transition"
   import { tick } from "svelte"
-  import type { BetaProduct } from "$lib/data/beta_products"
+  import type { BetaProduct } from "#lib/data/beta_products.ts"
   import { WebsiteName } from "../../../../../../config"
 
   // --- Types ---

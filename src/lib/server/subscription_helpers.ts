@@ -1,12 +1,16 @@
 // src/lib/server/subscription_helpers.ts
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
-import { env } from "$env/dynamic/private"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
+import * as env from "$app/env/private"
 import Stripe from "stripe"
-import { allProducts } from "$lib/data/products"
+import { building } from "$app/env"
+import { allProducts } from "#lib/data/products.ts"
 
-const stripe = new Stripe(env.PRIVATE_STRIPE_API_KEY!, {
-  apiVersion: "2026-08-26.dahlia",
-})
+// Route analysis imports this module without Stripe credentials.
+const stripe = building
+  ? (null as unknown as Stripe)
+  : new Stripe(env.PRIVATE_STRIPE_API_KEY!, {
+      apiVersion: "2026-08-26.dahlia",
+    })
 
 // Minimal user shape used throughout the app (matches locals.user)
 type MinimalUser = { id: string; email?: string | null }

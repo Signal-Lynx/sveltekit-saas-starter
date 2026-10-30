@@ -1,10 +1,10 @@
 // src/routes/(admin)/account/subscription/portal/+server.ts
 import { json, redirect } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types"
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import { WebsiteBaseUrl } from "../../../../../config"
 import Stripe from "stripe"
-import { getOrCreateCustomerId } from "$lib/server/subscription_helpers"
+import { getOrCreateCustomerId } from "#lib/server/subscription_helpers.ts"
 
 // ---------- Stripe singleton (avoids HMR re-inits) ----------
 let stripeClient: Stripe | null = null

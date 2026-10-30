@@ -2,7 +2,7 @@
 <script lang="ts">
   import type { PageData } from "./$types"
   import { WebsiteBaseUrl, WebsiteName } from "../../../../config"
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
 
   const { data }: { data: PageData } = $props()
 

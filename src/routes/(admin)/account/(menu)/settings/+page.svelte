@@ -3,8 +3,8 @@
   import { getContext } from "svelte"
   import { writable, type Writable } from "svelte/store"
   import SettingsModule from "./settings_module.svelte"
-  import { page } from "$app/stores"
-  import { browser } from "$app/environment"
+  import { page } from "$app/state"
+  import { browser } from "$app/env"
 
   // Shape of data expected from the server load
   type PageData = {
@@ -31,7 +31,7 @@
 
   // Derive query flag (client-only to avoid SSR hazards)
   const pwUpdated = $derived(
-    browser && $page.url.searchParams.get("pw") === "updated",
+    browser && page.url.searchParams.get("pw") === "updated",
   )
 </script>
 

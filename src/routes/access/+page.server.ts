@@ -1,6 +1,6 @@
 // src/routes/(marketing)/access/+page.server.ts
 import { fail, redirect, type Actions } from "@sveltejs/kit"
-import { env } from "$env/dynamic/private"
+import * as env from "$app/env/private"
 import { createHash, timingSafeEqual } from "node:crypto"
 
 /**

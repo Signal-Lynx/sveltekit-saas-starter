@@ -1,7 +1,7 @@
 // src/routes/(marketing)/login/sign_up/+page.server.ts
 import { fail } from "@sveltejs/kit"
 import type { Actions } from "./$types"
-import { verifyTurnstile } from "$lib/server/turnstile"
+import { verifyTurnstile } from "#lib/server/turnstile.ts"
 
 // --- Validation Schema (remains the same) ---
 

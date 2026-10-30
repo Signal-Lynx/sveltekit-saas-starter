@@ -5,10 +5,10 @@
 // - Preserves your Zod validation + masked dev warnings, prod fail-fast.
 // - UPDATED: Adds License Manager vars, SES vars, and Admin Email vars.
 
-import { dev } from "$app/environment"
+import { building, dev } from "$app/env"
 import { z } from "zod"
-import * as staticPriv from "$env/static/private" // namespace import avoids named export typing issues in CI
-import { env as dynPriv } from "$env/dynamic/private"
+import * as staticPriv from "$app/env/private" // namespace import avoids named export typing issues in CI
+import * as dynPriv from "$app/env/private"
 
 // --- helpers ---------------------------------------------------------------
 
@@ -33,7 +33,7 @@ function get(name: string): string | undefined {
   const fromStatic = (
     staticPriv as unknown as Record<string, string | undefined>
   )[name]
-  return fromStatic ?? (dynPriv[name] as string | undefined)
+  return fromStatic ?? (dynPriv as Record<string, string | undefined>)[name]
 }
 
 // --- schema ----------------------------------------------------------------
@@ -122,7 +122,7 @@ const parsed = EnvSchema.safeParse({
   PRIVATE_CF_ACCESS_CLIENT_SECRET: RAW_ENV.PRIVATE_CF_ACCESS_CLIENT_SECRET,
 })
 
-if (!parsed.success) {
+if (!parsed.success && !building) {
   const details = parsed.error.flatten().fieldErrors
 
   if (dev) {

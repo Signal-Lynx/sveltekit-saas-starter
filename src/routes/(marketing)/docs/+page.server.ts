@@ -1,9 +1,9 @@
 // src/routes/(marketing)/docs/+page.server.ts
 import type { PageServerLoad } from "./$types"
-import { listFiles, type R2File } from "$lib/server/r2"
+import { listFiles, type R2File } from "#lib/server/r2.ts"
 import { README_PREFIXES, PUBLIC_ASSETS_BASE } from "../../../config"
-import { documents as staticDocs } from "$lib/data/docsData"
-import { env as privateEnv } from "$env/dynamic/private"
+import { documents as staticDocs } from "#lib/data/docsData.ts"
+import * as privateEnv from "$app/env/private"
 
 function pickLatest(files: R2File[]): R2File | undefined {
   if (!files?.length) return undefined

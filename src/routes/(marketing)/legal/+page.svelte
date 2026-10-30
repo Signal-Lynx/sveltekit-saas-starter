@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ContentPage from "$lib/components/layout/ContentPage.svelte"
+  import ContentPage from "#lib/components/layout/ContentPage.svelte"
   import { SITE_CONFIG, WebsiteName } from "../../../config"
 
   // Get the list of legal pages from the central site configuration

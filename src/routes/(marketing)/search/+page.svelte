@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { page } from "$app/stores"
-  import { browser, dev } from "$app/environment"
+  import { page } from "$app/state"
+  import { browser, dev } from "$app/env"
   import { onMount, onDestroy } from "svelte"
   import Fuse from "fuse.js"
   import type { IFuseOptions, FuseResult, FuseIndex } from "fuse.js"
@@ -36,7 +36,7 @@
   let results: FuseResult<SearchDoc>[] = $state([])
 
   // Keep initial behavior: read query from the URL hash
-  let searchQuery = $state(decodeURIComponent($page.url.hash.slice(1) ?? ""))
+  let searchQuery = $state(decodeURIComponent(page.url.hash.slice(1) ?? ""))
 
   let loading = $state(true)
   let error = $state(false)
@@ -61,8 +61,7 @@
     try {
       // Prefer server-provided payload (works reliably with site-gate/cookies)
       let payload: SearchPayload | null =
-        (($page.data as any)?.searchPayload as SearchPayload | undefined) ??
-        null
+        ((page.data as any)?.searchPayload as SearchPayload | undefined) ?? null
 
       // Fall back to session cache (still skipped in dev)
       if (!payload && !dev) {
@@ -146,7 +145,7 @@
   // --- Keep URL hash synced with query (same behavior) --------------
   $effect(() => {
     if (browser && window.location.hash.slice(1) !== searchQuery) {
-      goto("#" + searchQuery, { keepFocus: true, replaceState: true })
+      goto("#" + searchQuery, { reset: false, replace: true })
     }
   })
 

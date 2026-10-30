@@ -1,10 +1,10 @@
 // src/routes/(admin)/account/(menu)/downloads/beta/+page.server.ts (FINAL CORRECTED VERSION)
 import { fail, error } from "@sveltejs/kit"
 import type { PageServerLoad, Actions } from "./$types"
-import { betaProducts } from "$lib/data/beta_products"
-import type { BetaProduct as BetaProductDef } from "$lib/data/beta_products"
-import { env } from "$env/dynamic/private"
-import { loadSubscriptionState } from "$lib/server/subscriptionLoader"
+import { betaProducts } from "#lib/data/beta_products.ts"
+import type { BetaProduct as BetaProductDef } from "#lib/data/beta_products.ts"
+import * as env from "$app/env/private"
+import { loadSubscriptionState } from "#lib/server/subscriptionLoader.ts"
 
 // --- Types ---
 type Status = "ineligible" | "locked" | "unlocked"
@@ -95,7 +95,9 @@ export const actions: Actions = {
       return fail(404, { error: "Invalid beta product." })
     }
 
-    const expectedPassphrase = env[product.envVariable] as string | undefined
+    const expectedPassphrase = (
+      env as unknown as Record<string, string | undefined>
+    )[product.envVariable] as string | undefined
 
     if (expectedPassphrase && passphrase === expectedPassphrase) {
       cookies.set(product.cookieName, "true", {

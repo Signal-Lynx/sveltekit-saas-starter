@@ -1,7 +1,7 @@
 // src/lib/server/admin/audit.ts
-import { supabaseAdmin } from "$lib/server/supabaseAdmin"
+import { supabaseAdmin } from "#lib/server/supabaseAdmin.ts"
 // If you have generated DB types, you can uncomment this and use the typed alias below
-// import type { Database } from "$lib/DatabaseDefinitions"
+// import type { Database } from "#lib/types/database.ts"
 
 /**
  * Minimal shape expected by the `admin_audit` table.
