@@ -59,9 +59,12 @@ updates:
         patterns:
           - "playwright*"
 
-    # Hold back breaking majors while you stabilize
+    # Hold breaking SvelteKit/adapter majors for a coordinated migration.
+    # Reassess in December 2026 (January 2027 fallback).
+    # Security alerts remain enabled; review any security-update PR separately.
     ignore:
       - dependency-name: "@sveltejs/kit"
+        versions: [">=3.0.0"]
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/vite-plugin-svelte"
         update-types: ["version-update:semver-major"]
@@ -84,14 +87,18 @@ updates:
       - dependency-name: "jsdom"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/adapter-auto"
+        versions: [">=8.0.0"]
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/adapter-vercel"
+        versions: [">=7.0.0"]
         update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
       - dependency-name: "stripe"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "cookie"
         update-types: ["version-update:semver-major"]
 
   # GitHub Actions
