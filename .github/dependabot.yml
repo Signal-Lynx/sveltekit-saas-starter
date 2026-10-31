@@ -59,12 +59,15 @@ updates:
         patterns:
           - "playwright*"
 
-    # Hold breaking SvelteKit/adapter majors for a coordinated migration.
-    # Reassess in December 2026 (January 2027 fallback).
-    # Security alerts remain enabled; review any security-update PR separately.
+    # Major-version holds: preserve low-noise Dependabot behavior after the
+    # October 2026 SvelteKit 3 / adapter / Stripe 23 upgrades.
+    # Do not pin out already-adopted major lines: permit 3.x, 8.x and 7.x
+    # minor/patch fixes (including potentially important security fixes).
+    # Ignore rules can also affect security update PRs requiring a blocked
+    # major version. Keep Dependabot alerts on and review those manually.
+    # Reassess these major holds in December 2026 / January 2027.
     ignore:
       - dependency-name: "@sveltejs/kit"
-        versions: [">=3.0.0"]
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/vite-plugin-svelte"
         update-types: ["version-update:semver-major"]
@@ -87,10 +90,8 @@ updates:
       - dependency-name: "jsdom"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/adapter-auto"
-        versions: [">=8.0.0"]
         update-types: ["version-update:semver-major"]
       - dependency-name: "@sveltejs/adapter-vercel"
-        versions: [">=7.0.0"]
         update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
