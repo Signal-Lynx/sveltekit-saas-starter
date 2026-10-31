@@ -203,5 +203,7 @@ export const load: PageServerLoad = async ({
     throw redirect(303, "/pricing")
   }
 
-  throw redirect(303, checkoutUrl)
+  throw redirect(303, checkoutUrl, {
+    external: ["https://checkout.stripe.com"],
+  })
 }

@@ -56,5 +56,7 @@ export const GET: RequestHandler = async ({ locals, params, url }) => {
 
   // 3) Success: perform the real redirect OUTSIDE any try/catch
   console.info("[admin.billing-portal] redirect → portal", { userId })
-  throw redirect(303, portalUrl)
+  throw redirect(303, portalUrl, {
+    external: ["https://billing.stripe.com"],
+  })
 }

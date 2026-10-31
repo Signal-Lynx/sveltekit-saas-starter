@@ -212,7 +212,9 @@ const adminDomainGuard: Handle = async ({ event, resolve }) => {
     const url = new URL(event.url)
     url.hostname = ADMIN_HOST
     url.protocol = "https:"
-    throw redirect(308, url.toString())
+    throw redirect(308, url.toString(), {
+      external: [`https://${ADMIN_HOST}`],
+    })
   }
 
   // Login/auth plumbing is permitted on the admin host.
@@ -226,7 +228,9 @@ const adminDomainGuard: Handle = async ({ event, resolve }) => {
     const url = new URL(event.url)
     url.hostname = MAIN_HOST
     url.protocol = "https:"
-    throw redirect(308, url.toString())
+    throw redirect(308, url.toString(), {
+      external: [`https://${MAIN_HOST}`],
+    })
   }
 
   return resolve(event)

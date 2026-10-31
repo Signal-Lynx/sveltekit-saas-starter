@@ -24,7 +24,7 @@ Ideas that usually won't land:
 
 Prereqs:
 
-- Node.js 18+
+- Node.js 24.x
 - Git
 - Supabase account
 - Stripe account (test mode is fine)
@@ -45,6 +45,7 @@ Checks (the same set CI should run):
 
 ```bash
 ./checks.sh
+npm run check:runtime
 ```
 
 ## Database and schema

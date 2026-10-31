@@ -10,7 +10,7 @@ export const featureShowcase: FeatureShowcaseItem[] = [
     description:
       "Don't spend months building a landing page. This template is pre-fueled and on the runway. Clone, config, deploy.",
     details: [
-      "SvelteKit 5 + TailwindCSS.",
+      "SvelteKit 3 + Svelte 5 + TailwindCSS.",
       "Pre-configured Stripe Integration.",
     ],
   },

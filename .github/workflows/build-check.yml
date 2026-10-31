@@ -76,5 +76,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: SvelteKit Build
+      - name: Verify Supabase runtime dependencies
+        run: npm run check:runtime
+
+      - name: SvelteKit Vercel Build
+        env:
+          BUILD_TARGET: vercel
         run: npm run build

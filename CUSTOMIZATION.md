@@ -64,7 +64,7 @@ If you are shipping a paid product, Key Commander is the option that keeps billi
 
 ## Prereqs
 
-- Node.js 18+
+- Node.js 24.x
 - Git
 - Supabase account
 - Stripe account

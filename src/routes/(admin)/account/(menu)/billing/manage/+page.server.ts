@@ -77,7 +77,9 @@ export const load: PageServerLoad = async ({ url, locals: { user } }) => {
 
     // 5. send browser to Stripe's hosted portal
     const destination = portalSession?.url ?? "/account/billing"
-    throw redirect(303, destination)
+    throw redirect(303, destination, {
+      external: ["https://billing.stripe.com"],
+    })
   } catch (e) {
     // IMPORTANT:
     // SvelteKit implements redirect() by throwing a special object

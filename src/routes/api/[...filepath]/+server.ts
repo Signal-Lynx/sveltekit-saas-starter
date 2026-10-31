@@ -97,7 +97,7 @@ export const GET: RequestHandler = async (event) => {
       expiresIn: 300, // Link is valid for 5 minutes
     })
     // This redirect must be thrown to be handled correctly by SvelteKit.
-    throw redirect(303, signedUrl)
+    throw redirect(303, signedUrl, { external: true })
   } catch (err) {
     // If the error is a SvelteKit redirect, re-throw it.
     if (

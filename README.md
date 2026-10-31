@@ -121,7 +121,7 @@ Community note: You can absolutely run this template without Key Commander. Weâ€
 
 ## Tech stack
 
-Framework: SvelteKit 5  
+Framework: SvelteKit 3 + Svelte 5  
 Styling: Tailwind CSS + DaisyUI  
 Auth + DB: Supabase (Postgres + Auth)  
 Payments: Stripe  
@@ -151,11 +151,23 @@ This allows you to keep your main domain compatible with hosts like Vercel (whic
 
 ---
 
+## Deployment verification (SvelteKit 3 / Vercel)
+
+- Use **Node.js 24.x** locally, in GitHub Actions and in the Vercel project settings.
+- Run `npm install` after changing dependencies, commit the updated `package-lock.json`, and use `npm ci` in CI.
+- Run `npm run check:runtime` before building. This catches the `@supabase/ssr` CommonJS / `cookie` dependency mismatch that can crash a Vercel serverless function even when a build passes. **Do not add a global `cookie` npm override**; Supabase SSR and SvelteKit require different major versions.
+- The build workflow also builds with `BUILD_TARGET=vercel`. A successful build **does not prove serverless runtime startup**.
+- Validate the _new deployment URL_ before promoting it: open the homepage, log in, visit `/account/billing`, follow a test-mode Stripe Checkout and Billing Portal link, and download an authorized R2 file if configured. Check Vercel **Runtime Logs** for `FUNCTION_INVOCATION_FAILED` or `ERR_REQUIRE_ESM`.
+- If production is already live, use your hosting platform's rollback controls to restore the last known-good deployment before debugging the replacement. After a rollback, confirm how your host handles automatic promotion of future Git builds.
+- Stripe webhooks, billing changes and license issuance require a separate integration test with the appropriate test accounts and credentials; they are not covered by this smoke test.
+
+---
+
 ## Quick start (local dev)
 
 ### Prereqs
 
-Node.js 18+  
+Node.js 24.x  
 Git  
 Supabase account  
 Stripe account  
